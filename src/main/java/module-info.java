@@ -1,20 +1,8 @@
-module tarea {
-
-    requires java.base;
-    requires javafx.fxml;
+module cr.ac.una.tarea1_progra3 {
     requires javafx.controls;
-    requires javafx.graphics;
-    requires MaterialFX;
-    requires java.sql;
-    requires com.oracle.database.jdbc;
-    requires jakarta.persistence;
-    requires jakarta.xml.bind;
-    requires eclipselink;
-    requires java.logging;
+    requires javafx.fxml;
+    requires java.base;
 
-    exports cr.ac.una.tarea;
-    opens cr.ac.una.tarea to javafx.fxml;
-    
-
-    
+    opens cr.ac.una.tarea1_progra3 to javafx.fxml;
+    exports cr.ac.una.tarea1_progra3;
 }
