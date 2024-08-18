@@ -64,7 +64,12 @@
 
 }
 
-.button-SignIn:pressed:hover:armed {
+.button-SignIn:pressed, .button-SignIn:hover, .button-SignIn:armed, .button-SignIn:focused {
     -fx-background-color: #0A1B42;
+    -fx-text-fill: white;
+}
+
+.button-Register:pressed, .button-Register:hover, .button-Register:armed, .button-Register:focused {
+    -fx-background-color: #070f2b;
     -fx-text-fill: white;
 }
