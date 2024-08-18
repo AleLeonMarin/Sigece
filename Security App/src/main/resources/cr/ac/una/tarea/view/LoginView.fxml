@@ -10,21 +10,21 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="445.0" prefWidth="604.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.LoginController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="622.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.LoginController">
    <children>
-      <StackPane prefHeight="469.0" prefWidth="485.0" styleClass="stack-personal-pane">
+      <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="485.0" styleClass="stack-personal-pane">
          <StackPane.margin>
             <Insets bottom="50.0" left="70.0" right="70.0" top="50.0" />
          </StackPane.margin>
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" StackPane.alignment="CENTER">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" StackPane.alignment="CENTER">
                <children>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../resources/profileBlank.png" />
                      </image></ImageView>
                   <MFXTextField floatMode="BORDER" floatingText="Correo electrónico" prefHeight="32.0" prefWidth="266.0" />
-                  <MFXTextField floatMode="BORDER" floatingText="Contraseña" prefHeight="49.0" prefWidth="268.0">
+                  <MFXTextField floatMode="BORDER" floatingText="Contraseña" prefHeight="32.0" prefWidth="266.0">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin></MFXTextField>
@@ -49,7 +49,7 @@
                      </children>
                   </HBox>
                   <Separator prefHeight="0.0" prefWidth="272.0" />
-                  <MFXButton text="Olvidaste tu contraseña?">
+                  <MFXButton prefHeight="31.0" prefWidth="177.0" styleClass="button-ForgetPass" text="Olvidaste tu contraseña?">
                      <VBox.margin>
                         <Insets bottom="20.0" top="20.0" />
                      </VBox.margin>

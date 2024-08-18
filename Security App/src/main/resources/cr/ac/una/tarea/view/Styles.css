@@ -1,4 +1,7 @@
-
+.stack-personal-pane1 {
+    -fx-background-color: #808080;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
 .stack-personal-pane {
     -fx-background-color: #f0f0f0;
     -fx-background-radius: 15;
@@ -64,6 +67,26 @@
 
 }
 
+.button-ForgetPass {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #525b90;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+
+}
+
 .button-SignIn:pressed, .button-SignIn:hover, .button-SignIn:armed, .button-SignIn:focused {
     -fx-background-color: #0A1B42;
     -fx-text-fill: white;
@@ -71,5 +94,10 @@
 
 .button-Register:pressed, .button-Register:hover, .button-Register:armed, .button-Register:focused {
     -fx-background-color: #070f2b;
+    -fx-text-fill: white;
+}
+
+.button-ForgetPass:pressed, .button-ForgetPass:hover, .button-ForgetPass:armed, .button-ForgetPass:focused {
+    -fx-background-color: #525b90;
     -fx-text-fill: white;
 }
