@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="681.0" prefWidth="514.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.RegisterController">
+    <children>
+        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="582.0" prefWidth="421.0" styleClass="stack-personal-pane">
+            <StackPane.margin>
+                <Insets left="170.0" right="170.0" />
+            </StackPane.margin>
+            <children>
+                <VBox alignment="CENTER" prefHeight="589.0" prefWidth="417.0" spacing="10.0" StackPane.alignment="CENTER">
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="57.0" prefWidth="136.0" text="Nuevo Usuario" textFill="#0000006b">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Segoe UI" size="20.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="40.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/add-user.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <StackPane prefHeight="155.0" prefWidth="156.0" styleClass="stack-personal-pane">
+                     <VBox.margin>
+                        <Insets left="120.0" right="120.0" />
+                     </VBox.margin>
+                     <children>
+                        <ImageView fitHeight="151.0" fitWidth="153.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/add-photo.jpg" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <MFXTextField floatMode="BORDER" floatingText="Nombre" prefHeight="39.0" prefWidth="292.0" />
+                  <HBox alignment="TOP_CENTER" prefHeight="45.0" prefWidth="417.0" spacing="5.0">
+                     <children>
+                        <MFXTextField floatMode="BORDER" floatingText="1er Apellido" prefHeight="41.0" prefWidth="137.0" />
+                        <MFXTextField floatMode="BORDER" floatingText="2er Apellido" prefHeight="41.0" prefWidth="148.0" />
+                     </children>
+                  </HBox>
+                  <MFXTextField floatMode="BORDER" floatingText="Cédula" prefHeight="39.0" prefWidth="292.0" />
+                  <MFXTextField floatMode="BORDER" floatingText="Nombre" prefHeight="39.0" prefWidth="292.0" />
+                  <MFXTextField floatMode="BORDER" floatingText="Correo" prefHeight="39.0" prefWidth="292.0" />
+                  <MFXTextField floatMode="BORDER" floatingText="Celular" prefHeight="39.0" prefWidth="292.0" />
+                  <ChoiceBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="126.0" />
+                  <MFXButton ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="33.0" prefWidth="78.0" styleClass="button-SignIn" text="Aceptar">
+                     <VBox.margin>
+                        <Insets bottom="30.0" top="5.0" />
+                     </VBox.margin>
+                  </MFXButton>
+               </children>
+                </VBox>
+            </children>
+        </StackPane>
+      <MFXButton ellipsisString="" prefHeight="31.0" prefWidth="78.0" styleClass="button-ForgetPass" text="Regresar" translateX="-170.0" translateY="320.0" />
+    </children>
+</StackPane>

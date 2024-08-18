@@ -6,6 +6,12 @@ package cr.ac.una.tarea.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import cr.ac.una.tarea.util.FlowController;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 /**
@@ -26,6 +32,39 @@ public class LoginController extends Controller implements Initializable {
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
+
+    }
+
+
+    @FXML
+    private MFXButton btnChangePass;
+
+    @FXML
+    private MFXButton btnLogIn;
+
+    @FXML
+    private MFXButton btnRegister;
+
+    @FXML
+    private MFXTextField textMail;
+
+    @FXML
+    private MFXTextField textPassword;
+
+    @FXML
+    void onActionBtnChangePass(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionBtnLogIn(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionBtnRegister(ActionEvent event) {
+
+        FlowController.getInstance().goViewInWindow("RegisterView");
 
     }
 

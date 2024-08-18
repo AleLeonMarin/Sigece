@@ -23,14 +23,14 @@
                      <image>
                         <Image url="@../resources/profileBlank.png" />
                      </image></ImageView>
-                  <MFXTextField floatMode="BORDER" floatingText="Correo electrónico" prefHeight="32.0" prefWidth="266.0" />
-                  <MFXTextField floatMode="BORDER" floatingText="Contraseña" prefHeight="32.0" prefWidth="266.0">
+                  <MFXTextField fx:id="textMail" floatMode="BORDER" floatingText="Correo electrónico" prefHeight="32.0" prefWidth="266.0" />
+                  <MFXTextField fx:id="textPassword" floatMode="BORDER" floatingText="Contraseña" prefHeight="32.0" prefWidth="266.0">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin></MFXTextField>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <MFXButton prefHeight="40.0" prefWidth="135.0" styleClass="button-Register" text="Nuevo Usuario">
+                        <MFXButton fx:id="btnRegister" onAction="#onActionBtnRegister" prefHeight="40.0" prefWidth="135.0" styleClass="button-Register" text="Nuevo Usuario">
                            <HBox.margin>
                               <Insets bottom="20.0" top="20.0" />
                            </HBox.margin>
@@ -38,7 +38,7 @@
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
-                        <MFXButton prefHeight="40.0" prefWidth="135.0" styleClass="button-SignIn" text="Ingresar">
+                        <MFXButton fx:id="btnLogIn" onAction="#onActionBtnLogIn" prefHeight="40.0" prefWidth="135.0" styleClass="button-SignIn" text="Ingresar">
                            <HBox.margin>
                               <Insets bottom="20.0" top="20.0" />
                            </HBox.margin>
@@ -49,7 +49,7 @@
                      </children>
                   </HBox>
                   <Separator prefHeight="0.0" prefWidth="272.0" />
-                  <MFXButton prefHeight="31.0" prefWidth="177.0" styleClass="button-ForgetPass" text="Olvidaste tu contraseña?">
+                  <MFXButton fx:id="btnChangePass" onAction="#onActionBtnChangePass" prefHeight="31.0" prefWidth="177.0" styleClass="button-ForgetPass" text="Olvidaste tu contraseña?">
                      <VBox.margin>
                         <Insets bottom="20.0" top="20.0" />
                      </VBox.margin>
