@@ -1,5 +1,6 @@
 # Ignorar archivos generados por IDEs
 .idea/
+.vscode/
 
 
 # Ignorar archivos específicos de NetBeans
