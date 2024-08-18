@@ -23,24 +23,27 @@
                      <image>
                         <Image url="@../resources/profileBlank.png" />
                      </image></ImageView>
-                  <MFXTextField prefHeight="32.0" prefWidth="266.0" />
-                  <MFXTextField prefHeight="49.0" prefWidth="268.0" />
+                  <MFXTextField floatMode="BORDER" floatingText="Correo electrónico" prefHeight="32.0" prefWidth="266.0" />
+                  <MFXTextField floatMode="BORDER" floatingText="Contraseña" prefHeight="49.0" prefWidth="268.0">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin></MFXTextField>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <MFXButton prefHeight="36.0" prefWidth="143.0" styleClass="button-Register" text="Nuevo Usuario">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <graphic>
-                              <ImageView fitHeight="31.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" />
-                           </graphic>
-                        </MFXButton>
-                        <MFXButton prefHeight="0.0" prefWidth="125.0" styleClass="button-SignIn" text="Ingresar">
+                        <MFXButton prefHeight="40.0" prefWidth="135.0" styleClass="button-Register" text="Nuevo Usuario">
                            <HBox.margin>
                               <Insets bottom="20.0" top="20.0" />
                            </HBox.margin>
                            <graphic>
-                              <ImageView fitHeight="32.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </MFXButton>
+                        <MFXButton prefHeight="40.0" prefWidth="135.0" styleClass="button-SignIn" text="Ingresar">
+                           <HBox.margin>
+                              <Insets bottom="20.0" top="20.0" />
+                           </HBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </MFXButton>
                      </children>
