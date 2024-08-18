@@ -13,7 +13,7 @@ import javafx.fxml.Initializable;
  *
  * @author Kendall Fonseca
  */
-public class LoginController implements Initializable {
+public class LoginController extends Controller implements Initializable {
 
     /**
      * Initializes the controller class.
@@ -21,6 +21,12 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+
+    @Override
+    public void initialize() {
+        // TODO Auto-generated method stub
+
+    }
+
 }
