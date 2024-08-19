@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -16,23 +17,23 @@ import javafx.scene.layout.StackPane;
  *
  * @author Kendall Fonseca
  */
-public class RegisterController extends Controller implements Initializable {
+public class AdminUsersController extends Controller implements Initializable {
 
     /**
      * Initializes the controller class.
      */
+
+    @FXML
+    private StackPane root;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
     
-     @Override
+         @Override
     public void initialize() {
-        // TODO Auto-generated method stub
-
     }
 
-    @FXML
-    private StackPane root;
-
 }
+

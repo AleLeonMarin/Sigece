@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="622.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.SecurityAppController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="673.0" prefWidth="1031.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.SecurityAppController">
     <children>
-        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="485.0" styleClass="stack-personal-pane">
-            <StackPane.margin>
-                <Insets bottom="50.0" left="70.0" right="70.0" top="50.0" />
-            </StackPane.margin>
+        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="999.0" styleClass="stack-personal-pane">
+            <children>
+                <HBox fx:id="root" prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="628.0" prefWidth="226.0" spacing="20.0">
+                            <children>
+                                <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <VBox.margin>
+                                        <Insets top="10.0" />
+                                    </VBox.margin>
+                                    <image>
+                                        <Image url="@../resources/profileBlank.png" />
+                                    </image>
+                                </ImageView>
+                                <MFXButton fx:id="btnAdminUsers" onAction="#onActionBtnAdminUsers" prefHeight="35.0" prefWidth="200.0" styleClass="button-ForgetPass" text="Administración de Usuarios" textAlignment="JUSTIFY">
+                                    <VBox.margin>
+                                        <Insets top="35.0" />
+                                    </VBox.margin>
+                                </MFXButton>
+                                <MFXButton prefHeight="35.0" prefWidth="200.0" styleClass="button-Register" text="Administración de Sistemas" />
+                                <MFXButton />
+                            </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="628.0" prefWidth="16.0" />
+                    </children>
+                </HBox>
+            </children>
         </StackPane>
     </children>
 </StackPane>
+

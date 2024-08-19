@@ -6,7 +6,15 @@ package cr.ac.una.tarea.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import cr.ac.una.tarea.util.FlowController;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 
 /**
  * FXML Controller class
@@ -18,14 +26,29 @@ public class SecurityAppController extends Controller implements Initializable {
     /**
      * Initializes the controller class.
      */
+
+    @FXML
+    private HBox root;
+
+    @FXML
+    private MFXButton btnAdminUsers;
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+       // FlowController.getInstance().InitializeFlow(stage, null);
     }
 
          @Override
     public void initialize() {
 
-         }
+    }
+    @FXML
+    private void onActionBtnAdminUsers(ActionEvent event) {
+        // Usa el FlowController para cargar el StackPane en el HBox de la vista principal
+        FlowController.getInstance().goView("AdminUsersView", "Center", null);
+    }
     
 }
