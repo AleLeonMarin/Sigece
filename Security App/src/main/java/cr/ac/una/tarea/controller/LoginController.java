@@ -60,7 +60,7 @@ public class LoginController extends Controller implements Initializable {
     @FXML
     void onActionBtnLogIn(ActionEvent event) {
 
-        FlowController.getInstance().goViewInWindow("SecurityAppView");
+        FlowController.getInstance().goMain("SecurityAppView");
 
     }
 

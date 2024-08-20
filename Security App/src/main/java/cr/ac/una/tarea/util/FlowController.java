@@ -109,27 +109,44 @@ public class FlowController {
 
         Parent root = loader.getRoot();
 
-        // Verifica si el root de la escena es un HBox
-        if (stage.getScene().getRoot() instanceof HBox) {
-            HBox hbox = (HBox) stage.getScene().getRoot();
+        // Verifica si el root de la escena es un StackPane
+        if (stage.getScene().getRoot() instanceof StackPane) {
+            StackPane mainStackPane = (StackPane) stage.getScene().getRoot();
 
-            switch (location) {
-                case "Center":
-                    hbox.getChildren().clear();
-                    hbox.getChildren().add(root);
-                    break;
-                default:
-                    System.out.println("Invalid location specified: " + location);
-                    break;
+            // Verifica si el primer hijo es un StackPane
+            if (mainStackPane.getChildren().get(0) instanceof StackPane) {
+                StackPane innerStackPane = (StackPane) mainStackPane.getChildren().get(0);
+
+                // Verifica si el primer hijo de ese StackPane es un HBox
+                if (innerStackPane.getChildren().get(0) instanceof HBox) {
+                    HBox hbox = (HBox) innerStackPane.getChildren().get(0);
+
+                    // Verifica si el tercer hijo del HBox es un StackPane (después del VBox y Separator)
+                    if (hbox.getChildren().get(2) instanceof StackPane) {
+                        StackPane targetStackPane = (StackPane) hbox.getChildren().get(2);
+
+                        switch (location) {
+                            case "Center":
+                                targetStackPane.getChildren().clear();
+                                targetStackPane.getChildren().add(root);
+                                break;
+                            default:
+                                System.out.println("Invalid location specified: " + location);
+                                break;
+                        }
+                    } else {
+                        System.out.println("Third child of HBox is not a StackPane, it's a " + hbox.getChildren().get(2).getClass().getName());
+                    }
+                } else {
+                    System.out.println("First child of inner StackPane is not an HBox, it's a " + innerStackPane.getChildren().get(0).getClass().getName());
+                }
+            } else {
+                System.out.println("First child of main StackPane is not a StackPane, it's a " + mainStackPane.getChildren().get(0).getClass().getName());
             }
         } else {
-            System.out.println("Root of the scene is not an HBox, it's a " + stage.getScene().getRoot().getClass().getName());
+            System.out.println("Root of the scene is not a StackPane, it's a " + stage.getScene().getRoot().getClass().getName());
         }
     }
-
-
-
-
 
 
     public void goViewInStage(String viewName, Stage stage) {
