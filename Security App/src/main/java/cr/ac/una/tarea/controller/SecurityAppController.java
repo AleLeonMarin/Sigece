@@ -12,6 +12,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -28,17 +29,20 @@ public class SecurityAppController extends Controller implements Initializable {
      */
 
     @FXML
-    private HBox root;
+    private MFXButton btnAdminSystems;
 
     @FXML
     private MFXButton btnAdminUsers;
 
+    @FXML
+    private ImageView imgViewUserPhotProf;
 
+    @FXML
+    private HBox root;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-       // FlowController.getInstance().InitializeFlow(stage, null);
+
     }
 
          @Override
@@ -50,5 +54,11 @@ public class SecurityAppController extends Controller implements Initializable {
         // Usa el FlowController para cargar el StackPane en el HBox de la vista principal
         FlowController.getInstance().goView("AdminUsersView", "Center", null);
     }
-    
+
+    @FXML
+    void onActionBtnAdminSystems(ActionEvent event) {
+
+    }
+
+
 }

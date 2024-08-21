@@ -6,6 +6,11 @@ package cr.ac.una.tarea.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 /**
@@ -23,10 +28,28 @@ public class ResetPasswordController extends Controller implements Initializable
         // TODO
     }
 
-    @Override
+        @Override
     public void initialize() {
+    }
+
+    @FXML
+    private MFXButton btnAccept;
+
+    @FXML
+    private MFXPasswordField fillPassWord;
+
+    @FXML
+    private MFXPasswordField repeatPassword;
+
+
+    @FXML
+    void onActionBtnAccept(ActionEvent event) {
 
     }
+
+
+
+
 
 
     

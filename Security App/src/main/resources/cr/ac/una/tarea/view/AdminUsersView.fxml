@@ -13,16 +13,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="570.0" prefWidth="848.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.AdminUsersController">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="627.0" prefWidth="846.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.AdminUsersController">
    <children>
-      <HBox prefHeight="583.0" prefWidth="800.0" spacing="10.0">
+      <HBox alignment="CENTER" prefHeight="627.0" prefWidth="856.0" spacing="10.0">
          <children>
             <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="361.0" styleClass="stack-personal-pane">
                <HBox.margin>
-                  <Insets bottom="5.0" left="20.0" top="5.0" />
+                  <Insets bottom="5.0" top="5.0" />
                </HBox.margin>
                <children>
-                  <TableView prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="tbvUsers" prefHeight="200.0" prefWidth="200.0">
                      <StackPane.margin>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </StackPane.margin>
@@ -56,7 +56,7 @@
                               <Insets left="120.0" right="120.0" />
                            </VBox.margin>
                            <children>
-                              <ImageView fitHeight="115.0" fitWidth="136.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="imgViewUser" fitHeight="115.0" fitWidth="135.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/add-photo.jpg" />
                                  </image>
@@ -82,9 +82,9 @@
                         </HBox>
                         <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <MFXButton text="Guardar" />
-                              <MFXButton text="Eliminar" />
-                              <MFXButton ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="75.0" styleClass="button-SignIn" text="Aceptar">
+                              <MFXButton fx:id="btnSave" onAction="#onActionBtnSave" prefHeight="25.0" prefWidth="65.0" styleClass="button-SignIn" text="Guardar" />
+                              <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="25.0" prefWidth="65.0" styleClass="button-SignIn" text="Eliminar" />
+                              <MFXButton fx:id="btnNew" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnNew" prefHeight="25.0" prefWidth="65.0" styleClass="button-SignIn" text="Nuevo">
                                  <HBox.margin>
                                     <Insets right="20.0" />
                                  </HBox.margin>
@@ -95,7 +95,6 @@
                   </VBox>
                </children>
             </StackPane>
-            <VBox prefHeight="400.0" prefWidth="320.0" />
          </children>
       </HBox>
    </children>

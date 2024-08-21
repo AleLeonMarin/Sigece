@@ -53,7 +53,7 @@ public class LoginController extends Controller implements Initializable {
     @FXML
     void onActionBtnChangePass(ActionEvent event) {
 
-        FlowController.getInstance().goViewInWindow("ResetPasswordView");
+        FlowController.getInstance().goViewInWindow("KeyAcceptView");
 
     }
 

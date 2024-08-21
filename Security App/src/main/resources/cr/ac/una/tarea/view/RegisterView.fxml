@@ -49,7 +49,7 @@
                         <Insets left="120.0" right="120.0" />
                      </VBox.margin>
                      <children>
-                        <ImageView fitHeight="151.0" fitWidth="153.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imgViewUserPhoto" fitHeight="151.0" fitWidth="153.0" onMouseClicked="#onActionUserPhoto" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../resources/add-photo.jpg" />
                            </image>
@@ -67,8 +67,8 @@
                   <MFXTextField floatMode="BORDER" floatingText="Nombre" prefHeight="39.0" prefWidth="292.0" />
                   <MFXTextField floatMode="BORDER" floatingText="Correo" prefHeight="39.0" prefWidth="292.0" />
                   <MFXTextField floatMode="BORDER" floatingText="Celular" prefHeight="39.0" prefWidth="292.0" />
-                  <ChoiceBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="126.0" />
-                  <MFXButton ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="33.0" prefWidth="78.0" styleClass="button-SignIn" text="Aceptar">
+                  <ChoiceBox fx:id="choiceBoxLanguage" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="126.0" />
+                  <MFXButton fx:id="btnAccept" ellipsisString="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnAccept" prefHeight="33.0" prefWidth="78.0" styleClass="button-SignIn" text="Aceptar">
                      <VBox.margin>
                         <Insets bottom="30.0" top="5.0" />
                      </VBox.margin>
@@ -77,6 +77,6 @@
                 </VBox>
             </children>
         </StackPane>
-      <MFXButton ellipsisString="" prefHeight="31.0" prefWidth="78.0" styleClass="button-ForgetPass" text="Regresar" translateX="-170.0" translateY="320.0" />
+      <MFXButton fx:id="btnGoBack" ellipsisString="" onAction="#onActionBtnGoback" prefHeight="31.0" prefWidth="78.0" styleClass="button-ForgetPass" text="Regresar" translateX="-170.0" translateY="320.0" />
     </children>
 </StackPane>
