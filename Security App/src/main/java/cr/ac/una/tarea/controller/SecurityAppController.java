@@ -58,6 +58,8 @@ public class SecurityAppController extends Controller implements Initializable {
     @FXML
     void onActionBtnAdminSystems(ActionEvent event) {
 
+        FlowController.getInstance().goView("AdminSystemsView", "Center", null);
+
     }
 
 
