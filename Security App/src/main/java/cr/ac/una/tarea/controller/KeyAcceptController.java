@@ -7,67 +7,72 @@ package cr.ac.una.tarea.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import cr.ac.una.tarea.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 
 /**
  * FXML Controller class
  *
  * @author Kendall Fonseca
  */
-public class RegisterController extends Controller implements Initializable {
+public class KeyAcceptController extends Controller implements Initializable {
 
     /**
      * Initializes the controller class.
      */
 
     @FXML
-    private MFXButton btnAccept;
+    private MFXButton btnAcceptKey;
+
+    @FXML
+    private MFXButton btnAcceptMail;
 
     @FXML
     private MFXButton btnGoBack;
 
     @FXML
-    private ChoiceBox<?> choiceBoxLanguage;
+    private MFXTextField txtKey;
 
     @FXML
-    private ImageView imgViewUserPhoto;
-
-    @FXML
-    private StackPane root;
+    private MFXTextField txtMail;
 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
-     @Override
+
+    }
+
+    @Override
     public void initialize() {
-        // TODO Auto-generated method stub
+        btnAcceptKey.setDisable(true);
+        txtKey.setDisable(true);
+
 
     }
 
 
 
     @FXML
-    void onActionBtnAccept(ActionEvent event) {
-
+    void onActionBtnAcceptKey(ActionEvent event) {
+        FlowController.getInstance().goView ("ResetPasswordView");
     }
 
     @FXML
-    void onActionBtnGoback(ActionEvent event) {
-
+    void onActionBtnAcceptMail(ActionEvent event) {
+        btnAcceptKey.setDisable(false);
+        txtKey.setDisable(false);
     }
 
     @FXML
-    void onActionUserPhoto(MouseEvent event) {
+    void onActionBtnGoBack(ActionEvent event) {
+        getStage().close();
 
     }
+
+
+    
 }

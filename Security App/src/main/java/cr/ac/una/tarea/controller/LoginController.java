@@ -32,7 +32,6 @@ public class LoginController extends Controller implements Initializable {
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
-
     }
 
 
@@ -54,10 +53,14 @@ public class LoginController extends Controller implements Initializable {
     @FXML
     void onActionBtnChangePass(ActionEvent event) {
 
+        FlowController.getInstance().goViewInWindow("KeyAcceptView");
+
     }
 
     @FXML
     void onActionBtnLogIn(ActionEvent event) {
+
+        FlowController.getInstance().goMain("SecurityAppView");
 
     }
 

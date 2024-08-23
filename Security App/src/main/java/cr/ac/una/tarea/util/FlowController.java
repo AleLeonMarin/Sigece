@@ -9,9 +9,7 @@ import java.util.logging.Level;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -88,6 +86,7 @@ public class FlowController {
         }
     }
 
+
     public void goView(String viewName) {
         goView(viewName, "Center", null);
     }
@@ -101,29 +100,54 @@ public class FlowController {
         Controller controller = loader.getController();
         controller.setAccion(accion);
         controller.initialize();
-        Stage stage = controller.getStage();
-        if (stage == null) {
-            stage = this.mainStage;
-            controller.setStage(stage);
+        Stage stage = this.mainStage;
+
+        if (stage.getScene() == null) {
+            System.out.println("La escena principal no está inicializada.");
+            return;
         }
-        switch (location) {
-            case "Center":
-                VBox vBox = ((VBox) ((BorderPane) stage.getScene().getRoot()).getCenter());
-                vBox.getChildren().clear();
-                vBox.getChildren().add(loader.getRoot());
-                break;
-            case "Top":
-                break;
-            case "Bottom":
-                break;
-            case "Right":
-                break;
-            case "Left":
-                break;
-            default:
-                break;
+
+        Parent root = loader.getRoot();
+
+        // Verifica si el root de la escena es un StackPane
+        if (stage.getScene().getRoot() instanceof StackPane) {
+            StackPane mainStackPane = (StackPane) stage.getScene().getRoot();
+
+            // Verifica si el primer hijo es un StackPane
+            if (mainStackPane.getChildren().get(0) instanceof StackPane) {
+                StackPane innerStackPane = (StackPane) mainStackPane.getChildren().get(0);
+
+                // Verifica si el primer hijo de ese StackPane es un HBox
+                if (innerStackPane.getChildren().get(0) instanceof HBox) {
+                    HBox hbox = (HBox) innerStackPane.getChildren().get(0);
+
+                    // Verifica si el tercer hijo del HBox es un StackPane (después del VBox y Separator)
+                    if (hbox.getChildren().get(2) instanceof StackPane) {
+                        StackPane targetStackPane = (StackPane) hbox.getChildren().get(2);
+
+                        switch (location) {
+                            case "Center":
+                                targetStackPane.getChildren().clear();
+                                targetStackPane.getChildren().add(root);
+                                break;
+                            default:
+                                System.out.println("Invalid location specified: " + location);
+                                break;
+                        }
+                    } else {
+                        System.out.println("Third child of HBox is not a StackPane, it's a " + hbox.getChildren().get(2).getClass().getName());
+                    }
+                } else {
+                    System.out.println("First child of inner StackPane is not an HBox, it's a " + innerStackPane.getChildren().get(0).getClass().getName());
+                }
+            } else {
+                System.out.println("First child of main StackPane is not a StackPane, it's a " + mainStackPane.getChildren().get(0).getClass().getName());
+            }
+        } else {
+            System.out.println("Root of the scene is not a StackPane, it's a " + stage.getScene().getRoot().getClass().getName());
         }
     }
+
 
     public void goViewInStage(String viewName, Stage stage) {
         FXMLLoader loader = getLoader(viewName);
