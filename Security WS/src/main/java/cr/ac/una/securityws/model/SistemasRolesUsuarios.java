@@ -81,8 +81,8 @@ public class SistemasRolesUsuarios implements Serializable {
         return sisID;
     }
 
-    public Usuarios getSrsUsuId() {
-        return srsUsuId;
+    public Usuarios getUsuID() {
+        return usuID;
     }
 
     public Long getVersion() {
@@ -105,8 +105,8 @@ public class SistemasRolesUsuarios implements Serializable {
         this.sisID = sisID;
     }
 
-    public void setSrsUsuId(Usuarios srsUsuId) {
-        this.srsUsuId = srsUsuId;
+    public void setSrsUsuId(Usuarios usuID) {
+        this.usuID = usuID;
     }
 
     public void setVersion(Long version) {
