@@ -129,3 +129,32 @@
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
+
+.image-LogOut-button {
+    -fx-background-image: url("../resources/logout-512.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #525b90;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+
+}
+
+.image-LogOut-button:hover, .image-LogOut-button:pressed, .image-LogOut-button:armed, .image-LogOut-button:focused {
+    -fx-background-image: url("../resources/logout-512.png");
+    -fx-background-color: rgba(28, 34, 73, 0.68);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}

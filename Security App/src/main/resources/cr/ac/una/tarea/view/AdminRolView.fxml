@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
@@ -18,7 +18,7 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="Sistemas del Usuario:" wrappingWidth="346.13671875">
+                        <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="Roles Disponibles" wrappingWidth="346.13671875">
                            <font>
                               <Font name="Segoe UI" size="20.0" />
                            </font>
@@ -28,12 +28,12 @@
                               <Insets bottom="40.0" left="40.0" right="40.0" top="10.0" />
                            </VBox.margin>
                         </TableView>
-                        <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="Rol del Usuario:" wrappingWidth="346.13671875">
+                        <Text fill="#00000099" strokeType="OUTSIDE" strokeWidth="0.0" text="Crear Rol:" wrappingWidth="346.13671875">
                            <font>
                               <Font name="Segoe UI" size="20.0" />
                            </font>
                         </Text>
-                        <MFXComboBox fx:id="choiceRol" prefHeight="40.0" prefWidth="250.0" />
+                        <MFXTextField floatMode="BORDER" floatingText="Nombre" prefHeight="27.0" prefWidth="343.0" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                            <children>
                               <MFXButton fx:id="btnDelete" prefHeight="35.0" prefWidth="90.0" styleClass="button-SignIn" text="Eliminar" />
