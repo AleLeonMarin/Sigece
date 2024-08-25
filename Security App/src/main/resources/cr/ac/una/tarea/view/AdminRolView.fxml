@@ -10,22 +10,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="627.0" prefWidth="846.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.AdminSystemController">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="627.0" prefWidth="846.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.AdminRolController">
    <children>
       <HBox alignment="CENTER" prefHeight="627.0" prefWidth="856.0" spacing="10.0">
          <children>
-            <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="361.0" styleClass="stack-personal-pane">
-               <HBox.margin>
-                  <Insets bottom="5.0" top="5.0" />
-               </HBox.margin>
-               <children>
-                  <TableView fx:id="tbvUsers" prefHeight="200.0" prefWidth="200.0">
-                     <StackPane.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </StackPane.margin>
-                  </TableView>
-               </children>
-            </StackPane>
             <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="569.0" prefWidth="438.0" styleClass="stack-personal-pane">
                <children>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
@@ -48,8 +36,8 @@
                         <MFXComboBox fx:id="choiceRol" prefHeight="40.0" prefWidth="250.0" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                            <children>
-                              <MFXButton fx:id="btnDelete" onAction="#onActionBtnDelete" prefHeight="35.0" prefWidth="90.0" styleClass="button-SignIn" text="Eliminar" />
-                              <MFXButton fx:id="btnAceptar" onAction="#onActionBtnAccept" prefHeight="35.0" prefWidth="90.0" styleClass="button-SignIn" text="Aceptar" />
+                              <MFXButton fx:id="btnDelete" prefHeight="35.0" prefWidth="90.0" styleClass="button-SignIn" text="Eliminar" />
+                              <MFXButton fx:id="btnAceptar" prefHeight="35.0" prefWidth="90.0" styleClass="button-SignIn" text="Aceptar" />
                            </children>
                         </HBox>
                      </children>

@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import cr.ac.una.tarea.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,6 +39,13 @@ public class SecurityAppController extends Controller implements Initializable {
     private ImageView imgViewUserPhotProf;
 
     @FXML
+    private MFXButton btnRolAdmin;
+
+    @FXML
+    private MFXButton btnLogOut;
+
+
+    @FXML
     private HBox root;
 
     @Override
@@ -58,8 +66,18 @@ public class SecurityAppController extends Controller implements Initializable {
     @FXML
     void onActionBtnAdminSystems(ActionEvent event) {
 
-        FlowController.getInstance().goView("AdminSystemsView", "Center", null);
+        FlowController.getInstance().goView("AdminSystemView", "Center", null);
 
+    }
+
+    @FXML
+    void onActionBtnRolAdmin(ActionEvent event) {
+        FlowController.getInstance().goView("AdminRolView", "Center", null);
+    }
+
+    @FXML
+    void onActionBtnLogOut(ActionEvent event) {
+        FlowController.getInstance().goViewInWindow("LoginView");
     }
 
 

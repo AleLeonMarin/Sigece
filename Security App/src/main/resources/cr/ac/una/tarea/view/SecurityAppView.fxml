@@ -25,13 +25,25 @@
                                         <Image url="@../resources/profileBlank.png" />
                                     </image>
                                 </ImageView>
-                                <MFXButton fx:id="btnAdminUsers" onAction="#onActionBtnAdminUsers" prefHeight="35.0" prefWidth="200.0" styleClass="button-ForgetPass" text="Administración de Usuarios" textAlignment="JUSTIFY">
+                                <MFXButton fx:id="btnAdminUsers" onAction="#onActionBtnAdminUsers" prefHeight="35.0" prefWidth="200.0" styleClass="button-Register" text="Administración de Usuarios" textAlignment="JUSTIFY">
                                     <VBox.margin>
                                         <Insets top="35.0" />
                                     </VBox.margin>
                                 </MFXButton>
                                 <MFXButton fx:id="btnAdminSystems" onAction="#onActionBtnAdminSystems" prefHeight="35.0" prefWidth="200.0" styleClass="button-Register" text="Administración de Sistemas" />
-                                <MFXButton />
+                                <MFXButton fx:id="btnRolAdmin" onAction="#onActionBtnRolAdmin" prefHeight="35.0" prefWidth="200.0" styleClass="button-Register" text="Administración de Roles" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <MFXButton fx:id="btnLogOut" buttonType="RAISED" onAction="#onActionBtnLogOut" prefHeight="48.0" prefWidth="46.0" styleClass="image-LogOut-button" text="‎ ">
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                              </MFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="170.0" />
+                           </VBox.margin>
+                        </HBox>
                             </children>
                         </VBox>
                         <Separator orientation="VERTICAL" prefHeight="628.0" prefWidth="16.0" />
