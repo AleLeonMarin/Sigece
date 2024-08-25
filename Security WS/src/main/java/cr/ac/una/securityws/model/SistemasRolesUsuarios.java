@@ -61,9 +61,6 @@ public class SistemasRolesUsuarios implements Serializable {
     public SistemasRolesUsuarios() {
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
 
     public Long getId() {
         return id;
