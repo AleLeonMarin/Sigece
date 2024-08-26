@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.securityws.model;
 
 import jakarta.persistence.Basic;
@@ -60,8 +56,14 @@ public class Sistemas implements Serializable {
         this.id = id;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+   public Sistemas(SistemasDto sistemasDto) {
+        this.id = sistemasDto.getId();
+        this.nombre = sistemasDto.getNombre();
+        actualizarSistemas(sistemasDto);
+    }
+
+    public void actualizarSistemas(SistemasDto sistemasDto) {
+        this.nombre = sistemasDto.getNombre();
     }
 
     public Long getId() {

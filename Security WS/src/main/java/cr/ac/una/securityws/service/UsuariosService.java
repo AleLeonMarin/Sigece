@@ -1,11 +1,11 @@
 package cr.ac.una.securityws.service;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import cr.ac.una.securityws.model.Roles;
-import cr.ac.una.securityws.model.RolesDto;
 import cr.ac.una.securityws.model.Sistemas;
-import cr.ac.una.securityws.model.SistemasDto;
 import cr.ac.una.securityws.model.SistemasRolesUsuarios;
-import cr.ac.una.securityws.model.SistemasRolesUsuariosDto;
 import cr.ac.una.securityws.model.Usuarios;
 import cr.ac.una.securityws.model.UsuariosDto;
 import cr.ac.una.securityws.util.CodigoRespuesta;
@@ -13,6 +13,8 @@ import cr.ac.una.securityws.util.Respuesta;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
@@ -20,14 +22,15 @@ import jakarta.persistence.Query;
 @LocalBean
 public class UsuariosService {
 
+    private static final Logger LOG = Logger.getLogger(UsuariosService.class.getName());
     @PersistenceContext(unitName = "SigeceUnaWsPU")
     private EntityManager em;
 
     public Respuesta validateUser(String usuario, String clave) {
         try {
             Query query = em.createNamedQuery("Usuarios.findByUsuClave");
-            query.setParameter("usu_usuario", usuario);
-            query.setParameter("usu_clave", clave);
+            query.setParameter("usuario", usuario);
+            query.setParameter("clave", clave);
             Usuarios usuarios = (Usuarios) query.getSingleResult();
 
             UsuariosDto usuariosDto = new UsuariosDto(usuarios);
@@ -45,12 +48,18 @@ public class UsuariosService {
             }
 
             // Si el usuario no tiene roles en ningún sistema
-            return new Respuesta(false, CodigoRespuesta.ERROR_PERMISOS,"Usuario no tiene acceso a ningún sistema asignado.");
-        } catch (NoResultException e) {
-            return new Respuesta(false, CodigoRespuesta.ERROR_ACCESO, "Usuario o clave incorrectos.",e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error en la validación del usuario.");
+            return new Respuesta(false, CodigoRespuesta.ERROR_PERMISOS, "",
+                    "Usuario no tiene acceso a ningún sistema asignado.");
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "", "Usuario o clave incorrectos.", ex);
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.",
+                    "validarUsuario NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.",
+                    "validarUsuario " + ex.getMessage());
         }
     }
 

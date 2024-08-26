@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.securityws.model;
 
 import jakarta.persistence.Basic;
@@ -23,7 +19,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.management.relation.Role;
 
 /**
  *
@@ -67,8 +62,15 @@ public class Roles implements Serializable {
         this.id = id;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Roles(RolesDto rolesDto) {
+        this.id = rolesDto.getId();
+        actualizarRoles(rolesDto);
+    }
+
+    public void actualizarRoles(RolesDto rolesDto) {
+        this.nombre = rolesDto.getNombre();
+        this.version = rolesDto.getVersion();
+        this.sis_id = new Sistemas(rolesDto.getSistemas());
     }
 
     public Long getId() {

@@ -11,6 +11,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.QueryHint;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -22,23 +23,47 @@ import java.util.List;
  *
  * @author aleon
  */
-        
+
 @Entity
 @Table(name = "SIS_USUARIOS")
 @NamedQueries({
         @NamedQuery(name = "SisUsuarios.findAll", query = "SELECT s FROM SisUsuarios s"),
         @NamedQuery(name = "SisUsuarios.findByUsuId", query = "SELECT s FROM SisUsuarios s WHERE s.usuId = :usuId"),
-        @NamedQuery(name = "SisUsuarios.findByUsuNombre", query = "SELECT s FROM SisUsuarios s WHERE s.usuNombre = :usuNombre"),
-        @NamedQuery(name = "SisUsuarios.findByUsuApellidos", query = "SELECT s FROM SisUsuarios s WHERE s.usuApellidos = :usuApellidos"),
-        @NamedQuery(name = "SisUsuarios.findByUsuCorreo", query = "SELECT s FROM SisUsuarios s WHERE s.usuCorreo = :usuCorreo"),
-        @NamedQuery(name = "SisUsuarios.findByUsuTelefono", query = "SELECT s FROM SisUsuarios s WHERE s.usuTelefono = :usuTelefono"),
-        @NamedQuery(name = "SisUsuarios.findByUsuCelular", query = "SELECT s FROM SisUsuarios s WHERE s.usuCelular = :usuCelular"),
-        @NamedQuery(name = "SisUsuarios.findByUsuIdioma", query = "SELECT s FROM SisUsuarios s WHERE s.usuIdioma = :usuIdioma"),
-        @NamedQuery(name = "SisUsuarios.findByUsuUsuario", query = "SELECT s FROM SisUsuarios s WHERE s.usuUsuario = :usuUsuario"),
-        @NamedQuery(name = "SisUsuarios.findByUsuClave", query = "SELECT s FROM SisUsuarios s WHERE s.usuClave = :usuClave"),
-        @NamedQuery(name = "SisUsuarios.findByUsuEstado", query = "SELECT s FROM SisUsuarios s WHERE s.usuEstado = :usuEstado"),
-        @NamedQuery(name = "SisUsuarios.findByUsuStatus", query = "SELECT s FROM SisUsuarios s WHERE s.usuStatus = :usuStatus"),
-        @NamedQuery(name = "SisUsuarios.findByUsuVersion", query = "SELECT s FROM SisUsuarios s WHERE s.usuVersion = :usuVersion") })
+        @NamedQuery(name = "Usuarios,findByUsuClave", query = "SELECT s FROM SisUsuarios s WHERE s.usuario = :usuUsuario and s.usuClave = :clave", hints = @QueryHint(name = "eclipselink.refresh", value = "true")) }
+/*
+ * @NamedQuery(name = "SisUsuarios.findByUsuNombre", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuNombre = :usuNombre"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuApellidos", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuApellidos = :usuApellidos"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuCorreo", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuCorreo = :usuCorreo"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuTelefono", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuTelefono = :usuTelefono"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuCelular", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuCelular = :usuCelular"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuIdioma", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuIdioma = :usuIdioma"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuUsuario", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuUsuario = :usuUsuario"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuClave", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuClave = :usuClave"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuEstado", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuEstado = :usuEstado"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuStatus", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuStatus = :usuStatus"),
+ * 
+ * @NamedQuery(name = "SisUsuarios.findByUsuVersion", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuVersion = :usuVersion") }
+ */)
 public class Usuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -93,9 +118,27 @@ public class Usuarios implements Serializable {
     public Usuarios() {
     }
 
-    
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Usuarios(Long id) {
+        this.id = id;
+    }
+
+    public Usuarios(UsuariosDto usuariosDto) {
+        this.id = usuariosDto.getId();
+        actualizarUsuario(usuariosDto);
+    }
+
+    public void actualizarUsuario(UsuariosDto usuariosDto) {
+        this.nombre = usuariosDto.getNombre();
+        this.apellidos = usuariosDto.getApellidos();
+        this.correo = usuariosDto.getCorreo();
+        this.telefono = usuariosDto.getTelefono();
+        this.celular = usuariosDto.getCelular();
+        this.idioma = usuariosDto.getIdioma();
+        this.foto = usuariosDto.getFoto();
+        this.usuario = usuariosDto.getUsuario();
+        this.clave = usuariosDto.getClave();
+        this.estado = usuariosDto.getEstado();
+        this.status = usuariosDto.getStatus();
     }
 
     public Long getId() {

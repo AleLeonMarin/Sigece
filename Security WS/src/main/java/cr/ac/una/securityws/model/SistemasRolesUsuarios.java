@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.securityws.model;
 
 import jakarta.persistence.Basic;
@@ -19,7 +15,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.io.Serializable;
-import java.util.Objects;
+
 
 /**
  *
@@ -59,6 +55,22 @@ public class SistemasRolesUsuarios implements Serializable {
     private Long version;
 
     public SistemasRolesUsuarios() {
+    }
+
+    public SistemasRolesUsuarios(Long id) {
+        this.id = id;
+    }
+
+    public SistemasRolesUsuarios(SistemasRolesUsuariosDto sistemasRolesUsuariosDto) {
+        this.id = sistemasRolesUsuariosDto.getId();
+        actualizarSistemasRolesUsuarios(sistemasRolesUsuariosDto);
+    }
+
+    public void actualizarSistemasRolesUsuarios(SistemasRolesUsuariosDto sistemasRolesUsuariosDto) {
+        this.nombre = sistemasRolesUsuariosDto.getNombre();
+        this.rolID = new Roles(sistemasRolesUsuariosDto.getRolesDto());
+        this.sisID = new Sistemas(sistemasRolesUsuariosDto.getSistemasDto());
+        this.usuID = new Usuarios(sistemasRolesUsuariosDto.getUsuariosDto());
     }
 
 

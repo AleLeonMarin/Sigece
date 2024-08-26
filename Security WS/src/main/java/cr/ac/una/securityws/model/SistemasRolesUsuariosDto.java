@@ -6,6 +6,7 @@ public class SistemasRolesUsuariosDto implements Serializable{
 
     private Long id;
     private Long version;
+    String nombre;
     private SistemasDto SistemasDto;
     private RolesDto RolesDto;
     private UsuariosDto UsuariosDto;
@@ -22,6 +23,10 @@ public class SistemasRolesUsuariosDto implements Serializable{
 
     public Long getId() {
         return id;
+    }
+
+    public String getNombre() {
+        return nombre;
     }
 
     public Long getVersion() {
@@ -46,6 +51,10 @@ public class SistemasRolesUsuariosDto implements Serializable{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public void setVersion(Long version) {
