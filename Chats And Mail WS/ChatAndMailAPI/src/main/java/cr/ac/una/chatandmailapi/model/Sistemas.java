@@ -34,7 +34,7 @@ import java.util.List;
     @NamedQuery(name = "SisSistemas.findBySisId", query = "SELECT s FROM SisSistemas s WHERE s.sisId = :sisId"),
     @NamedQuery(name = "SisSistemas.findBySisNombre", query = "SELECT s FROM SisSistemas s WHERE s.sisNombre = :sisNombre"),
     @NamedQuery(name = "SisSistemas.findBySisVersion", query = "SELECT s FROM SisSistemas s WHERE s.sisVersion = :sisVersion")})
-public class SisSistemas implements Serializable {
+public class Sistemas implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -53,18 +53,18 @@ public class SisSistemas implements Serializable {
     @Column(name = "SIS_VERSION")
     private BigInteger sisVersion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rolSisId")
-    private List<SisRoles> sisRolesList;
+    private List<Roles> sisRolesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "srsSisId")
-    private List<SisSistemasRolesUsuarios> sisSistemasRolesUsuariosList;
+    private List<SistemasRolesUsuarios> sisSistemasRolesUsuariosList;
 
-    public SisSistemas() {
+    public Sistemas() {
     }
 
-    public SisSistemas(BigDecimal sisId) {
+    public Sistemas(BigDecimal sisId) {
         this.sisId = sisId;
     }
 
-    public SisSistemas(BigDecimal sisId, String sisNombre, BigInteger sisVersion) {
+    public Sistemas(BigDecimal sisId, String sisNombre, BigInteger sisVersion) {
         this.sisId = sisId;
         this.sisNombre = sisNombre;
         this.sisVersion = sisVersion;
@@ -95,20 +95,20 @@ public class SisSistemas implements Serializable {
     }
 
     @XmlTransient
-    public List<SisRoles> getSisRolesList() {
+    public List<Roles> getSisRolesList() {
         return sisRolesList;
     }
 
-    public void setSisRolesList(List<SisRoles> sisRolesList) {
+    public void setSisRolesList(List<Roles> sisRolesList) {
         this.sisRolesList = sisRolesList;
     }
 
     @XmlTransient
-    public List<SisSistemasRolesUsuarios> getSisSistemasRolesUsuariosList() {
+    public List<SistemasRolesUsuarios> getSisSistemasRolesUsuariosList() {
         return sisSistemasRolesUsuariosList;
     }
 
-    public void setSisSistemasRolesUsuariosList(List<SisSistemasRolesUsuarios> sisSistemasRolesUsuariosList) {
+    public void setSisSistemasRolesUsuariosList(List<SistemasRolesUsuarios> sisSistemasRolesUsuariosList) {
         this.sisSistemasRolesUsuariosList = sisSistemasRolesUsuariosList;
     }
 
@@ -122,10 +122,10 @@ public class SisSistemas implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisSistemas)) {
+        if (!(object instanceof Sistemas)) {
             return false;
         }
-        SisSistemas other = (SisSistemas) object;
+        Sistemas other = (Sistemas) object;
         if ((this.sisId == null && other.sisId != null) || (this.sisId != null && !this.sisId.equals(other.sisId))) {
             return false;
         }

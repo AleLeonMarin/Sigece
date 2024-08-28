@@ -44,7 +44,7 @@ import java.util.List;
     @NamedQuery(name = "SisUsuarios.findByUsuEstado", query = "SELECT s FROM SisUsuarios s WHERE s.usuEstado = :usuEstado"),
     @NamedQuery(name = "SisUsuarios.findByUsuStatus", query = "SELECT s FROM SisUsuarios s WHERE s.usuStatus = :usuStatus"),
     @NamedQuery(name = "SisUsuarios.findByUsuVersion", query = "SELECT s FROM SisUsuarios s WHERE s.usuVersion = :usuVersion")})
-public class SisUsuarios implements Serializable {
+public class Usuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -113,22 +113,22 @@ public class SisUsuarios implements Serializable {
     @Column(name = "USU_VERSION")
     private BigInteger usuVersion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chtReceptorId")
-    private List<SisChats> sisChatsList;
+    private List<Chats> sisChatsList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chtEmisorId")
-    private List<SisChats> sisChatsList1;
+    private List<Chats> sisChatsList1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "smsUsuId")
-    private List<SisMensajes> sisMensajesList;
+    private List<Mensajes> sisMensajesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "srsUsuId")
-    private List<SisSistemasRolesUsuarios> sisSistemasRolesUsuariosList;
+    private List<SistemasRolesUsuarios> sisSistemasRolesUsuariosList;
 
-    public SisUsuarios() {
+    public Usuarios() {
     }
 
-    public SisUsuarios(BigDecimal usuId) {
+    public Usuarios(BigDecimal usuId) {
         this.usuId = usuId;
     }
 
-    public SisUsuarios(BigDecimal usuId, String usuNombre, String usuApellidos, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, BigInteger usuVersion) {
+    public Usuarios(BigDecimal usuId, String usuNombre, String usuApellidos, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, BigInteger usuVersion) {
         this.usuId = usuId;
         this.usuNombre = usuNombre;
         this.usuApellidos = usuApellidos;
@@ -249,38 +249,38 @@ public class SisUsuarios implements Serializable {
     }
 
     @XmlTransient
-    public List<SisChats> getSisChatsList() {
+    public List<Chats> getSisChatsList() {
         return sisChatsList;
     }
 
-    public void setSisChatsList(List<SisChats> sisChatsList) {
+    public void setSisChatsList(List<Chats> sisChatsList) {
         this.sisChatsList = sisChatsList;
     }
 
     @XmlTransient
-    public List<SisChats> getSisChatsList1() {
+    public List<Chats> getSisChatsList1() {
         return sisChatsList1;
     }
 
-    public void setSisChatsList1(List<SisChats> sisChatsList1) {
+    public void setSisChatsList1(List<Chats> sisChatsList1) {
         this.sisChatsList1 = sisChatsList1;
     }
 
     @XmlTransient
-    public List<SisMensajes> getSisMensajesList() {
+    public List<Mensajes> getSisMensajesList() {
         return sisMensajesList;
     }
 
-    public void setSisMensajesList(List<SisMensajes> sisMensajesList) {
+    public void setSisMensajesList(List<Mensajes> sisMensajesList) {
         this.sisMensajesList = sisMensajesList;
     }
 
     @XmlTransient
-    public List<SisSistemasRolesUsuarios> getSisSistemasRolesUsuariosList() {
+    public List<SistemasRolesUsuarios> getSisSistemasRolesUsuariosList() {
         return sisSistemasRolesUsuariosList;
     }
 
-    public void setSisSistemasRolesUsuariosList(List<SisSistemasRolesUsuarios> sisSistemasRolesUsuariosList) {
+    public void setSisSistemasRolesUsuariosList(List<SistemasRolesUsuarios> sisSistemasRolesUsuariosList) {
         this.sisSistemasRolesUsuariosList = sisSistemasRolesUsuariosList;
     }
 
@@ -294,10 +294,10 @@ public class SisUsuarios implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisUsuarios)) {
+        if (!(object instanceof Usuarios)) {
             return false;
         }
-        SisUsuarios other = (SisUsuarios) object;
+        Usuarios other = (Usuarios) object;
         if ((this.usuId == null && other.usuId != null) || (this.usuId != null && !this.usuId.equals(other.usuId))) {
             return false;
         }

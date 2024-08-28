@@ -38,7 +38,7 @@ import java.util.List;
     @NamedQuery(name = "SisVariables.findByVarNombre", query = "SELECT s FROM SisVariables s WHERE s.varNombre = :varNombre"),
     @NamedQuery(name = "SisVariables.findByTipo", query = "SELECT s FROM SisVariables s WHERE s.tipo = :tipo"),
     @NamedQuery(name = "SisVariables.findByVarVersion", query = "SELECT s FROM SisVariables s WHERE s.varVersion = :varVersion")})
-public class SisVariables implements Serializable {
+public class Variables implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -66,20 +66,20 @@ public class SisVariables implements Serializable {
     private BigInteger varVersion;
     @JoinColumn(name = "VAR_NOT_ID", referencedColumnName = "NOT_ID")
     @ManyToOne(optional = false)
-    private SisNotificacion varNotId;
+    private Notificacion varNotId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vconVarId")
-    private List<SisVariablesCondicionales> sisVariablesCondicionalesList;
+    private List<VariablesCondicionales> sisVariablesCondicionalesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mediaVarId")
-    private List<SisVariablesMultimedia> sisVariablesMultimediaList;
+    private List<VariablesMultimedia> sisVariablesMultimediaList;
 
-    public SisVariables() {
+    public Variables() {
     }
 
-    public SisVariables(BigDecimal varId) {
+    public Variables(BigDecimal varId) {
         this.varId = varId;
     }
 
-    public SisVariables(BigDecimal varId, String varNombre, String tipo, BigInteger varVersion) {
+    public Variables(BigDecimal varId, String varNombre, String tipo, BigInteger varVersion) {
         this.varId = varId;
         this.varNombre = varNombre;
         this.tipo = tipo;
@@ -126,29 +126,29 @@ public class SisVariables implements Serializable {
         this.varVersion = varVersion;
     }
 
-    public SisNotificacion getVarNotId() {
+    public Notificacion getVarNotId() {
         return varNotId;
     }
 
-    public void setVarNotId(SisNotificacion varNotId) {
+    public void setVarNotId(Notificacion varNotId) {
         this.varNotId = varNotId;
     }
 
     @XmlTransient
-    public List<SisVariablesCondicionales> getSisVariablesCondicionalesList() {
+    public List<VariablesCondicionales> getSisVariablesCondicionalesList() {
         return sisVariablesCondicionalesList;
     }
 
-    public void setSisVariablesCondicionalesList(List<SisVariablesCondicionales> sisVariablesCondicionalesList) {
+    public void setSisVariablesCondicionalesList(List<VariablesCondicionales> sisVariablesCondicionalesList) {
         this.sisVariablesCondicionalesList = sisVariablesCondicionalesList;
     }
 
     @XmlTransient
-    public List<SisVariablesMultimedia> getSisVariablesMultimediaList() {
+    public List<VariablesMultimedia> getSisVariablesMultimediaList() {
         return sisVariablesMultimediaList;
     }
 
-    public void setSisVariablesMultimediaList(List<SisVariablesMultimedia> sisVariablesMultimediaList) {
+    public void setSisVariablesMultimediaList(List<VariablesMultimedia> sisVariablesMultimediaList) {
         this.sisVariablesMultimediaList = sisVariablesMultimediaList;
     }
 
@@ -162,10 +162,10 @@ public class SisVariables implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisVariables)) {
+        if (!(object instanceof Variables)) {
             return false;
         }
-        SisVariables other = (SisVariables) object;
+        Variables other = (Variables) object;
         if ((this.varId == null && other.varId != null) || (this.varId != null && !this.varId.equals(other.varId))) {
             return false;
         }
