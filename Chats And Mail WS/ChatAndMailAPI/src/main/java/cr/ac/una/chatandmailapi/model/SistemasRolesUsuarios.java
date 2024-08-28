@@ -32,7 +32,7 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisSistemasRolesUsuarios.findBySrsId", query = "SELECT s FROM SisSistemasRolesUsuarios s WHERE s.srsId = :srsId"),
     @NamedQuery(name = "SisSistemasRolesUsuarios.findBySrsNombre", query = "SELECT s FROM SisSistemasRolesUsuarios s WHERE s.srsNombre = :srsNombre"),
     @NamedQuery(name = "SisSistemasRolesUsuarios.findBySrsVersion", query = "SELECT s FROM SisSistemasRolesUsuarios s WHERE s.srsVersion = :srsVersion")})
-public class SisSistemasRolesUsuarios implements Serializable {
+public class SistemasRolesUsuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -52,22 +52,22 @@ public class SisSistemasRolesUsuarios implements Serializable {
     private BigInteger srsVersion;
     @JoinColumn(name = "SRS_ROL_ID", referencedColumnName = "ROL_ID")
     @ManyToOne(optional = false)
-    private SisRoles srsRolId;
+    private Roles srsRolId;
     @JoinColumn(name = "SRS_SIS_ID", referencedColumnName = "SIS_ID")
     @ManyToOne(optional = false)
-    private SisSistemas srsSisId;
+    private Sistemas srsSisId;
     @JoinColumn(name = "SRS_USU_ID", referencedColumnName = "USU_ID")
     @ManyToOne(optional = false)
-    private SisUsuarios srsUsuId;
+    private Usuarios srsUsuId;
 
-    public SisSistemasRolesUsuarios() {
+    public SistemasRolesUsuarios() {
     }
 
-    public SisSistemasRolesUsuarios(BigDecimal srsId) {
+    public SistemasRolesUsuarios(BigDecimal srsId) {
         this.srsId = srsId;
     }
 
-    public SisSistemasRolesUsuarios(BigDecimal srsId, String srsNombre, BigInteger srsVersion) {
+    public SistemasRolesUsuarios(BigDecimal srsId, String srsNombre, BigInteger srsVersion) {
         this.srsId = srsId;
         this.srsNombre = srsNombre;
         this.srsVersion = srsVersion;
@@ -97,27 +97,27 @@ public class SisSistemasRolesUsuarios implements Serializable {
         this.srsVersion = srsVersion;
     }
 
-    public SisRoles getSrsRolId() {
+    public Roles getSrsRolId() {
         return srsRolId;
     }
 
-    public void setSrsRolId(SisRoles srsRolId) {
+    public void setSrsRolId(Roles srsRolId) {
         this.srsRolId = srsRolId;
     }
 
-    public SisSistemas getSrsSisId() {
+    public Sistemas getSrsSisId() {
         return srsSisId;
     }
 
-    public void setSrsSisId(SisSistemas srsSisId) {
+    public void setSrsSisId(Sistemas srsSisId) {
         this.srsSisId = srsSisId;
     }
 
-    public SisUsuarios getSrsUsuId() {
+    public Usuarios getSrsUsuId() {
         return srsUsuId;
     }
 
-    public void setSrsUsuId(SisUsuarios srsUsuId) {
+    public void setSrsUsuId(Usuarios srsUsuId) {
         this.srsUsuId = srsUsuId;
     }
 
@@ -131,10 +131,10 @@ public class SisSistemasRolesUsuarios implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisSistemasRolesUsuarios)) {
+        if (!(object instanceof SistemasRolesUsuarios)) {
             return false;
         }
-        SisSistemasRolesUsuarios other = (SisSistemasRolesUsuarios) object;
+        SistemasRolesUsuarios other = (SistemasRolesUsuarios) object;
         if ((this.srsId == null && other.srsId != null) || (this.srsId != null && !this.srsId.equals(other.srsId))) {
             return false;
         }

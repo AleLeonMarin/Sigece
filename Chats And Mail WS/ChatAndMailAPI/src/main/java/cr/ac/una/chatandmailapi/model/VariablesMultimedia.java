@@ -33,7 +33,7 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisVariablesMultimedia.findByMediaId", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaId = :mediaId"),
     @NamedQuery(name = "SisVariablesMultimedia.findByMediaTipo", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaTipo = :mediaTipo"),
     @NamedQuery(name = "SisVariablesMultimedia.findByMediaVersion", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaVersion = :mediaVersion")})
-public class SisVariablesMultimedia implements Serializable {
+public class VariablesMultimedia implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -58,16 +58,16 @@ public class SisVariablesMultimedia implements Serializable {
     private BigInteger mediaVersion;
     @JoinColumn(name = "MEDIA_VAR_ID", referencedColumnName = "VAR_ID")
     @ManyToOne(optional = false)
-    private SisVariables mediaVarId;
+    private Variables mediaVarId;
 
-    public SisVariablesMultimedia() {
+    public VariablesMultimedia() {
     }
 
-    public SisVariablesMultimedia(BigDecimal mediaId) {
+    public VariablesMultimedia(BigDecimal mediaId) {
         this.mediaId = mediaId;
     }
 
-    public SisVariablesMultimedia(BigDecimal mediaId, Serializable mediaUrl, String mediaTipo, BigInteger mediaVersion) {
+    public VariablesMultimedia(BigDecimal mediaId, Serializable mediaUrl, String mediaTipo, BigInteger mediaVersion) {
         this.mediaId = mediaId;
         this.mediaUrl = mediaUrl;
         this.mediaTipo = mediaTipo;
@@ -106,11 +106,11 @@ public class SisVariablesMultimedia implements Serializable {
         this.mediaVersion = mediaVersion;
     }
 
-    public SisVariables getMediaVarId() {
+    public Variables getMediaVarId() {
         return mediaVarId;
     }
 
-    public void setMediaVarId(SisVariables mediaVarId) {
+    public void setMediaVarId(Variables mediaVarId) {
         this.mediaVarId = mediaVarId;
     }
 
@@ -124,10 +124,10 @@ public class SisVariablesMultimedia implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisVariablesMultimedia)) {
+        if (!(object instanceof VariablesMultimedia)) {
             return false;
         }
-        SisVariablesMultimedia other = (SisVariablesMultimedia) object;
+        VariablesMultimedia other = (VariablesMultimedia) object;
         if ((this.mediaId == null && other.mediaId != null) || (this.mediaId != null && !this.mediaId.equals(other.mediaId))) {
             return false;
         }

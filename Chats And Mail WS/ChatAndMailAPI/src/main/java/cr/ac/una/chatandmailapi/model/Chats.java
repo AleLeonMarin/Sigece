@@ -38,7 +38,7 @@ import java.util.List;
     @NamedQuery(name = "SisChats.findByChtId", query = "SELECT s FROM SisChats s WHERE s.chtId = :chtId"),
     @NamedQuery(name = "SisChats.findByChtFecha", query = "SELECT s FROM SisChats s WHERE s.chtFecha = :chtFecha"),
     @NamedQuery(name = "SisChats.findByChtVersion", query = "SELECT s FROM SisChats s WHERE s.chtVersion = :chtVersion")})
-public class SisChats implements Serializable {
+public class Chats implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -46,7 +46,7 @@ public class SisChats implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "CHT_ID")
-    private BigDecimal chtId;
+    private Long chtId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "CHT_FECHA")
@@ -55,34 +55,34 @@ public class SisChats implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "CHT_VERSION")
-    private BigInteger chtVersion;
+    private Long chtVersion;
     @JoinColumn(name = "CHT_RECEPTOR_ID", referencedColumnName = "USU_ID")
     @ManyToOne(optional = false)
-    private SisUsuarios chtReceptorId;
+    private Usuarios chtReceptorId;
     @JoinColumn(name = "CHT_EMISOR_ID", referencedColumnName = "USU_ID")
     @ManyToOne(optional = false)
-    private SisUsuarios chtEmisorId;
+    private Usuarios chtEmisorId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "smsChatId")
-    private List<SisMensajes> sisMensajesList;
+    private List<Mensajes> sisMensajesList;
 
-    public SisChats() {
+    public Chats() {
     }
 
-    public SisChats(BigDecimal chtId) {
+    public Chats(Long chtId) {
         this.chtId = chtId;
     }
 
-    public SisChats(BigDecimal chtId, Date chtFecha, BigInteger chtVersion) {
+    public Chats(Long chtId, Date chtFecha, Long chtVersion) {
         this.chtId = chtId;
         this.chtFecha = chtFecha;
         this.chtVersion = chtVersion;
     }
 
-    public BigDecimal getChtId() {
+    public Long getChtId() {
         return chtId;
     }
 
-    public void setChtId(BigDecimal chtId) {
+    public void setChtId(Long chtId) {
         this.chtId = chtId;
     }
 
@@ -94,36 +94,36 @@ public class SisChats implements Serializable {
         this.chtFecha = chtFecha;
     }
 
-    public BigInteger getChtVersion() {
+    public Long getChtVersion() {
         return chtVersion;
     }
 
-    public void setChtVersion(BigInteger chtVersion) {
+    public void setChtVersion(Long chtVersion) {
         this.chtVersion = chtVersion;
     }
 
-    public SisUsuarios getChtReceptorId() {
+    public Usuarios getChtReceptorId() {
         return chtReceptorId;
     }
 
-    public void setChtReceptorId(SisUsuarios chtReceptorId) {
+    public void setChtReceptorId(Usuarios chtReceptorId) {
         this.chtReceptorId = chtReceptorId;
     }
 
-    public SisUsuarios getChtEmisorId() {
+    public Usuarios getChtEmisorId() {
         return chtEmisorId;
     }
 
-    public void setChtEmisorId(SisUsuarios chtEmisorId) {
+    public void setChtEmisorId(Usuarios chtEmisorId) {
         this.chtEmisorId = chtEmisorId;
     }
 
     @XmlTransient
-    public List<SisMensajes> getSisMensajesList() {
+    public List<Mensajes> getSisMensajesList() {
         return sisMensajesList;
     }
 
-    public void setSisMensajesList(List<SisMensajes> sisMensajesList) {
+    public void setSisMensajesList(List<Mensajes> sisMensajesList) {
         this.sisMensajesList = sisMensajesList;
     }
 
@@ -137,10 +137,10 @@ public class SisChats implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisChats)) {
+        if (!(object instanceof Chats)) {
             return false;
         }
-        SisChats other = (SisChats) object;
+        Chats other = (Chats) object;
         if ((this.chtId == null && other.chtId != null) || (this.chtId != null && !this.chtId.equals(other.chtId))) {
             return false;
         }

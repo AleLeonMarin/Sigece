@@ -35,7 +35,7 @@ import java.util.List;
     @NamedQuery(name = "SisNotificacion.findByNotId", query = "SELECT s FROM SisNotificacion s WHERE s.notId = :notId"),
     @NamedQuery(name = "SisNotificacion.findByNotNombre", query = "SELECT s FROM SisNotificacion s WHERE s.notNombre = :notNombre"),
     @NamedQuery(name = "SisNotificacion.findByNotVersion", query = "SELECT s FROM SisNotificacion s WHERE s.notVersion = :notVersion")})
-public class SisNotificacion implements Serializable {
+public class Notificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -43,7 +43,7 @@ public class SisNotificacion implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "NOT_ID")
-    private BigDecimal notId;
+    private Long notId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
@@ -57,31 +57,31 @@ public class SisNotificacion implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "NOT_VERSION")
-    private BigInteger notVersion;
+    private Long notVersion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "varNotId")
-    private List<SisVariables> sisVariablesList;
+    private List<Variables> sisVariablesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "corNotId")
-    private List<SisCorreos> sisCorreosList;
+    private List<Correos> sisCorreosList;
 
-    public SisNotificacion() {
+    public Notificacion() {
     }
 
-    public SisNotificacion(BigDecimal notId) {
+    public Notificacion(Long notId) {
         this.notId = notId;
     }
 
-    public SisNotificacion(BigDecimal notId, String notNombre, String notPlantilla, BigInteger notVersion) {
+    public Notificacion(Long notId, String notNombre, String notPlantilla, Long notVersion) {
         this.notId = notId;
         this.notNombre = notNombre;
         this.notPlantilla = notPlantilla;
         this.notVersion = notVersion;
     }
 
-    public BigDecimal getNotId() {
+    public Long getNotId() {
         return notId;
     }
 
-    public void setNotId(BigDecimal notId) {
+    public void setNotId(Long notId) {
         this.notId = notId;
     }
 
@@ -101,29 +101,29 @@ public class SisNotificacion implements Serializable {
         this.notPlantilla = notPlantilla;
     }
 
-    public BigInteger getNotVersion() {
+    public Long getNotVersion() {
         return notVersion;
     }
 
-    public void setNotVersion(BigInteger notVersion) {
+    public void setNotVersion(Long notVersion) {
         this.notVersion = notVersion;
     }
 
     @XmlTransient
-    public List<SisVariables> getSisVariablesList() {
+    public List<Variables> getSisVariablesList() {
         return sisVariablesList;
     }
 
-    public void setSisVariablesList(List<SisVariables> sisVariablesList) {
+    public void setSisVariablesList(List<Variables> sisVariablesList) {
         this.sisVariablesList = sisVariablesList;
     }
 
     @XmlTransient
-    public List<SisCorreos> getSisCorreosList() {
+    public List<Correos> getSisCorreosList() {
         return sisCorreosList;
     }
 
-    public void setSisCorreosList(List<SisCorreos> sisCorreosList) {
+    public void setSisCorreosList(List<Correos> sisCorreosList) {
         this.sisCorreosList = sisCorreosList;
     }
 
@@ -137,10 +137,10 @@ public class SisNotificacion implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisNotificacion)) {
+        if (!(object instanceof Notificacion)) {
             return false;
         }
-        SisNotificacion other = (SisNotificacion) object;
+        Notificacion other = (Notificacion) object;
         if ((this.notId == null && other.notId != null) || (this.notId != null && !this.notId.equals(other.notId))) {
             return false;
         }

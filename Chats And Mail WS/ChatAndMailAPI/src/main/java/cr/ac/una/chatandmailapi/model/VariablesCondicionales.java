@@ -33,7 +33,7 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisVariablesCondicionales.findByVconId", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vconId = :vconId"),
     @NamedQuery(name = "SisVariablesCondicionales.findByVcondValor", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vcondValor = :vcondValor"),
     @NamedQuery(name = "SisVariablesCondicionales.findByVconVersion", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vconVersion = :vconVersion")})
-public class SisVariablesCondicionales implements Serializable {
+public class VariablesCondicionales implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -56,16 +56,16 @@ public class SisVariablesCondicionales implements Serializable {
     private BigInteger vconVersion;
     @JoinColumn(name = "VCON_VAR_ID", referencedColumnName = "VAR_ID")
     @ManyToOne(optional = false)
-    private SisVariables vconVarId;
+    private Variables vconVarId;
 
-    public SisVariablesCondicionales() {
+    public VariablesCondicionales() {
     }
 
-    public SisVariablesCondicionales(BigDecimal vconId) {
+    public VariablesCondicionales(BigDecimal vconId) {
         this.vconId = vconId;
     }
 
-    public SisVariablesCondicionales(BigDecimal vconId, String vcondValor, BigInteger vconVersion) {
+    public VariablesCondicionales(BigDecimal vconId, String vcondValor, BigInteger vconVersion) {
         this.vconId = vconId;
         this.vcondValor = vcondValor;
         this.vconVersion = vconVersion;
@@ -103,11 +103,11 @@ public class SisVariablesCondicionales implements Serializable {
         this.vconVersion = vconVersion;
     }
 
-    public SisVariables getVconVarId() {
+    public Variables getVconVarId() {
         return vconVarId;
     }
 
-    public void setVconVarId(SisVariables vconVarId) {
+    public void setVconVarId(Variables vconVarId) {
         this.vconVarId = vconVarId;
     }
 
@@ -121,10 +121,10 @@ public class SisVariablesCondicionales implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisVariablesCondicionales)) {
+        if (!(object instanceof VariablesCondicionales)) {
             return false;
         }
-        SisVariablesCondicionales other = (SisVariablesCondicionales) object;
+        VariablesCondicionales other = (VariablesCondicionales) object;
         if ((this.vconId == null && other.vconId != null) || (this.vconId != null && !this.vconId.equals(other.vconId))) {
             return false;
         }

@@ -35,7 +35,7 @@ import java.util.Date;
     @NamedQuery(name = "SisMensajes.findBySmsId", query = "SELECT s FROM SisMensajes s WHERE s.smsId = :smsId"),
     @NamedQuery(name = "SisMensajes.findBySmsTiempo", query = "SELECT s FROM SisMensajes s WHERE s.smsTiempo = :smsTiempo"),
     @NamedQuery(name = "SisMensajes.findBySmsVersion", query = "SELECT s FROM SisMensajes s WHERE s.smsVersion = :smsVersion")})
-public class SisMensajes implements Serializable {
+public class Mensajes implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -43,7 +43,7 @@ public class SisMensajes implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "SMS_ID")
-    private BigDecimal smsId;
+    private Long smsId;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -57,33 +57,33 @@ public class SisMensajes implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "SMS_VERSION")
-    private BigInteger smsVersion;
+    private Long smsVersion;
     @JoinColumn(name = "SMS_CHAT_ID", referencedColumnName = "CHT_ID")
     @ManyToOne(optional = false)
-    private SisChats smsChatId;
+    private Chats smsChatId;
     @JoinColumn(name = "SMS_USU_ID", referencedColumnName = "USU_ID")
     @ManyToOne(optional = false)
-    private SisUsuarios smsUsuId;
+    private Usuarios smsUsuId;
 
-    public SisMensajes() {
+    public Mensajes() {
     }
 
-    public SisMensajes(BigDecimal smsId) {
+    public Mensajes(Long smsId) {
         this.smsId = smsId;
     }
 
-    public SisMensajes(BigDecimal smsId, String smsTexto, Date smsTiempo, BigInteger smsVersion) {
+    public Mensajes(Long smsId, String smsTexto, Date smsTiempo, Long smsVersion) {
         this.smsId = smsId;
         this.smsTexto = smsTexto;
         this.smsTiempo = smsTiempo;
         this.smsVersion = smsVersion;
     }
 
-    public BigDecimal getSmsId() {
+    public Long getSmsId() {
         return smsId;
     }
 
-    public void setSmsId(BigDecimal smsId) {
+    public void setSmsId(Long smsId) {
         this.smsId = smsId;
     }
 
@@ -103,27 +103,27 @@ public class SisMensajes implements Serializable {
         this.smsTiempo = smsTiempo;
     }
 
-    public BigInteger getSmsVersion() {
+    public Long getSmsVersion() {
         return smsVersion;
     }
 
-    public void setSmsVersion(BigInteger smsVersion) {
+    public void setSmsVersion(Long smsVersion) {
         this.smsVersion = smsVersion;
     }
 
-    public SisChats getSmsChatId() {
+    public Chats getSmsChatId() {
         return smsChatId;
     }
 
-    public void setSmsChatId(SisChats smsChatId) {
+    public void setSmsChatId(Chats smsChatId) {
         this.smsChatId = smsChatId;
     }
 
-    public SisUsuarios getSmsUsuId() {
+    public Usuarios getSmsUsuId() {
         return smsUsuId;
     }
 
-    public void setSmsUsuId(SisUsuarios smsUsuId) {
+    public void setSmsUsuId(Usuarios smsUsuId) {
         this.smsUsuId = smsUsuId;
     }
 
@@ -137,10 +137,10 @@ public class SisMensajes implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisMensajes)) {
+        if (!(object instanceof Mensajes)) {
             return false;
         }
-        SisMensajes other = (SisMensajes) object;
+        Mensajes other = (Mensajes) object;
         if ((this.smsId == null && other.smsId != null) || (this.smsId != null && !this.smsId.equals(other.smsId))) {
             return false;
         }

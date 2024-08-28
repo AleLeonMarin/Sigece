@@ -39,7 +39,7 @@ import java.util.Date;
     @NamedQuery(name = "SisCorreos.findByCorEstado", query = "SELECT s FROM SisCorreos s WHERE s.corEstado = :corEstado"),
     @NamedQuery(name = "SisCorreos.findByCorFecha", query = "SELECT s FROM SisCorreos s WHERE s.corFecha = :corFecha"),
     @NamedQuery(name = "SisCorreos.findByCorVersion", query = "SELECT s FROM SisCorreos s WHERE s.corVersion = :corVersion")})
-public class SisCorreos implements Serializable {
+public class Correos implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -47,7 +47,7 @@ public class SisCorreos implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "COR_ID")
-    private BigDecimal corId;
+    private Long corId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
@@ -76,19 +76,19 @@ public class SisCorreos implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "COR_VERSION")
-    private BigInteger corVersion;
+    private Long corVersion;
     @JoinColumn(name = "COR_NOT_ID", referencedColumnName = "NOT_ID")
     @ManyToOne(optional = false)
-    private SisNotificacion corNotId;
+    private Notificacion corNotId;
 
-    public SisCorreos() {
+    public Correos() {
     }
 
-    public SisCorreos(BigDecimal corId) {
+    public Correos(Long corId) {
         this.corId = corId;
     }
 
-    public SisCorreos(BigDecimal corId, String corAsunto, String corDestinatario, String corPlantilla, String corEstado, Date corFecha, BigInteger corVersion) {
+    public Correos(Long corId, String corAsunto, String corDestinatario, String corPlantilla, String corEstado, Date corFecha, Long corVersion) {
         this.corId = corId;
         this.corAsunto = corAsunto;
         this.corDestinatario = corDestinatario;
@@ -98,11 +98,11 @@ public class SisCorreos implements Serializable {
         this.corVersion = corVersion;
     }
 
-    public BigDecimal getCorId() {
+    public Long getCorId() {
         return corId;
     }
 
-    public void setCorId(BigDecimal corId) {
+    public void setCorId (Long corId) {
         this.corId = corId;
     }
 
@@ -146,19 +146,19 @@ public class SisCorreos implements Serializable {
         this.corFecha = corFecha;
     }
 
-    public BigInteger getCorVersion() {
+    public Long getCorVersion() {
         return corVersion;
     }
 
-    public void setCorVersion(BigInteger corVersion) {
+    public void setCorVersion(Long corVersion) {
         this.corVersion = corVersion;
     }
 
-    public SisNotificacion getCorNotId() {
+    public Notificacion getCorNotId() {
         return corNotId;
     }
 
-    public void setCorNotId(SisNotificacion corNotId) {
+    public void setCorNotId(Notificacion corNotId) {
         this.corNotId = corNotId;
     }
 
@@ -172,10 +172,10 @@ public class SisCorreos implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisCorreos)) {
+        if (!(object instanceof Correos)) {
             return false;
         }
-        SisCorreos other = (SisCorreos) object;
+        Correos other = (Correos) object;
         if ((this.corId == null && other.corId != null) || (this.corId != null && !this.corId.equals(other.corId))) {
             return false;
         }
