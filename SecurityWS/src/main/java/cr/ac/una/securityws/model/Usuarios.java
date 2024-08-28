@@ -1,36 +1,38 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package cr.ac.una.securityws.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.QueryHint;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author aleon
  */
-
 @Entity
-@Table(name = "SIS_USUARIOS")
+@Table(name = "SIS_USUARIOS" , schema = "SigeceUNA")
 @NamedQueries({
-        @NamedQuery(name = "SisUsuarios.findAll", query = "SELECT s FROM SisUsuarios s"),
-        @NamedQuery(name = "SisUsuarios.findByUsuId", query = "SELECT s FROM SisUsuarios s WHERE s.usuId = :usuId"),
-        @NamedQuery(name = "Usuarios,findByUsuClave", query = "SELECT s FROM SisUsuarios s WHERE s.usuario = :usuUsuario and s.usuClave = :clave", hints = @QueryHint(name = "eclipselink.refresh", value = "true")) }
+        @NamedQuery(name = "Usuarios.findAll", query = "SELECT s FROM Usuarios s"),
+        @NamedQuery(name = "Usuarios.findByUsuClave", query = "SELECT s FROM Usuarios s WHERE s.usuario = :usuario AND s.clave = :clave"),
 /*
+ * @NamedQuery(name = "SisUsuarios.findByUsuId", query =
+ * "SELECT s FROM SisUsuarios s WHERE s.usuId = :id"),
+ * 
  * @NamedQuery(name = "SisUsuarios.findByUsuNombre", query =
  * "SELECT s FROM SisUsuarios s WHERE s.usuNombre = :usuNombre"),
  * 
@@ -62,58 +64,71 @@ import java.util.List;
  * "SELECT s FROM SisUsuarios s WHERE s.usuStatus = :usuStatus"),
  * 
  * @NamedQuery(name = "SisUsuarios.findByUsuVersion", query =
- * "SELECT s FROM SisUsuarios s WHERE s.usuVersion = :usuVersion") }
- */)
+ * "SELECT s FROM SisUsuarios s WHERE s.usuVersion = :usuVersion")
+ */ })
 public class Usuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?) @Min(value=?)//if you know range of your decimal fields
     // consider using these annotations to enforce field validation
     @Id
-    @SequenceGenerator(name = "SIS_USUARIOS_ID_GENERATOR", sequenceName = "sigeceuna.SIS_USUARIOS_SEQ01", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SIS_USUARIOS_ID_GENERATOR")
     @Basic(optional = false)
+    @SequenceGenerator(name = "GENERATOR_USUARIOS_SEQUENCE", sequenceName = "SIS_USUARIOS_SEQ_01", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SIS_USUARIOS_SEQ_01")
     @Column(name = "USU_ID")
     private Long id;
+
     @Basic(optional = false)
     @Column(name = "USU_NOMBRE")
     private String nombre;
+
     @Basic(optional = false)
     @Column(name = "USU_APELLIDOS")
     private String apellidos;
+
     @Basic(optional = false)
     @Column(name = "USU_CORREO")
     private String correo;
+
     @Basic(optional = false)
     @Column(name = "USU_TELEFONO")
     private String telefono;
+
     @Basic(optional = false)
     @Column(name = "USU_CELULAR")
     private String celular;
+
     @Basic(optional = false)
     @Column(name = "USU_IDIOMA")
     private String idioma;
+
     @Basic(optional = false)
     @Lob
     @Column(name = "USU_FOTO")
     private Serializable foto;
+
     @Basic(optional = false)
     @Column(name = "USU_USUARIO")
     private String usuario;
+
     @Basic(optional = false)
     @Column(name = "USU_CLAVE")
     private String clave;
+
     @Basic(optional = false)
     @Column(name = "USU_ESTADO")
     private String estado;
+
     @Basic(optional = false)
     @Column(name = "USU_STATUS")
     private String status;
+
     @Version
     @Column(name = "USU_VERSION")
     private Long version;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "srsUsuId")
-    private List<SistemasRolesUsuarios> sisRolesUsuarios = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "usuarios")
+    private List<Roles> roles;
 
     public Usuarios() {
     }
@@ -124,10 +139,10 @@ public class Usuarios implements Serializable {
 
     public Usuarios(UsuariosDto usuariosDto) {
         this.id = usuariosDto.getId();
-        actualizarUsuario(usuariosDto);
+        actualizar(usuariosDto);
     }
 
-    public void actualizarUsuario(UsuariosDto usuariosDto) {
+    public void actualizar(UsuariosDto usuariosDto) {
         this.nombre = usuariosDto.getNombre();
         this.apellidos = usuariosDto.getApellidos();
         this.correo = usuariosDto.getCorreo();
@@ -193,8 +208,8 @@ public class Usuarios implements Serializable {
         return version;
     }
 
-    public List<SistemasRolesUsuarios> getSisRolesUsuarios() {
-        return sisRolesUsuarios;
+    public List<Roles> getRoles() {
+        return roles;
     }
 
     public void setId(Long id) {
@@ -249,8 +264,8 @@ public class Usuarios implements Serializable {
         this.version = version;
     }
 
-    public void setSisRolesUsuarios(List<SistemasRolesUsuarios> sisRolesUsuarios) {
-        this.sisRolesUsuarios = sisRolesUsuarios;
+    public void setRoles(List<Roles> roles) {
+        this.roles = roles;
     }
 
     @Override
@@ -262,7 +277,7 @@ public class Usuarios implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Usuarios)) {
             return false;
         }
@@ -270,14 +285,12 @@ public class Usuarios implements Serializable {
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
-
         return true;
     }
 
     @Override
-
     public String toString() {
-        return "cr.ac.una.securityws.model.Usuarios[ usuId=" + id + " ]";
+        return "cr.ac.una.securityws.model.SisUsuarios[ id=" + id + " ]";
     }
 
 }

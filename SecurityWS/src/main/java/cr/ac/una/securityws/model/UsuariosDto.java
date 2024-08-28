@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsuariosDto implements Serializable {
-
+public class UsuariosDto implements Serializable{
+    
     private Long id;
     private String nombre;
     private String apellidos;
@@ -20,12 +20,12 @@ public class UsuariosDto implements Serializable {
     private String status;
     private Long version;
     private Boolean modificado;
-    List<SistemasRolesUsuariosDto> sistemasRolesUsuariosList;
+    List<RolesDto> rolesDto;
 
     public UsuariosDto() {
 
         this.modificado = false;
-        sistemasRolesUsuariosList = new ArrayList<>();
+        rolesDto = new ArrayList<>();
     }
 
     public UsuariosDto(Usuarios usuarios) {
@@ -101,8 +101,8 @@ public class UsuariosDto implements Serializable {
         return modificado;
     }
 
-    public List<SistemasRolesUsuariosDto> getSistemasRolesUsuariosList() {
-        return sistemasRolesUsuariosList;
+    public List<RolesDto> getRolesDto() {
+        return rolesDto;
     }
 
     public void setId(Long id) {
@@ -161,8 +161,10 @@ public class UsuariosDto implements Serializable {
         this.modificado = modificado;
     }
 
-    public void setSistemasRolesUsuariosList(List<SistemasRolesUsuariosDto> sistemasRolesUsuariosList) {
-        this.sistemasRolesUsuariosList = sistemasRolesUsuariosList;
+    public void setRolesDto(List<RolesDto> rolesDto) {
+        this.rolesDto = rolesDto;
     }
+
+    
 
 }

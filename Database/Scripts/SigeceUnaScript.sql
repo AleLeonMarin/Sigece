@@ -72,14 +72,6 @@ CREATE SEQUENCE sis_sistemas_seq01
  NOCACHE
 ;
 
--- CREATE SEQUENCE sis_sistemas_roles_usuarios_seq01
-CREATE SEQUENCE sis_sistemas_roles_usuarios_seq01
- INCREMENT BY 1
- START WITH 1
- NOMAXVALUE
- NOMINVALUE
- NOCACHE
-;
 
 -- CREATE SEQUENCE sis_variables_seq01
 CREATE SEQUENCE sis_variables_seq01
@@ -161,17 +153,10 @@ ALTER TABLE sis_usuarios ADD CONSTRAINT sis_usuarios_pk PRIMARY KEY (usu_id);
 -- CREATE TABLE sis_sistemas_roles_usuarios -------------------------------
 
 CREATE TABLE sis_sistemas_roles_usuarios(
-    srs_id NUMBER NOT NULL,
-    srs_nombre VARCHAR2(300) NOT NULL,
-    srs_sis_id NUMBER NOT NULL,
     srs_rol_id NUMBER NOT NULL,
     srs_usu_id NUMBER NOT NULL,
-    srs_version NUMBER DEFAULT 1 NOT NULL
 );
 
-CREATE UNIQUE INDEX sis_sistemas_roles_usuarios_ind01 ON sis_sistemas_roles_usuarios (srs_nombre);
-
-ALTER TABLE sis_sistemas_roles_usuarios ADD CONSTRAINT sis_sistemas_roles_usuarios_pk PRIMARY KEY (srs_id);
 
 -- CREATE TABLE sis_mensajes -------------------------------
 
@@ -179,7 +164,7 @@ CREATE TABLE sis_mensajes(
     sms_id NUMBER NOT NULL,
     sms_texto CLOB NOT NULL,
     sms_tiempo DATE NOT NULL,
-    sms_usu_id NUMBER NOT NULL,
+    sms_usu_id_emisor NUMBER NOT NULL,
     sms_chat_id NUMBER NOT NULL,
     sms_version NUMBER DEFAULT 1 NOT NULL
 );
@@ -270,7 +255,7 @@ CREATE TABLE sis_correos(
     cor_id NUMBER NOT NULL,
     cor_asunto VARCHAR2(300) NOT NULL,
     cor_destinatario VARCHAR2(300) NOT NULL,
-    cor_plantilla CLOB NOT NULL,
+    cor_resultado CLOB NOT NULL,
     cor_estado VARCHAR2(1) DEFAULT 'P' NOT NULL
         CONSTRAINT sis_correos_ck01 CHECK (cor_estado in ('E','P')),
     cor_fecha DATE NOT NULL,
@@ -333,22 +318,6 @@ BEGIN
     RAISE_APPLICATION_ERROR(-20012, 'No se puede actualizar el campo usu_id en la tabla sis_usuarios ya que utiliza una secuencia.');
 END;
 
--- Triggers para la tabla sis_sistemas_roles_usuarios -------------------------------
-
-CREATE OR REPLACE TRIGGER sis_sistemas_roles_usuarios_trg01
-BEFORE INSERT ON sis_sistemas_roles_usuarios FOR EACH ROW
-BEGIN
-    IF :new.srs_id IS NULL OR :new.srs_id <= 0 THEN
-       :new.srs_id := sis_sistemas_roles_usuarios_seq01.NEXTVAL;
-    END IF;
-END;
-;
-
-CREATE OR REPLACE TRIGGER sis_sistemas_roles_usuarios_trg02
-AFTER UPDATE OF srs_id ON sis_sistemas_roles_usuarios FOR EACH ROW
-BEGIN
-    RAISE_APPLICATION_ERROR(-20013, 'No se puede actualizar el campo srs_id en la tabla sis_sistemas_roles_usuarios ya que utiliza una secuencia.');
-END;
 
 -- Triggers para la tabla sis_mensajes -------------------------------
 
@@ -498,10 +467,6 @@ REFERENCES sis_sistemas (sis_id);
 
 -- Constraints para la tabla sis_sistemas_roles_usuarios -------------------------------
 
-ALTER TABLE sis_sistemas_roles_usuarios
-ADD CONSTRAINT sis_sistemas_roles_usuarios_fk01
-FOREIGN KEY (srs_sis_id)
-REFERENCES sis_sistemas (sis_id);
 
 ALTER TABLE sis_sistemas_roles_usuarios
 ADD CONSTRAINT sis_sistemas_roles_usuarios_fk02

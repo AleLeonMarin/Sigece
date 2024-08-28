@@ -2,10 +2,8 @@ package cr.ac.una.securityws.service;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import cr.ac.una.securityws.model.Roles;
 import cr.ac.una.securityws.model.Sistemas;
-import cr.ac.una.securityws.model.SistemasRolesUsuarios;
 import cr.ac.una.securityws.model.Usuarios;
 import cr.ac.una.securityws.model.UsuariosDto;
 import cr.ac.una.securityws.util.CodigoRespuesta;
@@ -35,13 +33,11 @@ public class UsuariosService {
 
             UsuariosDto usuariosDto = new UsuariosDto(usuarios);
 
-            if (usuarios.getSisRolesUsuarios() != null) {
-                for (SistemasRolesUsuarios sistemasRolesUsuarios : usuarios.getSisRolesUsuarios()) {
-                    Sistemas sistema = sistemasRolesUsuarios.getSisID();
-                    Roles rol = sistemasRolesUsuarios.getRolID();
-
-                    // Verificar si el usuario tiene un rol asignado en al menos un sistema
-                    if (sistema != null && rol != null) {
+            if (usuarios.getRoles() != null) {
+                for (Roles rol : usuarios.getRoles()) {
+                    Sistemas sistema = rol.getSisId();
+                    // Verificar si el usuario tiene un rol en el sistema
+                    if (sistema != null) {
                         return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", usuariosDto);
                     }
                 }
@@ -49,7 +45,7 @@ public class UsuariosService {
 
             // Si el usuario no tiene roles en ningún sistema
             return new Respuesta(false, CodigoRespuesta.ERROR_PERMISOS, "",
-                    "Usuario no tiene acceso a ningún sistema asignado.");
+                    "Usuario no tiene acceso al sistema asignado.");
         } catch (NoResultException ex) {
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "", "Usuario o clave incorrectos.", ex);
         } catch (NonUniqueResultException ex) {
