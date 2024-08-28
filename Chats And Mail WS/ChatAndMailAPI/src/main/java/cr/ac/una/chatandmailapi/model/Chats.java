@@ -5,26 +5,18 @@
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -34,36 +26,42 @@ import java.util.List;
 @Table(name = "SIS_CHATS")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisChats.findAll", query = "SELECT s FROM SisChats s"),
-    @NamedQuery(name = "SisChats.findByChtId", query = "SELECT s FROM SisChats s WHERE s.chtId = :chtId"),
-    @NamedQuery(name = "SisChats.findByChtFecha", query = "SELECT s FROM SisChats s WHERE s.chtFecha = :chtFecha"),
-    @NamedQuery(name = "SisChats.findByChtVersion", query = "SELECT s FROM SisChats s WHERE s.chtVersion = :chtVersion")})
+    @NamedQuery(name = "SisChats.findAll", query = "SELECT s FROM Chats s"),
+    @NamedQuery(name = "SisChats.findByChtId", query = "SELECT s FROM Chats s WHERE s.chtId = :chtId"),
+    @NamedQuery(name = "SisChats.findByChtFecha", query = "SELECT s FROM Chats s WHERE s.chtFecha = :chtFecha"),
+    @NamedQuery(name = "SisChats.findByChtEmisorId", query = "SELECT s FROM Chats s WHERE s.chtEmisorId = :chtEmisorId"),
+    @NamedQuery(name = "SisChats.findByChtReceptorId", query = "SELECT s FROM Chats s WHERE s.chtReceptorId = :chtReceptorId"),
+    @NamedQuery(name = "SisChats.findByChtVersion", query = "SELECT s FROM Chats s WHERE s.chtVersion = :chtVersion")})
 public class Chats implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "CHT_ID")
     private Long chtId;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "CHT_FECHA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date chtFecha;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "CHT_EMISOR_ID")
+    private Long chtEmisorId;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "CHT_RECEPTOR_ID")
+    private Long chtReceptorId;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "CHT_VERSION")
     private Long chtVersion;
-    @JoinColumn(name = "CHT_RECEPTOR_ID", referencedColumnName = "USU_ID")
-    @ManyToOne(optional = false)
-    private Usuarios chtReceptorId;
-    @JoinColumn(name = "CHT_EMISOR_ID", referencedColumnName = "USU_ID")
-    @ManyToOne(optional = false)
-    private Usuarios chtEmisorId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "smsChatId")
-    private List<Mensajes> sisMensajesList;
 
     public Chats() {
     }
@@ -72,9 +70,11 @@ public class Chats implements Serializable {
         this.chtId = chtId;
     }
 
-    public Chats(Long chtId, Date chtFecha, Long chtVersion) {
+    public Chats(Long chtId, Date chtFecha, Long chtEmisorId, Long chtReceptorId, Long chtVersion) {
         this.chtId = chtId;
         this.chtFecha = chtFecha;
+        this.chtEmisorId = chtEmisorId;
+        this.chtReceptorId = chtReceptorId;
         this.chtVersion = chtVersion;
     }
 
@@ -94,37 +94,28 @@ public class Chats implements Serializable {
         this.chtFecha = chtFecha;
     }
 
+    public Long getChtEmisorId() {
+        return chtEmisorId;
+    }
+
+    public void setChtEmisorId(Long chtEmisorId) {
+        this.chtEmisorId = chtEmisorId;
+    }
+
+    public Long getChtReceptorId() {
+        return chtReceptorId;
+    }
+
+    public void setChtReceptorId(Long chtReceptorId) {
+        this.chtReceptorId = chtReceptorId;
+    }
+
     public Long getChtVersion() {
         return chtVersion;
     }
 
     public void setChtVersion(Long chtVersion) {
         this.chtVersion = chtVersion;
-    }
-
-    public Usuarios getChtReceptorId() {
-        return chtReceptorId;
-    }
-
-    public void setChtReceptorId(Usuarios chtReceptorId) {
-        this.chtReceptorId = chtReceptorId;
-    }
-
-    public Usuarios getChtEmisorId() {
-        return chtEmisorId;
-    }
-
-    public void setChtEmisorId(Usuarios chtEmisorId) {
-        this.chtEmisorId = chtEmisorId;
-    }
-
-    @XmlTransient
-    public List<Mensajes> getSisMensajesList() {
-        return sisMensajesList;
-    }
-
-    public void setSisMensajesList(List<Mensajes> sisMensajesList) {
-        this.sisMensajesList = sisMensajesList;
     }
 
     @Override
@@ -136,7 +127,6 @@ public class Chats implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Chats)) {
             return false;
         }
@@ -149,7 +139,6 @@ public class Chats implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.SisChats[ chtId=" + chtId + " ]";
+        return "cr.ac.una.chatandmailapi.model.SisChats[ chtId=" + chtId + " ]";
     }
-    
 }

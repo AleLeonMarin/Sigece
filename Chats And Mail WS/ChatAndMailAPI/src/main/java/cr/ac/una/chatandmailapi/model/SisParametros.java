@@ -35,7 +35,7 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisParametros.findByParProtocolo", query = "SELECT s FROM SisParametros s WHERE s.parProtocolo = :parProtocolo"),
     @NamedQuery(name = "SisParametros.findByParTimeout", query = "SELECT s FROM SisParametros s WHERE s.parTimeout = :parTimeout"),
     @NamedQuery(name = "SisParametros.findByParVersion", query = "SELECT s FROM SisParametros s WHERE s.parVersion = :parVersion")})
-public class Parametros implements Serializable {
+public class SisParametros implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -43,7 +43,7 @@ public class Parametros implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "PAR_ID")
-    private Long parId;
+    private BigDecimal parId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
@@ -57,7 +57,7 @@ public class Parametros implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "PAR_PUERTO")
-    private Long parPuerto;
+    private BigInteger parPuerto;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
@@ -71,20 +71,20 @@ public class Parametros implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "PAR_TIMEOUT")
-    private Long parTimeout;
+    private BigInteger parTimeout;
     @Basic(optional = false)
     @NotNull
     @Column(name = "PAR_VERSION")
-    private Long parVersion;
+    private BigInteger parVersion;
 
-    public Parametros() {
+    public SisParametros() {
     }
 
-    public Parametros(Long parId) {
+    public SisParametros(BigDecimal parId) {
         this.parId = parId;
     }
 
-    public Parametros(Long parId, String parCorreo, String parClave, Long parPuerto, String parServer, String parProtocolo, Long parTimeout, Long parVersion) {
+    public SisParametros(BigDecimal parId, String parCorreo, String parClave, BigInteger parPuerto, String parServer, String parProtocolo, BigInteger parTimeout, BigInteger parVersion) {
         this.parId = parId;
         this.parCorreo = parCorreo;
         this.parClave = parClave;
@@ -95,11 +95,11 @@ public class Parametros implements Serializable {
         this.parVersion = parVersion;
     }
 
-    public Long getParId() {
+    public BigDecimal getParId() {
         return parId;
     }
 
-    public void setParId(Long parId) {
+    public void setParId(BigDecimal parId) {
         this.parId = parId;
     }
 
@@ -119,11 +119,11 @@ public class Parametros implements Serializable {
         this.parClave = parClave;
     }
 
-    public Long getParPuerto() {
+    public BigInteger getParPuerto() {
         return parPuerto;
     }
 
-    public void setParPuerto(Long parPuerto) {
+    public void setParPuerto(BigInteger parPuerto) {
         this.parPuerto = parPuerto;
     }
 
@@ -143,19 +143,19 @@ public class Parametros implements Serializable {
         this.parProtocolo = parProtocolo;
     }
 
-    public Long getParTimeout() {
+    public BigInteger getParTimeout() {
         return parTimeout;
     }
 
-    public void setParTimeout(Long parTimeout) {
+    public void setParTimeout(BigInteger parTimeout) {
         this.parTimeout = parTimeout;
     }
 
-    public Long getParVersion() {
+    public BigInteger getParVersion() {
         return parVersion;
     }
 
-    public void setParVersion(Long parVersion) {
+    public void setParVersion(BigInteger parVersion) {
         this.parVersion = parVersion;
     }
 
@@ -169,10 +169,10 @@ public class Parametros implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Parametros)) {
+        if (!(object instanceof SisParametros)) {
             return false;
         }
-        Parametros other = (Parametros) object;
+        SisParametros other = (SisParametros) object;
         if ((this.parId == null && other.parId != null) || (this.parId != null && !this.parId.equals(other.parId))) {
             return false;
         }
@@ -181,7 +181,7 @@ public class Parametros implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.SisParametros[ parId=" + parId + " ]";
+        return "cr.ac.una.chatandmailapi.model.SisParametros[ parId=" + parId + " ]";
     }
     
 }

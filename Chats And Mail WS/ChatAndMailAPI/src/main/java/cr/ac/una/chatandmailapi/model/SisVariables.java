@@ -5,25 +5,19 @@
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  *
@@ -37,8 +31,9 @@ import java.util.List;
     @NamedQuery(name = "SisVariables.findByVarId", query = "SELECT s FROM SisVariables s WHERE s.varId = :varId"),
     @NamedQuery(name = "SisVariables.findByVarNombre", query = "SELECT s FROM SisVariables s WHERE s.varNombre = :varNombre"),
     @NamedQuery(name = "SisVariables.findByTipo", query = "SELECT s FROM SisVariables s WHERE s.tipo = :tipo"),
+    @NamedQuery(name = "SisVariables.findByVarNotId", query = "SELECT s FROM SisVariables s WHERE s.varNotId = :varNotId"),
     @NamedQuery(name = "SisVariables.findByVarVersion", query = "SELECT s FROM SisVariables s WHERE s.varVersion = :varVersion")})
-public class Variables implements Serializable {
+public class SisVariables implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -62,27 +57,25 @@ public class Variables implements Serializable {
     private String varValor;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "VAR_NOT_ID")
+    private BigInteger varNotId;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "VAR_VERSION")
     private BigInteger varVersion;
-    @JoinColumn(name = "VAR_NOT_ID", referencedColumnName = "NOT_ID")
-    @ManyToOne(optional = false)
-    private Notificacion varNotId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vconVarId")
-    private List<VariablesCondicionales> sisVariablesCondicionalesList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "mediaVarId")
-    private List<VariablesMultimedia> sisVariablesMultimediaList;
 
-    public Variables() {
+    public SisVariables() {
     }
 
-    public Variables(BigDecimal varId) {
+    public SisVariables(BigDecimal varId) {
         this.varId = varId;
     }
 
-    public Variables(BigDecimal varId, String varNombre, String tipo, BigInteger varVersion) {
+    public SisVariables(BigDecimal varId, String varNombre, String tipo, BigInteger varNotId, BigInteger varVersion) {
         this.varId = varId;
         this.varNombre = varNombre;
         this.tipo = tipo;
+        this.varNotId = varNotId;
         this.varVersion = varVersion;
     }
 
@@ -118,38 +111,20 @@ public class Variables implements Serializable {
         this.varValor = varValor;
     }
 
+    public BigInteger getVarNotId() {
+        return varNotId;
+    }
+
+    public void setVarNotId(BigInteger varNotId) {
+        this.varNotId = varNotId;
+    }
+
     public BigInteger getVarVersion() {
         return varVersion;
     }
 
     public void setVarVersion(BigInteger varVersion) {
         this.varVersion = varVersion;
-    }
-
-    public Notificacion getVarNotId() {
-        return varNotId;
-    }
-
-    public void setVarNotId(Notificacion varNotId) {
-        this.varNotId = varNotId;
-    }
-
-    @XmlTransient
-    public List<VariablesCondicionales> getSisVariablesCondicionalesList() {
-        return sisVariablesCondicionalesList;
-    }
-
-    public void setSisVariablesCondicionalesList(List<VariablesCondicionales> sisVariablesCondicionalesList) {
-        this.sisVariablesCondicionalesList = sisVariablesCondicionalesList;
-    }
-
-    @XmlTransient
-    public List<VariablesMultimedia> getSisVariablesMultimediaList() {
-        return sisVariablesMultimediaList;
-    }
-
-    public void setSisVariablesMultimediaList(List<VariablesMultimedia> sisVariablesMultimediaList) {
-        this.sisVariablesMultimediaList = sisVariablesMultimediaList;
     }
 
     @Override
@@ -162,10 +137,10 @@ public class Variables implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Variables)) {
+        if (!(object instanceof SisVariables)) {
             return false;
         }
-        Variables other = (Variables) object;
+        SisVariables other = (SisVariables) object;
         if ((this.varId == null && other.varId != null) || (this.varId != null && !this.varId.equals(other.varId))) {
             return false;
         }
@@ -174,7 +149,7 @@ public class Variables implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.SisVariables[ varId=" + varId + " ]";
+        return "cr.ac.una.chatandmailapi.model.SisVariables[ varId=" + varId + " ]";
     }
     
 }

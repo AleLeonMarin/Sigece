@@ -1,16 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -20,8 +14,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -38,48 +30,57 @@ import java.util.Date;
     @NamedQuery(name = "SisCorreos.findByCorDestinatario", query = "SELECT s FROM SisCorreos s WHERE s.corDestinatario = :corDestinatario"),
     @NamedQuery(name = "SisCorreos.findByCorEstado", query = "SELECT s FROM SisCorreos s WHERE s.corEstado = :corEstado"),
     @NamedQuery(name = "SisCorreos.findByCorFecha", query = "SELECT s FROM SisCorreos s WHERE s.corFecha = :corFecha"),
+    @NamedQuery(name = "SisCorreos.findByCorNotId", query = "SELECT s FROM SisCorreos s WHERE s.corNotId = :corNotId"),
     @NamedQuery(name = "SisCorreos.findByCorVersion", query = "SELECT s FROM SisCorreos s WHERE s.corVersion = :corVersion")})
 public class Correos implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "COR_ID")
     private Long corId;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "COR_ASUNTO")
     private String corAsunto;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "COR_DESTINATARIO")
     private String corDestinatario;
+
     @Basic(optional = false)
     @NotNull
     @Lob
-    @Column(name = "COR_PLANTILLA")
-    private String corPlantilla;
+    @Column(name = "COR_RESULTADO")
+    private String corResultado;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 1)
     @Column(name = "COR_ESTADO")
     private String corEstado;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "COR_FECHA")
     @Temporal(TemporalType.TIMESTAMP)
     private Date corFecha;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "COR_NOT_ID")
+    private Long corNotId;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "COR_VERSION")
     private Long corVersion;
-    @JoinColumn(name = "COR_NOT_ID", referencedColumnName = "NOT_ID")
-    @ManyToOne(optional = false)
-    private Notificacion corNotId;
 
     public Correos() {
     }
@@ -88,13 +89,14 @@ public class Correos implements Serializable {
         this.corId = corId;
     }
 
-    public Correos(Long corId, String corAsunto, String corDestinatario, String corPlantilla, String corEstado, Date corFecha, Long corVersion) {
+    public Correos(Long corId, String corAsunto, String corDestinatario, String corResultado, String corEstado, Date corFecha, Long corNotId, Long corVersion) {
         this.corId = corId;
         this.corAsunto = corAsunto;
         this.corDestinatario = corDestinatario;
-        this.corPlantilla = corPlantilla;
+        this.corResultado = corResultado;
         this.corEstado = corEstado;
         this.corFecha = corFecha;
+        this.corNotId = corNotId;
         this.corVersion = corVersion;
     }
 
@@ -102,7 +104,7 @@ public class Correos implements Serializable {
         return corId;
     }
 
-    public void setCorId (Long corId) {
+    public void setCorId(Long corId) {
         this.corId = corId;
     }
 
@@ -122,12 +124,12 @@ public class Correos implements Serializable {
         this.corDestinatario = corDestinatario;
     }
 
-    public String getCorPlantilla() {
-        return corPlantilla;
+    public String getCorResultado() {
+        return corResultado;
     }
 
-    public void setCorPlantilla(String corPlantilla) {
-        this.corPlantilla = corPlantilla;
+    public void setCorResultado(String corResultado) {
+        this.corResultado = corResultado;
     }
 
     public String getCorEstado() {
@@ -146,20 +148,20 @@ public class Correos implements Serializable {
         this.corFecha = corFecha;
     }
 
+    public Long getCorNotId() {
+        return corNotId;
+    }
+
+    public void setCorNotId(Long corNotId) {
+        this.corNotId = corNotId;
+    }
+
     public Long getCorVersion() {
         return corVersion;
     }
 
     public void setCorVersion(Long corVersion) {
         this.corVersion = corVersion;
-    }
-
-    public Notificacion getCorNotId() {
-        return corNotId;
-    }
-
-    public void setCorNotId(Notificacion corNotId) {
-        this.corNotId = corNotId;
     }
 
     @Override
@@ -171,7 +173,6 @@ public class Correos implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Correos)) {
             return false;
         }
@@ -184,7 +185,6 @@ public class Correos implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.SisCorreos[ corId=" + corId + " ]";
+        return "cr.ac.una.chatandmailapi.model.Correos[ corId=" + corId + " ]";
     }
-    
 }

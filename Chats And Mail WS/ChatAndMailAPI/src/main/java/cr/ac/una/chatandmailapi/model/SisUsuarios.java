@@ -5,23 +5,19 @@
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  *
@@ -44,7 +40,7 @@ import java.util.List;
     @NamedQuery(name = "SisUsuarios.findByUsuEstado", query = "SELECT s FROM SisUsuarios s WHERE s.usuEstado = :usuEstado"),
     @NamedQuery(name = "SisUsuarios.findByUsuStatus", query = "SELECT s FROM SisUsuarios s WHERE s.usuStatus = :usuStatus"),
     @NamedQuery(name = "SisUsuarios.findByUsuVersion", query = "SELECT s FROM SisUsuarios s WHERE s.usuVersion = :usuVersion")})
-public class Usuarios implements Serializable {
+public class SisUsuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -112,23 +108,15 @@ public class Usuarios implements Serializable {
     @NotNull
     @Column(name = "USU_VERSION")
     private BigInteger usuVersion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "chtReceptorId")
-    private List<Chats> sisChatsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "chtEmisorId")
-    private List<Chats> sisChatsList1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "smsUsuId")
-    private List<Mensajes> sisMensajesList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "srsUsuId")
-    private List<SistemasRolesUsuarios> sisSistemasRolesUsuariosList;
 
-    public Usuarios() {
+    public SisUsuarios() {
     }
 
-    public Usuarios(BigDecimal usuId) {
+    public SisUsuarios(BigDecimal usuId) {
         this.usuId = usuId;
     }
 
-    public Usuarios(BigDecimal usuId, String usuNombre, String usuApellidos, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, BigInteger usuVersion) {
+    public SisUsuarios(BigDecimal usuId, String usuNombre, String usuApellidos, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, BigInteger usuVersion) {
         this.usuId = usuId;
         this.usuNombre = usuNombre;
         this.usuApellidos = usuApellidos;
@@ -248,42 +236,6 @@ public class Usuarios implements Serializable {
         this.usuVersion = usuVersion;
     }
 
-    @XmlTransient
-    public List<Chats> getSisChatsList() {
-        return sisChatsList;
-    }
-
-    public void setSisChatsList(List<Chats> sisChatsList) {
-        this.sisChatsList = sisChatsList;
-    }
-
-    @XmlTransient
-    public List<Chats> getSisChatsList1() {
-        return sisChatsList1;
-    }
-
-    public void setSisChatsList1(List<Chats> sisChatsList1) {
-        this.sisChatsList1 = sisChatsList1;
-    }
-
-    @XmlTransient
-    public List<Mensajes> getSisMensajesList() {
-        return sisMensajesList;
-    }
-
-    public void setSisMensajesList(List<Mensajes> sisMensajesList) {
-        this.sisMensajesList = sisMensajesList;
-    }
-
-    @XmlTransient
-    public List<SistemasRolesUsuarios> getSisSistemasRolesUsuariosList() {
-        return sisSistemasRolesUsuariosList;
-    }
-
-    public void setSisSistemasRolesUsuariosList(List<SistemasRolesUsuarios> sisSistemasRolesUsuariosList) {
-        this.sisSistemasRolesUsuariosList = sisSistemasRolesUsuariosList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -294,10 +246,10 @@ public class Usuarios implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Usuarios)) {
+        if (!(object instanceof SisUsuarios)) {
             return false;
         }
-        Usuarios other = (Usuarios) object;
+        SisUsuarios other = (SisUsuarios) object;
         if ((this.usuId == null && other.usuId != null) || (this.usuId != null && !this.usuId.equals(other.usuId))) {
             return false;
         }
@@ -306,7 +258,7 @@ public class Usuarios implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.SisUsuarios[ usuId=" + usuId + " ]";
+        return "cr.ac.una.chatandmailapi.model.SisUsuarios[ usuId=" + usuId + " ]";
     }
     
 }

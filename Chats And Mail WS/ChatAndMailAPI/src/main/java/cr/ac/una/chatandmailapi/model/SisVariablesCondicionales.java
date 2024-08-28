@@ -8,9 +8,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -32,8 +30,9 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisVariablesCondicionales.findAll", query = "SELECT s FROM SisVariablesCondicionales s"),
     @NamedQuery(name = "SisVariablesCondicionales.findByVconId", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vconId = :vconId"),
     @NamedQuery(name = "SisVariablesCondicionales.findByVcondValor", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vcondValor = :vcondValor"),
+    @NamedQuery(name = "SisVariablesCondicionales.findByVconVarId", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vconVarId = :vconVarId"),
     @NamedQuery(name = "SisVariablesCondicionales.findByVconVersion", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vconVersion = :vconVersion")})
-public class VariablesCondicionales implements Serializable {
+public class SisVariablesCondicionales implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -52,22 +51,24 @@ public class VariablesCondicionales implements Serializable {
     private String vcondResultado;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "VCON_VAR_ID")
+    private BigInteger vconVarId;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "VCON_VERSION")
     private BigInteger vconVersion;
-    @JoinColumn(name = "VCON_VAR_ID", referencedColumnName = "VAR_ID")
-    @ManyToOne(optional = false)
-    private Variables vconVarId;
 
-    public VariablesCondicionales() {
+    public SisVariablesCondicionales() {
     }
 
-    public VariablesCondicionales(BigDecimal vconId) {
+    public SisVariablesCondicionales(BigDecimal vconId) {
         this.vconId = vconId;
     }
 
-    public VariablesCondicionales(BigDecimal vconId, String vcondValor, BigInteger vconVersion) {
+    public SisVariablesCondicionales(BigDecimal vconId, String vcondValor, BigInteger vconVarId, BigInteger vconVersion) {
         this.vconId = vconId;
         this.vcondValor = vcondValor;
+        this.vconVarId = vconVarId;
         this.vconVersion = vconVersion;
     }
 
@@ -95,20 +96,20 @@ public class VariablesCondicionales implements Serializable {
         this.vcondResultado = vcondResultado;
     }
 
+    public BigInteger getVconVarId() {
+        return vconVarId;
+    }
+
+    public void setVconVarId(BigInteger vconVarId) {
+        this.vconVarId = vconVarId;
+    }
+
     public BigInteger getVconVersion() {
         return vconVersion;
     }
 
     public void setVconVersion(BigInteger vconVersion) {
         this.vconVersion = vconVersion;
-    }
-
-    public Variables getVconVarId() {
-        return vconVarId;
-    }
-
-    public void setVconVarId(Variables vconVarId) {
-        this.vconVarId = vconVarId;
     }
 
     @Override
@@ -121,10 +122,10 @@ public class VariablesCondicionales implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof VariablesCondicionales)) {
+        if (!(object instanceof SisVariablesCondicionales)) {
             return false;
         }
-        VariablesCondicionales other = (VariablesCondicionales) object;
+        SisVariablesCondicionales other = (SisVariablesCondicionales) object;
         if ((this.vconId == null && other.vconId != null) || (this.vconId != null && !this.vconId.equals(other.vconId))) {
             return false;
         }
@@ -133,7 +134,7 @@ public class VariablesCondicionales implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.SisVariablesCondicionales[ vconId=" + vconId + " ]";
+        return "cr.ac.una.chatandmailapi.model.SisVariablesCondicionales[ vconId=" + vconId + " ]";
     }
     
 }

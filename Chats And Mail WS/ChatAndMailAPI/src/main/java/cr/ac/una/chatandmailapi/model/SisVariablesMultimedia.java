@@ -8,9 +8,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -32,8 +30,9 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisVariablesMultimedia.findAll", query = "SELECT s FROM SisVariablesMultimedia s"),
     @NamedQuery(name = "SisVariablesMultimedia.findByMediaId", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaId = :mediaId"),
     @NamedQuery(name = "SisVariablesMultimedia.findByMediaTipo", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaTipo = :mediaTipo"),
+    @NamedQuery(name = "SisVariablesMultimedia.findByMediaVarId", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaVarId = :mediaVarId"),
     @NamedQuery(name = "SisVariablesMultimedia.findByMediaVersion", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaVersion = :mediaVersion")})
-public class VariablesMultimedia implements Serializable {
+public class SisVariablesMultimedia implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -54,23 +53,25 @@ public class VariablesMultimedia implements Serializable {
     private String mediaTipo;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "MEDIA_VAR_ID")
+    private BigInteger mediaVarId;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "MEDIA_VERSION")
     private BigInteger mediaVersion;
-    @JoinColumn(name = "MEDIA_VAR_ID", referencedColumnName = "VAR_ID")
-    @ManyToOne(optional = false)
-    private Variables mediaVarId;
 
-    public VariablesMultimedia() {
+    public SisVariablesMultimedia() {
     }
 
-    public VariablesMultimedia(BigDecimal mediaId) {
+    public SisVariablesMultimedia(BigDecimal mediaId) {
         this.mediaId = mediaId;
     }
 
-    public VariablesMultimedia(BigDecimal mediaId, Serializable mediaUrl, String mediaTipo, BigInteger mediaVersion) {
+    public SisVariablesMultimedia(BigDecimal mediaId, Serializable mediaUrl, String mediaTipo, BigInteger mediaVarId, BigInteger mediaVersion) {
         this.mediaId = mediaId;
         this.mediaUrl = mediaUrl;
         this.mediaTipo = mediaTipo;
+        this.mediaVarId = mediaVarId;
         this.mediaVersion = mediaVersion;
     }
 
@@ -98,20 +99,20 @@ public class VariablesMultimedia implements Serializable {
         this.mediaTipo = mediaTipo;
     }
 
+    public BigInteger getMediaVarId() {
+        return mediaVarId;
+    }
+
+    public void setMediaVarId(BigInteger mediaVarId) {
+        this.mediaVarId = mediaVarId;
+    }
+
     public BigInteger getMediaVersion() {
         return mediaVersion;
     }
 
     public void setMediaVersion(BigInteger mediaVersion) {
         this.mediaVersion = mediaVersion;
-    }
-
-    public Variables getMediaVarId() {
-        return mediaVarId;
-    }
-
-    public void setMediaVarId(Variables mediaVarId) {
-        this.mediaVarId = mediaVarId;
     }
 
     @Override
@@ -124,10 +125,10 @@ public class VariablesMultimedia implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof VariablesMultimedia)) {
+        if (!(object instanceof SisVariablesMultimedia)) {
             return false;
         }
-        VariablesMultimedia other = (VariablesMultimedia) object;
+        SisVariablesMultimedia other = (SisVariablesMultimedia) object;
         if ((this.mediaId == null && other.mediaId != null) || (this.mediaId != null && !this.mediaId.equals(other.mediaId))) {
             return false;
         }
@@ -136,7 +137,7 @@ public class VariablesMultimedia implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.SisVariablesMultimedia[ mediaId=" + mediaId + " ]";
+        return "cr.ac.una.chatandmailapi.model.SisVariablesMultimedia[ mediaId=" + mediaId + " ]";
     }
     
 }

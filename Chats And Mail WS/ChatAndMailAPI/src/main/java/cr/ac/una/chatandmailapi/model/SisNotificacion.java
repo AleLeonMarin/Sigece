@@ -5,23 +5,19 @@
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  *
@@ -35,7 +31,7 @@ import java.util.List;
     @NamedQuery(name = "SisNotificacion.findByNotId", query = "SELECT s FROM SisNotificacion s WHERE s.notId = :notId"),
     @NamedQuery(name = "SisNotificacion.findByNotNombre", query = "SELECT s FROM SisNotificacion s WHERE s.notNombre = :notNombre"),
     @NamedQuery(name = "SisNotificacion.findByNotVersion", query = "SELECT s FROM SisNotificacion s WHERE s.notVersion = :notVersion")})
-public class Notificacion implements Serializable {
+public class SisNotificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -43,7 +39,7 @@ public class Notificacion implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "NOT_ID")
-    private Long notId;
+    private BigDecimal notId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
@@ -57,31 +53,27 @@ public class Notificacion implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "NOT_VERSION")
-    private Long notVersion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "varNotId")
-    private List<Variables> sisVariablesList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "corNotId")
-    private List<Correos> sisCorreosList;
+    private BigInteger notVersion;
 
-    public Notificacion() {
+    public SisNotificacion() {
     }
 
-    public Notificacion(Long notId) {
+    public SisNotificacion(BigDecimal notId) {
         this.notId = notId;
     }
 
-    public Notificacion(Long notId, String notNombre, String notPlantilla, Long notVersion) {
+    public SisNotificacion(BigDecimal notId, String notNombre, String notPlantilla, BigInteger notVersion) {
         this.notId = notId;
         this.notNombre = notNombre;
         this.notPlantilla = notPlantilla;
         this.notVersion = notVersion;
     }
 
-    public Long getNotId() {
+    public BigDecimal getNotId() {
         return notId;
     }
 
-    public void setNotId(Long notId) {
+    public void setNotId(BigDecimal notId) {
         this.notId = notId;
     }
 
@@ -101,30 +93,12 @@ public class Notificacion implements Serializable {
         this.notPlantilla = notPlantilla;
     }
 
-    public Long getNotVersion() {
+    public BigInteger getNotVersion() {
         return notVersion;
     }
 
-    public void setNotVersion(Long notVersion) {
+    public void setNotVersion(BigInteger notVersion) {
         this.notVersion = notVersion;
-    }
-
-    @XmlTransient
-    public List<Variables> getSisVariablesList() {
-        return sisVariablesList;
-    }
-
-    public void setSisVariablesList(List<Variables> sisVariablesList) {
-        this.sisVariablesList = sisVariablesList;
-    }
-
-    @XmlTransient
-    public List<Correos> getSisCorreosList() {
-        return sisCorreosList;
-    }
-
-    public void setSisCorreosList(List<Correos> sisCorreosList) {
-        this.sisCorreosList = sisCorreosList;
     }
 
     @Override
@@ -137,10 +111,10 @@ public class Notificacion implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Notificacion)) {
+        if (!(object instanceof SisNotificacion)) {
             return false;
         }
-        Notificacion other = (Notificacion) object;
+        SisNotificacion other = (SisNotificacion) object;
         if ((this.notId == null && other.notId != null) || (this.notId != null && !this.notId.equals(other.notId))) {
             return false;
         }
@@ -149,7 +123,7 @@ public class Notificacion implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.SisNotificacion[ notId=" + notId + " ]";
+        return "cr.ac.una.chatandmailapi.model.SisNotificacion[ notId=" + notId + " ]";
     }
     
 }

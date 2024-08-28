@@ -5,22 +5,18 @@
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  *
@@ -34,7 +30,7 @@ import java.util.List;
     @NamedQuery(name = "SisSistemas.findBySisId", query = "SELECT s FROM SisSistemas s WHERE s.sisId = :sisId"),
     @NamedQuery(name = "SisSistemas.findBySisNombre", query = "SELECT s FROM SisSistemas s WHERE s.sisNombre = :sisNombre"),
     @NamedQuery(name = "SisSistemas.findBySisVersion", query = "SELECT s FROM SisSistemas s WHERE s.sisVersion = :sisVersion")})
-public class Sistemas implements Serializable {
+public class SisSistemas implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -52,19 +48,15 @@ public class Sistemas implements Serializable {
     @NotNull
     @Column(name = "SIS_VERSION")
     private BigInteger sisVersion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rolSisId")
-    private List<Roles> sisRolesList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "srsSisId")
-    private List<SistemasRolesUsuarios> sisSistemasRolesUsuariosList;
 
-    public Sistemas() {
+    public SisSistemas() {
     }
 
-    public Sistemas(BigDecimal sisId) {
+    public SisSistemas(BigDecimal sisId) {
         this.sisId = sisId;
     }
 
-    public Sistemas(BigDecimal sisId, String sisNombre, BigInteger sisVersion) {
+    public SisSistemas(BigDecimal sisId, String sisNombre, BigInteger sisVersion) {
         this.sisId = sisId;
         this.sisNombre = sisNombre;
         this.sisVersion = sisVersion;
@@ -94,24 +86,6 @@ public class Sistemas implements Serializable {
         this.sisVersion = sisVersion;
     }
 
-    @XmlTransient
-    public List<Roles> getSisRolesList() {
-        return sisRolesList;
-    }
-
-    public void setSisRolesList(List<Roles> sisRolesList) {
-        this.sisRolesList = sisRolesList;
-    }
-
-    @XmlTransient
-    public List<SistemasRolesUsuarios> getSisSistemasRolesUsuariosList() {
-        return sisSistemasRolesUsuariosList;
-    }
-
-    public void setSisSistemasRolesUsuariosList(List<SistemasRolesUsuarios> sisSistemasRolesUsuariosList) {
-        this.sisSistemasRolesUsuariosList = sisSistemasRolesUsuariosList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -122,10 +96,10 @@ public class Sistemas implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Sistemas)) {
+        if (!(object instanceof SisSistemas)) {
             return false;
         }
-        Sistemas other = (Sistemas) object;
+        SisSistemas other = (SisSistemas) object;
         if ((this.sisId == null && other.sisId != null) || (this.sisId != null && !this.sisId.equals(other.sisId))) {
             return false;
         }
@@ -134,7 +108,7 @@ public class Sistemas implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.SisSistemas[ sisId=" + sisId + " ]";
+        return "cr.ac.una.chatandmailapi.model.SisSistemas[ sisId=" + sisId + " ]";
     }
     
 }
