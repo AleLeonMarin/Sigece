@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
@@ -15,8 +11,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  *
@@ -30,43 +24,45 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisSistemas.findBySisId", query = "SELECT s FROM SisSistemas s WHERE s.sisId = :sisId"),
     @NamedQuery(name = "SisSistemas.findBySisNombre", query = "SELECT s FROM SisSistemas s WHERE s.sisNombre = :sisNombre"),
     @NamedQuery(name = "SisSistemas.findBySisVersion", query = "SELECT s FROM SisSistemas s WHERE s.sisVersion = :sisVersion")})
-public class SisSistemas implements Serializable {
+public class Sistemas implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "SIS_ID")
-    private BigDecimal sisId;
+    private Long sisId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
     @Column(name = "SIS_NOMBRE")
     private String sisNombre;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "SIS_VERSION")
-    private BigInteger sisVersion;
+    private Long sisVersion;
 
-    public SisSistemas() {
+    public Sistemas() {
     }
 
-    public SisSistemas(BigDecimal sisId) {
+    public Sistemas(Long sisId) {
         this.sisId = sisId;
     }
 
-    public SisSistemas(BigDecimal sisId, String sisNombre, BigInteger sisVersion) {
+    public Sistemas(Long sisId, String sisNombre, Long sisVersion) {
         this.sisId = sisId;
         this.sisNombre = sisNombre;
         this.sisVersion = sisVersion;
     }
 
-    public BigDecimal getSisId() {
+    public Long getSisId() {
         return sisId;
     }
 
-    public void setSisId(BigDecimal sisId) {
+    public void setSisId(Long sisId) {
         this.sisId = sisId;
     }
 
@@ -78,11 +74,11 @@ public class SisSistemas implements Serializable {
         this.sisNombre = sisNombre;
     }
 
-    public BigInteger getSisVersion() {
+    public Long getSisVersion() {
         return sisVersion;
     }
 
-    public void setSisVersion(BigInteger sisVersion) {
+    public void setSisVersion(Long sisVersion) {
         this.sisVersion = sisVersion;
     }
 
@@ -95,11 +91,10 @@ public class SisSistemas implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisSistemas)) {
+        if (!(object instanceof Sistemas)) {
             return false;
         }
-        SisSistemas other = (SisSistemas) object;
+        Sistemas other = (Sistemas) object;
         if ((this.sisId == null && other.sisId != null) || (this.sisId != null && !this.sisId.equals(other.sisId))) {
             return false;
         }

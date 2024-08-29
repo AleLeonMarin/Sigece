@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
@@ -16,8 +12,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  *
@@ -33,45 +27,50 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisVariables.findByTipo", query = "SELECT s FROM SisVariables s WHERE s.tipo = :tipo"),
     @NamedQuery(name = "SisVariables.findByVarNotId", query = "SELECT s FROM SisVariables s WHERE s.varNotId = :varNotId"),
     @NamedQuery(name = "SisVariables.findByVarVersion", query = "SELECT s FROM SisVariables s WHERE s.varVersion = :varVersion")})
-public class SisVariables implements Serializable {
+public class Variables implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "VAR_ID")
-    private BigDecimal varId;
+    private Long varId;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "VAR_NOMBRE")
     private String varNombre;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "TIPO")
     private String tipo;
+
     @Lob
     @Column(name = "VAR_VALOR")
     private String varValor;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "VAR_NOT_ID")
-    private BigInteger varNotId;
+    private Long varNotId;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "VAR_VERSION")
-    private BigInteger varVersion;
+    private Long varVersion;
 
-    public SisVariables() {
+    public Variables() {
     }
 
-    public SisVariables(BigDecimal varId) {
+    public Variables(Long varId) {
         this.varId = varId;
     }
 
-    public SisVariables(BigDecimal varId, String varNombre, String tipo, BigInteger varNotId, BigInteger varVersion) {
+    public Variables(Long varId, String varNombre, String tipo, Long varNotId, Long varVersion) {
         this.varId = varId;
         this.varNombre = varNombre;
         this.tipo = tipo;
@@ -79,11 +78,11 @@ public class SisVariables implements Serializable {
         this.varVersion = varVersion;
     }
 
-    public BigDecimal getVarId() {
+    public Long getVarId() {
         return varId;
     }
 
-    public void setVarId(BigDecimal varId) {
+    public void setVarId(Long varId) {
         this.varId = varId;
     }
 
@@ -111,19 +110,19 @@ public class SisVariables implements Serializable {
         this.varValor = varValor;
     }
 
-    public BigInteger getVarNotId() {
+    public Long getVarNotId() {
         return varNotId;
     }
 
-    public void setVarNotId(BigInteger varNotId) {
+    public void setVarNotId(Long varNotId) {
         this.varNotId = varNotId;
     }
 
-    public BigInteger getVarVersion() {
+    public Long getVarVersion() {
         return varVersion;
     }
 
-    public void setVarVersion(BigInteger varVersion) {
+    public void setVarVersion(Long varVersion) {
         this.varVersion = varVersion;
     }
 
@@ -136,11 +135,10 @@ public class SisVariables implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisVariables)) {
+        if (!(object instanceof Variables)) {
             return false;
         }
-        SisVariables other = (SisVariables) object;
+        Variables other = (Variables) object;
         if ((this.varId == null && other.varId != null) || (this.varId != null && !this.varId.equals(other.varId))) {
             return false;
         }
@@ -151,5 +149,4 @@ public class SisVariables implements Serializable {
     public String toString() {
         return "cr.ac.una.chatandmailapi.model.SisVariables[ varId=" + varId + " ]";
     }
-    
 }

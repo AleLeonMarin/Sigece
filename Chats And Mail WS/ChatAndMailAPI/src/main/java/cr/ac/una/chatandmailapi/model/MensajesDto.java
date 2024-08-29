@@ -1,5 +1,5 @@
 
-package cr.ac.una.chatandmailapi.dto;
+package cr.ac.una.chatandmailapi.model;
 
 import java.util.Date;
 

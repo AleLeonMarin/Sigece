@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
@@ -16,8 +12,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  *
@@ -40,83 +34,95 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisUsuarios.findByUsuEstado", query = "SELECT s FROM SisUsuarios s WHERE s.usuEstado = :usuEstado"),
     @NamedQuery(name = "SisUsuarios.findByUsuStatus", query = "SELECT s FROM SisUsuarios s WHERE s.usuStatus = :usuStatus"),
     @NamedQuery(name = "SisUsuarios.findByUsuVersion", query = "SELECT s FROM SisUsuarios s WHERE s.usuVersion = :usuVersion")})
-public class SisUsuarios implements Serializable {
+public class Usuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "USU_ID")
-    private BigDecimal usuId;
+    private Long usuId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "USU_NOMBRE")
     private String usuNombre;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "USU_APELLIDOS")
     private String usuApellidos;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
     @Column(name = "USU_CORREO")
     private String usuCorreo;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "USU_TELEFONO")
     private String usuTelefono;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "USU_CELULAR")
     private String usuCelular;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "USU_IDIOMA")
     private String usuIdioma;
+    
     @Basic(optional = false)
     @NotNull
     @Lob
     @Column(name = "USU_FOTO")
     private Serializable usuFoto;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "USU_USUARIO")
     private String usuUsuario;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "USU_CLAVE")
     private String usuClave;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 1)
     @Column(name = "USU_ESTADO")
     private String usuEstado;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
     @Column(name = "USU_STATUS")
     private String usuStatus;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "USU_VERSION")
-    private BigInteger usuVersion;
+    private Long usuVersion;
 
-    public SisUsuarios() {
+    public Usuarios() {
     }
 
-    public SisUsuarios(BigDecimal usuId) {
+    public Usuarios(Long usuId) {
         this.usuId = usuId;
     }
 
-    public SisUsuarios(BigDecimal usuId, String usuNombre, String usuApellidos, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, BigInteger usuVersion) {
+    public Usuarios(Long usuId, String usuNombre, String usuApellidos, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
         this.usuId = usuId;
         this.usuNombre = usuNombre;
         this.usuApellidos = usuApellidos;
@@ -132,11 +138,11 @@ public class SisUsuarios implements Serializable {
         this.usuVersion = usuVersion;
     }
 
-    public BigDecimal getUsuId() {
+    public Long getUsuId() {
         return usuId;
     }
 
-    public void setUsuId(BigDecimal usuId) {
+    public void setUsuId(Long usuId) {
         this.usuId = usuId;
     }
 
@@ -228,11 +234,11 @@ public class SisUsuarios implements Serializable {
         this.usuStatus = usuStatus;
     }
 
-    public BigInteger getUsuVersion() {
+    public Long getUsuVersion() {
         return usuVersion;
     }
 
-    public void setUsuVersion(BigInteger usuVersion) {
+    public void setUsuVersion(Long usuVersion) {
         this.usuVersion = usuVersion;
     }
 
@@ -245,11 +251,10 @@ public class SisUsuarios implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisUsuarios)) {
+        if (!(object instanceof Usuarios)) {
             return false;
         }
-        SisUsuarios other = (SisUsuarios) object;
+        Usuarios other = (Usuarios) object;
         if ((this.usuId == null && other.usuId != null) || (this.usuId != null && !this.usuId.equals(other.usuId))) {
             return false;
         }

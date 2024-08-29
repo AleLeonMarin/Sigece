@@ -15,8 +15,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  *
@@ -31,48 +29,50 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisRoles.findByRolNombre", query = "SELECT s FROM SisRoles s WHERE s.rolNombre = :rolNombre"),
     @NamedQuery(name = "SisRoles.findByRolSisId", query = "SELECT s FROM SisRoles s WHERE s.rolSisId = :rolSisId"),
     @NamedQuery(name = "SisRoles.findByRolVersion", query = "SELECT s FROM SisRoles s WHERE s.rolVersion = :rolVersion")})
-public class SisRoles implements Serializable {
+public class Roles implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "ROL_ID")
-    private BigDecimal rolId;
+    private Long rolId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "ROL_NOMBRE")
     private String rolNombre;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "ROL_SIS_ID")
-    private BigInteger rolSisId;
+    private Long rolSisId;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "ROL_VERSION")
-    private BigInteger rolVersion;
+    private Long rolVersion;
 
-    public SisRoles() {
+    public Roles() {
     }
 
-    public SisRoles(BigDecimal rolId) {
+    public Roles(Long rolId) {
         this.rolId = rolId;
     }
 
-    public SisRoles(BigDecimal rolId, String rolNombre, BigInteger rolSisId, BigInteger rolVersion) {
+    public Roles(Long rolId, String rolNombre, Long rolSisId, Long rolVersion) {
         this.rolId = rolId;
         this.rolNombre = rolNombre;
         this.rolSisId = rolSisId;
         this.rolVersion = rolVersion;
     }
 
-    public BigDecimal getRolId() {
+    public Long getRolId() {
         return rolId;
     }
 
-    public void setRolId(BigDecimal rolId) {
+    public void setRolId(Long rolId) {
         this.rolId = rolId;
     }
 
@@ -84,19 +84,19 @@ public class SisRoles implements Serializable {
         this.rolNombre = rolNombre;
     }
 
-    public BigInteger getRolSisId() {
+    public Long getRolSisId() {
         return rolSisId;
     }
 
-    public void setRolSisId(BigInteger rolSisId) {
+    public void setRolSisId(Long rolSisId) {
         this.rolSisId = rolSisId;
     }
 
-    public BigInteger getRolVersion() {
+    public Long getRolVersion() {
         return rolVersion;
     }
 
-    public void setRolVersion(BigInteger rolVersion) {
+    public void setRolVersion(Long rolVersion) {
         this.rolVersion = rolVersion;
     }
 
@@ -109,11 +109,10 @@ public class SisRoles implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisRoles)) {
+        if (!(object instanceof Roles)) {
             return false;
         }
-        SisRoles other = (SisRoles) object;
+        Roles other = (Roles) object;
         if ((this.rolId == null && other.rolId != null) || (this.rolId != null && !this.rolId.equals(other.rolId))) {
             return false;
         }

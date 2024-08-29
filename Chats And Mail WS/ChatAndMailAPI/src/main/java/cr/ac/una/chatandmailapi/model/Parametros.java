@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
@@ -15,8 +11,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  *
@@ -35,56 +29,62 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisParametros.findByParProtocolo", query = "SELECT s FROM SisParametros s WHERE s.parProtocolo = :parProtocolo"),
     @NamedQuery(name = "SisParametros.findByParTimeout", query = "SELECT s FROM SisParametros s WHERE s.parTimeout = :parTimeout"),
     @NamedQuery(name = "SisParametros.findByParVersion", query = "SELECT s FROM SisParametros s WHERE s.parVersion = :parVersion")})
-public class SisParametros implements Serializable {
+public class Parametros implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "PAR_ID")
-    private BigDecimal parId;
+    private Long parId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "PAR_CORREO")
     private String parCorreo;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "PAR_CLAVE")
     private String parClave;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "PAR_PUERTO")
-    private BigInteger parPuerto;
+    private Long parPuerto;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "PAR_SERVER")
     private String parServer;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "PAR_PROTOCOLO")
     private String parProtocolo;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "PAR_TIMEOUT")
-    private BigInteger parTimeout;
+    private Long parTimeout;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "PAR_VERSION")
-    private BigInteger parVersion;
+    private Long parVersion;
 
-    public SisParametros() {
+    public Parametros() {
     }
 
-    public SisParametros(BigDecimal parId) {
+    public Parametros(Long parId) {
         this.parId = parId;
     }
 
-    public SisParametros(BigDecimal parId, String parCorreo, String parClave, BigInteger parPuerto, String parServer, String parProtocolo, BigInteger parTimeout, BigInteger parVersion) {
+    public Parametros(Long parId, String parCorreo, String parClave, Long parPuerto, String parServer, String parProtocolo, Long parTimeout, Long parVersion) {
         this.parId = parId;
         this.parCorreo = parCorreo;
         this.parClave = parClave;
@@ -95,11 +95,11 @@ public class SisParametros implements Serializable {
         this.parVersion = parVersion;
     }
 
-    public BigDecimal getParId() {
+    public Long getParId() {
         return parId;
     }
 
-    public void setParId(BigDecimal parId) {
+    public void setParId(Long parId) {
         this.parId = parId;
     }
 
@@ -119,11 +119,11 @@ public class SisParametros implements Serializable {
         this.parClave = parClave;
     }
 
-    public BigInteger getParPuerto() {
+    public Long getParPuerto() {
         return parPuerto;
     }
 
-    public void setParPuerto(BigInteger parPuerto) {
+    public void setParPuerto(Long parPuerto) {
         this.parPuerto = parPuerto;
     }
 
@@ -143,19 +143,19 @@ public class SisParametros implements Serializable {
         this.parProtocolo = parProtocolo;
     }
 
-    public BigInteger getParTimeout() {
+    public Long getParTimeout() {
         return parTimeout;
     }
 
-    public void setParTimeout(BigInteger parTimeout) {
+    public void setParTimeout(Long parTimeout) {
         this.parTimeout = parTimeout;
     }
 
-    public BigInteger getParVersion() {
+    public Long getParVersion() {
         return parVersion;
     }
 
-    public void setParVersion(BigInteger parVersion) {
+    public void setParVersion(Long parVersion) {
         this.parVersion = parVersion;
     }
 
@@ -168,11 +168,10 @@ public class SisParametros implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisParametros)) {
+        if (!(object instanceof Parametros)) {
             return false;
         }
-        SisParametros other = (SisParametros) object;
+        Parametros other = (Parametros) object;
         if ((this.parId == null && other.parId != null) || (this.parId != null && !this.parId.equals(other.parId))) {
             return false;
         }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
@@ -16,8 +12,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  *
@@ -32,42 +26,46 @@ import java.math.BigInteger;
     @NamedQuery(name = "SisVariablesMultimedia.findByMediaTipo", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaTipo = :mediaTipo"),
     @NamedQuery(name = "SisVariablesMultimedia.findByMediaVarId", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaVarId = :mediaVarId"),
     @NamedQuery(name = "SisVariablesMultimedia.findByMediaVersion", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaVersion = :mediaVersion")})
-public class SisVariablesMultimedia implements Serializable {
+public class VariablesMultimedia implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "MEDIA_ID")
-    private BigDecimal mediaId;
+    private Long mediaId;
+
     @Basic(optional = false)
     @NotNull
     @Lob
     @Column(name = "MEDIA_URL")
     private Serializable mediaUrl;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 300)
     @Column(name = "MEDIA_TIPO")
     private String mediaTipo;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "MEDIA_VAR_ID")
-    private BigInteger mediaVarId;
+    private Long mediaVarId;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "MEDIA_VERSION")
-    private BigInteger mediaVersion;
+    private Long mediaVersion;
 
-    public SisVariablesMultimedia() {
+    public VariablesMultimedia() {
     }
 
-    public SisVariablesMultimedia(BigDecimal mediaId) {
+    public VariablesMultimedia(Long mediaId) {
         this.mediaId = mediaId;
     }
 
-    public SisVariablesMultimedia(BigDecimal mediaId, Serializable mediaUrl, String mediaTipo, BigInteger mediaVarId, BigInteger mediaVersion) {
+    public VariablesMultimedia(Long mediaId, Serializable mediaUrl, String mediaTipo, Long mediaVarId, Long mediaVersion) {
         this.mediaId = mediaId;
         this.mediaUrl = mediaUrl;
         this.mediaTipo = mediaTipo;
@@ -75,11 +73,11 @@ public class SisVariablesMultimedia implements Serializable {
         this.mediaVersion = mediaVersion;
     }
 
-    public BigDecimal getMediaId() {
+    public Long getMediaId() {
         return mediaId;
     }
 
-    public void setMediaId(BigDecimal mediaId) {
+    public void setMediaId(Long mediaId) {
         this.mediaId = mediaId;
     }
 
@@ -99,19 +97,19 @@ public class SisVariablesMultimedia implements Serializable {
         this.mediaTipo = mediaTipo;
     }
 
-    public BigInteger getMediaVarId() {
+    public Long getMediaVarId() {
         return mediaVarId;
     }
 
-    public void setMediaVarId(BigInteger mediaVarId) {
+    public void setMediaVarId(Long mediaVarId) {
         this.mediaVarId = mediaVarId;
     }
 
-    public BigInteger getMediaVersion() {
+    public Long getMediaVersion() {
         return mediaVersion;
     }
 
-    public void setMediaVersion(BigInteger mediaVersion) {
+    public void setMediaVersion(Long mediaVersion) {
         this.mediaVersion = mediaVersion;
     }
 
@@ -124,11 +122,10 @@ public class SisVariablesMultimedia implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SisVariablesMultimedia)) {
+        if (!(object instanceof VariablesMultimedia)) {
             return false;
         }
-        SisVariablesMultimedia other = (SisVariablesMultimedia) object;
+        VariablesMultimedia other = (VariablesMultimedia) object;
         if ((this.mediaId == null && other.mediaId != null) || (this.mediaId != null && !this.mediaId.equals(other.mediaId))) {
             return false;
         }
@@ -139,5 +136,4 @@ public class SisVariablesMultimedia implements Serializable {
     public String toString() {
         return "cr.ac.una.chatandmailapi.model.SisVariablesMultimedia[ mediaId=" + mediaId + " ]";
     }
-    
 }
