@@ -110,7 +110,7 @@ public class UsuariosService {
 
         try {
             Query query = em.createNamedQuery("Usuarios.findAll", Usuarios.class);
-            List<Usuarios> usuarios = query.getResultList();
+            List<Usuarios> usuarios = (List<Usuarios>) query.getResultList();
             List<UsuariosDto> usuariosDto = new ArrayList<>();
             for (Usuarios usuario : usuarios) {
                 usuariosDto.add(new UsuariosDto(usuario));

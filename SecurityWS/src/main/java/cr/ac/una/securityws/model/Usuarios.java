@@ -7,6 +7,7 @@ package cr.ac.una.securityws.model;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,7 +26,7 @@ import java.util.List;
  * @author aleon
  */
 @Entity
-@Table(name = "SIS_USUARIOS" , schema = "SigeceUNA")
+@Table(name = "SIS_USUARIOS", schema = "SigeceUNA")
 @NamedQueries({
         @NamedQuery(name = "Usuarios.findAll", query = "SELECT s FROM Usuarios s"),
         @NamedQuery(name = "Usuarios.findByUsuClave", query = "SELECT s FROM Usuarios s WHERE s.usuario = :usuario AND s.clave = :clave"),
@@ -127,7 +128,7 @@ public class Usuarios implements Serializable {
     @Column(name = "USU_VERSION")
     private Long version;
 
-    @ManyToMany(mappedBy = "usuarios")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "usuarios")
     private List<Roles> roles;
 
     public Usuarios() {

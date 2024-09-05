@@ -1,4 +1,4 @@
-package cr.ac.una.securityws.model;
+package cr.ac.una.tarea.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class UsuariosDto implements Serializable {
         rolesDto = new ArrayList<>();
     }
 
-    public UsuariosDto(Usuarios usuarios) {
+    public UsuariosDto(cr.ac.una.securityws.controller.UsuariosDto usuarios) {
 
         this.id = usuarios.getId();
         this.nombre = usuarios.getNombre();
@@ -44,7 +44,7 @@ public class UsuariosDto implements Serializable {
         this.estado = usuarios.getEstado();
         this.status = usuarios.getStatus();
         this.version = usuarios.getVersion();
-        this.rolesDto = usuarios.getRoles().stream()
+        this.rolesDto = usuarios.getRolesDto().stream()
                 .map(RolesDto::new)
                 .collect(Collectors.toList());
     }
