@@ -41,6 +41,23 @@ public class UsuariosDto implements Serializable {
         this.usuStatus = usuStatus;
         this.usuVersion = usuVersion;
     }
+    
+        public UsuariosDto(Usuarios usuario) {
+        this();  
+        this.usuId = usuario.getUsuId();
+        this.usuNombre = usuario.getUsuNombre();
+        this.usuApellidos = usuario.getUsuApellidos();
+        this.usuCorreo = usuario.getUsuCorreo();
+        this.usuTelefono = usuario.getUsuTelefono();
+        this.usuCelular = usuario.getUsuCelular();
+        this.usuIdioma = usuario.getUsuIdioma();
+        this.usuFoto = usuario.getUsuFoto();
+        this.usuUsuario = usuario.getUsuUsuario();
+        this.usuClave = usuario.getUsuClave();
+        this.usuEstado = usuario.getUsuEstado();
+        this.usuStatus = usuario.getUsuStatus();
+        this.usuVersion = usuario.getUsuVersion();
+    }
 
     public Long getUsuId() {
         return usuId;

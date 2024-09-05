@@ -137,6 +137,8 @@ public class Usuarios implements Serializable {
         this.usuStatus = usuStatus;
         this.usuVersion = usuVersion;
     }
+    
+    
 
     public Long getUsuId() {
         return usuId;
