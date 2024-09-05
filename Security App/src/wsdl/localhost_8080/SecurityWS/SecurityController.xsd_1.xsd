@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.3.payara-p1 (metro-4.0.3.payara-maintenance-004e4e3; 2023-11-08T12:59:53+0000) XMLWS-Impl/4.0.2 XMLWS-API/4.0.1 XMLB-Impl/4.0.4 XMLB-API/4.0.1 git-revision#004e4e3. --><xs:schema xmlns:tns="http://controller.securityws.una.ac.cr/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://controller.securityws.una.ac.cr/">
+
+<xs:element name="deleteUser" type="tns:deleteUser"/>
+
+<xs:element name="deleteUserResponse" type="tns:deleteUserResponse"/>
+
+<xs:element name="getAllUsers" type="tns:getAllUsers"/>
+
+<xs:element name="getAllUsersResponse" type="tns:getAllUsersResponse"/>
+
+<xs:element name="logIn" type="tns:logIn"/>
+
+<xs:element name="logInResponse" type="tns:logInResponse"/>
+
+<xs:element name="saveUser" type="tns:saveUser"/>
+
+<xs:element name="saveUserResponse" type="tns:saveUserResponse"/>
+
+<xs:complexType name="deleteUser">
+<xs:sequence>
+<xs:element name="usuario" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteUserResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="usuariosDto">
+<xs:sequence>
+<xs:element name="apellidos" type="xs:string" minOccurs="0"/>
+<xs:element name="celular" type="xs:string" minOccurs="0"/>
+<xs:element name="clave" type="xs:string" minOccurs="0"/>
+<xs:element name="correo" type="xs:string" minOccurs="0"/>
+<xs:element name="estado" type="xs:string" minOccurs="0"/>
+<xs:element name="foto" type="xs:base64Binary" minOccurs="0"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="idioma" type="xs:string" minOccurs="0"/>
+<xs:element name="modificado" type="xs:boolean" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+<xs:element name="rolesDto" type="tns:rolesDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="status" type="xs:string" minOccurs="0"/>
+<xs:element name="telefono" type="xs:string" minOccurs="0"/>
+<xs:element name="usuario" type="xs:string" minOccurs="0"/>
+<xs:element name="version" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="rolesDto">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="modificado" type="xs:boolean" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+<xs:element name="sisId" type="tns:sistemasDto" minOccurs="0"/>
+<xs:element name="usuariosDto" type="tns:usuariosDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="version" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="sistemasDto">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="modificado" type="xs:boolean" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+<xs:element name="rolesDto" type="tns:rolesDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="version" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="logIn">
+<xs:sequence>
+<xs:element name="usuario" type="xs:string" minOccurs="0"/>
+<xs:element name="clave" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="logInResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="saveUser">
+<xs:sequence>
+<xs:element name="arg0" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="saveUserResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllUsers">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getAllUsersResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
