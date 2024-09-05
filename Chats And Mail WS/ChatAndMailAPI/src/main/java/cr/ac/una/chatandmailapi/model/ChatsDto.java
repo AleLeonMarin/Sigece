@@ -13,9 +13,9 @@ public class ChatsDto {
     private Long chtReceptorId;
     private Long chtVersion;
 
-    public ChatsDto() {
+     public ChatsDto() {
+        this.chtFecha = new Date(); 
     }
-
     public ChatsDto(Long chtId, Date chtFecha, Long chtEmisorId, Long chtReceptorId, Long chtVersion) {
         this.chtId = chtId;
         this.chtFecha = chtFecha;
@@ -23,6 +23,18 @@ public class ChatsDto {
         this.chtReceptorId = chtReceptorId;
         this.chtVersion = chtVersion;
     }
+    
+    
+
+    public ChatsDto(Chats chat) {
+        this();
+        this.chtId = chat.getChtId();
+        this.chtFecha = chat.getChtFecha();
+        this.chtEmisorId = chat.getChtEmisorId();
+        this.chtReceptorId = chat.getChtReceptorId();
+        this.chtVersion = chat.getChtVersion();
+    }
+
 
     public Long getChtId() {
         return chtId;

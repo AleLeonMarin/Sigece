@@ -13,7 +13,10 @@ public class MensajesDto {
     private Long smsVersion;
 
     public MensajesDto() {
+        // Constructor por defecto
+        this.smsTiempo = new Date();  // Inicializa la fecha actual
     }
+
 
     public MensajesDto(Long smsId, String smsTexto, Date smsTiempo, Long smsUsuIdEmisor, Long smsChatId, Long smsVersion) {
         this.smsId = smsId;
@@ -22,6 +25,18 @@ public class MensajesDto {
         this.smsUsuIdEmisor = smsUsuIdEmisor;
         this.smsChatId = smsChatId;
         this.smsVersion = smsVersion;
+    }
+    
+  
+    // Constructor que recibe la entidad de Mensajes
+    public MensajesDto(Mensajes mensaje) {
+        this();  // Llama al constructor por defecto
+        this.smsId = mensaje.getSmsId();
+        this.smsTexto = mensaje.getSmsTexto();
+        this.smsTiempo = mensaje.getSmsTiempo();
+        this.smsUsuIdEmisor = mensaje.getSmsUsuIdEmisor();
+        this.smsChatId = mensaje.getSmsChatId();
+        this.smsVersion = mensaje.getSmsVersion();
     }
 
     public Long getSmsId() {
