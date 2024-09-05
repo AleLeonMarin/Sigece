@@ -20,15 +20,15 @@ import java.io.Serializable;
 @Table(name = "SIS_PARAMETROS")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisParametros.findAll", query = "SELECT s FROM SisParametros s"),
-    @NamedQuery(name = "SisParametros.findByParId", query = "SELECT s FROM SisParametros s WHERE s.parId = :parId"),
-    @NamedQuery(name = "SisParametros.findByParCorreo", query = "SELECT s FROM SisParametros s WHERE s.parCorreo = :parCorreo"),
-    @NamedQuery(name = "SisParametros.findByParClave", query = "SELECT s FROM SisParametros s WHERE s.parClave = :parClave"),
-    @NamedQuery(name = "SisParametros.findByParPuerto", query = "SELECT s FROM SisParametros s WHERE s.parPuerto = :parPuerto"),
-    @NamedQuery(name = "SisParametros.findByParServer", query = "SELECT s FROM SisParametros s WHERE s.parServer = :parServer"),
-    @NamedQuery(name = "SisParametros.findByParProtocolo", query = "SELECT s FROM SisParametros s WHERE s.parProtocolo = :parProtocolo"),
-    @NamedQuery(name = "SisParametros.findByParTimeout", query = "SELECT s FROM SisParametros s WHERE s.parTimeout = :parTimeout"),
-    @NamedQuery(name = "SisParametros.findByParVersion", query = "SELECT s FROM SisParametros s WHERE s.parVersion = :parVersion")})
+    @NamedQuery(name = "Parametros.findAll", query = "SELECT s FROM Parametros s"),
+    @NamedQuery(name = "Parametros.findByParId", query = "SELECT s FROM Parametros s WHERE s.parId = :parId"),
+    @NamedQuery(name = "Parametros.findByParCorreo", query = "SELECT s FROM Parametros s WHERE s.parCorreo = :parCorreo"),
+    @NamedQuery(name = "Parametros.findByParClave", query = "SELECT s FROM Parametros s WHERE s.parClave = :parClave"),
+    @NamedQuery(name = "Parametros.findByParPuerto", query = "SELECT s FROM Parametros s WHERE s.parPuerto = :parPuerto"),
+    @NamedQuery(name = "Parametros.findByParServer", query = "SELECT s FROM Parametros s WHERE s.parServer = :parServer"),
+    @NamedQuery(name = "Parametros.findByParProtocolo", query = "SELECT s FROM Parametros s WHERE s.parProtocolo = :parProtocolo"),
+    @NamedQuery(name = "Parametros.findByParTimeout", query = "SELECT s FROM Parametros s WHERE s.parTimeout = :parTimeout"),
+    @NamedQuery(name = "Parametros.findByParVersion", query = "SELECT s FROM Parametros s WHERE s.parVersion = :parVersion")})
 public class Parametros implements Serializable {
 
     private static final long serialVersionUID = 1L;

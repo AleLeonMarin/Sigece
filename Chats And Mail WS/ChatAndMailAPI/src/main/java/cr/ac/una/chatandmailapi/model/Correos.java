@@ -24,14 +24,14 @@ import java.util.Date;
 @Table(name = "SIS_CORREOS")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisCorreos.findAll", query = "SELECT s FROM SisCorreos s"),
-    @NamedQuery(name = "SisCorreos.findByCorId", query = "SELECT s FROM SisCorreos s WHERE s.corId = :corId"),
-    @NamedQuery(name = "SisCorreos.findByCorAsunto", query = "SELECT s FROM SisCorreos s WHERE s.corAsunto = :corAsunto"),
-    @NamedQuery(name = "SisCorreos.findByCorDestinatario", query = "SELECT s FROM SisCorreos s WHERE s.corDestinatario = :corDestinatario"),
-    @NamedQuery(name = "SisCorreos.findByCorEstado", query = "SELECT s FROM SisCorreos s WHERE s.corEstado = :corEstado"),
-    @NamedQuery(name = "SisCorreos.findByCorFecha", query = "SELECT s FROM SisCorreos s WHERE s.corFecha = :corFecha"),
-    @NamedQuery(name = "SisCorreos.findByCorNotId", query = "SELECT s FROM SisCorreos s WHERE s.corNotId = :corNotId"),
-    @NamedQuery(name = "SisCorreos.findByCorVersion", query = "SELECT s FROM SisCorreos s WHERE s.corVersion = :corVersion")})
+    @NamedQuery(name = "Correos.findAll", query = "SELECT s FROM Correos s"),
+    @NamedQuery(name = "Correos.findByCorId", query = "SELECT s FROM Correos s WHERE s.corId = :corId"),
+    @NamedQuery(name = "Correos.findByCorAsunto", query = "SELECT s FROM Correos s WHERE s.corAsunto = :corAsunto"),
+    @NamedQuery(name = "Correos.findByCorDestinatario", query = "SELECT s FROM Correos s WHERE s.corDestinatario = :corDestinatario"),
+    @NamedQuery(name = "Correos.findByCorEstado", query = "SELECT s FROM Correos s WHERE s.corEstado = :corEstado"),
+    @NamedQuery(name = "Correos.findByCorFecha", query = "SELECT s FROM Correos s WHERE s.corFecha = :corFecha"),
+    @NamedQuery(name = "Correos.findByCorNotId", query = "SELECT s FROM Correos s WHERE s.corNotId = :corNotId"),
+    @NamedQuery(name = "Correos.findByCorVersion", query = "SELECT s FROM Correos s WHERE s.corVersion = :corVersion")})
 public class Correos implements Serializable {
 
     private static final long serialVersionUID = 1L;

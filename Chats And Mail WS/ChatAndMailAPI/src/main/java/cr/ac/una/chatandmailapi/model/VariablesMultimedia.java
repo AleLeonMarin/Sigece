@@ -21,11 +21,11 @@ import java.io.Serializable;
 @Table(name = "SIS_VARIABLES_MULTIMEDIA")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisVariablesMultimedia.findAll", query = "SELECT s FROM SisVariablesMultimedia s"),
-    @NamedQuery(name = "SisVariablesMultimedia.findByMediaId", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaId = :mediaId"),
-    @NamedQuery(name = "SisVariablesMultimedia.findByMediaTipo", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaTipo = :mediaTipo"),
-    @NamedQuery(name = "SisVariablesMultimedia.findByMediaVarId", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaVarId = :mediaVarId"),
-    @NamedQuery(name = "SisVariablesMultimedia.findByMediaVersion", query = "SELECT s FROM SisVariablesMultimedia s WHERE s.mediaVersion = :mediaVersion")})
+    @NamedQuery(name = "VariablesMultimedia.findAll", query = "SELECT s FROM VariablesMultimedia s"),
+    @NamedQuery(name = "VariablesMultimedia.findByMediaId", query = "SELECT s FROM VariablesMultimedia s WHERE s.mediaId = :mediaId"),
+    @NamedQuery(name = "VariablesMultimedia.findByMediaTipo", query = "SELECT s FROM VariablesMultimedia s WHERE s.mediaTipo = :mediaTipo"),
+    @NamedQuery(name = "VariablesMultimedia.findByMediaVarId", query = "SELECT s FROM VariablesMultimedia s WHERE s.mediaVarId = :mediaVarId"),
+    @NamedQuery(name = "VariablesMultimedia.findByMediaVersion", query = "SELECT s FROM VariablesMultimedia s WHERE s.mediaVersion = :mediaVersion")})
 public class VariablesMultimedia implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -24,11 +24,11 @@ import java.io.Serializable;
 @Table(name = "SIS_ROLES")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisRoles.findAll", query = "SELECT s FROM SisRoles s"),
-    @NamedQuery(name = "SisRoles.findByRolId", query = "SELECT s FROM SisRoles s WHERE s.rolId = :rolId"),
-    @NamedQuery(name = "SisRoles.findByRolNombre", query = "SELECT s FROM SisRoles s WHERE s.rolNombre = :rolNombre"),
-    @NamedQuery(name = "SisRoles.findByRolSisId", query = "SELECT s FROM SisRoles s WHERE s.rolSisId = :rolSisId"),
-    @NamedQuery(name = "SisRoles.findByRolVersion", query = "SELECT s FROM SisRoles s WHERE s.rolVersion = :rolVersion")})
+    @NamedQuery(name = "Roles.findAll", query = "SELECT s FROM Roles s"),
+    @NamedQuery(name = "Roles.findByRolId", query = "SELECT s FROM Roles s WHERE s.rolId = :rolId"),
+    @NamedQuery(name = "Roles.findByRolNombre", query = "SELECT s FROM Roles s WHERE s.rolNombre = :rolNombre"),
+    @NamedQuery(name = "Roles.findByRolSisId", query = "SELECT s FROM Roles s WHERE s.rolSisId = :rolSisId"),
+    @NamedQuery(name = "Roles.findByRolVersion", query = "SELECT s FROM Roles s WHERE s.rolVersion = :rolVersion")})
 public class Roles implements Serializable {
 
     private static final long serialVersionUID = 1L;

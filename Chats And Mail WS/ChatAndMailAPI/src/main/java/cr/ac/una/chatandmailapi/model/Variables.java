@@ -21,12 +21,12 @@ import java.io.Serializable;
 @Table(name = "SIS_VARIABLES")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisVariables.findAll", query = "SELECT s FROM SisVariables s"),
-    @NamedQuery(name = "SisVariables.findByVarId", query = "SELECT s FROM SisVariables s WHERE s.varId = :varId"),
-    @NamedQuery(name = "SisVariables.findByVarNombre", query = "SELECT s FROM SisVariables s WHERE s.varNombre = :varNombre"),
-    @NamedQuery(name = "SisVariables.findByTipo", query = "SELECT s FROM SisVariables s WHERE s.tipo = :tipo"),
-    @NamedQuery(name = "SisVariables.findByVarNotId", query = "SELECT s FROM SisVariables s WHERE s.varNotId = :varNotId"),
-    @NamedQuery(name = "SisVariables.findByVarVersion", query = "SELECT s FROM SisVariables s WHERE s.varVersion = :varVersion")})
+    @NamedQuery(name = "Variables.findAll", query = "SELECT s FROM Variables s"),
+    @NamedQuery(name = "Variables.findByVarId", query = "SELECT s FROM Variables s WHERE s.varId = :varId"),
+    @NamedQuery(name = "Variables.findByVarNombre", query = "SELECT s FROM Variables s WHERE s.varNombre = :varNombre"),
+    @NamedQuery(name = "Variables.findByTipo", query = "SELECT s FROM Variables s WHERE s.tipo = :tipo"),
+    @NamedQuery(name = "Variables.findByVarNotId", query = "SELECT s FROM Variables s WHERE s.varNotId = :varNotId"),
+    @NamedQuery(name = "Variables.findByVarVersion", query = "SELECT s FROM Variables s WHERE s.varVersion = :varVersion")})
 public class Variables implements Serializable {
 
     private static final long serialVersionUID = 1L;

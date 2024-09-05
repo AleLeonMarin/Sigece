@@ -26,12 +26,12 @@ import java.util.Date;
 @Table(name = "SIS_CHATS")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisChats.findAll", query = "SELECT s FROM Chats s"),
-    @NamedQuery(name = "SisChats.findByChtId", query = "SELECT s FROM Chats s WHERE s.chtId = :chtId"),
-    @NamedQuery(name = "SisChats.findByChtFecha", query = "SELECT s FROM Chats s WHERE s.chtFecha = :chtFecha"),
-    @NamedQuery(name = "SisChats.findByChtEmisorId", query = "SELECT s FROM Chats s WHERE s.chtEmisorId = :chtEmisorId"),
-    @NamedQuery(name = "SisChats.findByChtReceptorId", query = "SELECT s FROM Chats s WHERE s.chtReceptorId = :chtReceptorId"),
-    @NamedQuery(name = "SisChats.findByChtVersion", query = "SELECT s FROM Chats s WHERE s.chtVersion = :chtVersion")})
+    @NamedQuery(name = "Chats.findAll", query = "SELECT s FROM Chats s"),
+    @NamedQuery(name = "Chats.findByChtId", query = "SELECT s FROM Chats s WHERE s.chtId = :chtId"),
+    @NamedQuery(name = "Chats.findByChtFecha", query = "SELECT s FROM Chats s WHERE s.chtFecha = :chtFecha"),
+    @NamedQuery(name = "Chats.findByChtEmisorId", query = "SELECT s FROM Chats s WHERE s.chtEmisorId = :chtEmisorId"),
+    @NamedQuery(name = "Chats.findByChtReceptorId", query = "SELECT s FROM Chats s WHERE s.chtReceptorId = :chtReceptorId"),
+    @NamedQuery(name = "Chats.findByChtVersion", query = "SELECT s FROM Chats s WHERE s.chtVersion = :chtVersion")})
 public class Chats implements Serializable {
 
     private static final long serialVersionUID = 1L;

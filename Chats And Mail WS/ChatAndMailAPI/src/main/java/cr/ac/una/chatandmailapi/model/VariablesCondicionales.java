@@ -21,11 +21,11 @@ import java.io.Serializable;
 @Table(name = "SIS_VARIABLES_CONDICIONALES")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisVariablesCondicionales.findAll", query = "SELECT s FROM SisVariablesCondicionales s"),
-    @NamedQuery(name = "SisVariablesCondicionales.findByVconId", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vconId = :vconId"),
-    @NamedQuery(name = "SisVariablesCondicionales.findByVcondValor", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vcondValor = :vcondValor"),
-    @NamedQuery(name = "SisVariablesCondicionales.findByVconVarId", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vconVarId = :vconVarId"),
-    @NamedQuery(name = "SisVariablesCondicionales.findByVconVersion", query = "SELECT s FROM SisVariablesCondicionales s WHERE s.vconVersion = :vconVersion")})
+    @NamedQuery(name = "VariablesCondicionales.findAll", query = "SELECT s FROM VariablesCondicionales s"),
+    @NamedQuery(name = "VariablesCondicionales.findByVconId", query = "SELECT s FROM VariablesCondicionales s WHERE s.vconId = :vconId"),
+    @NamedQuery(name = "VariablesCondicionales.findByVcondValor", query = "SELECT s FROM VariablesCondicionales s WHERE s.vcondValor = :vcondValor"),
+    @NamedQuery(name = "VariablesCondicionales.findByVconVarId", query = "SELECT s FROM VariablesCondicionales s WHERE s.vconVarId = :vconVarId"),
+    @NamedQuery(name = "VariablesCondicionales.findByVconVersion", query = "SELECT s FROM VariablesCondicionales s WHERE s.vconVersion = :vconVersion")})
 public class VariablesCondicionales implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -21,19 +21,19 @@ import java.io.Serializable;
 @Table(name = "SIS_USUARIOS")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisUsuarios.findAll", query = "SELECT s FROM SisUsuarios s"),
-    @NamedQuery(name = "SisUsuarios.findByUsuId", query = "SELECT s FROM SisUsuarios s WHERE s.usuId = :usuId"),
-    @NamedQuery(name = "SisUsuarios.findByUsuNombre", query = "SELECT s FROM SisUsuarios s WHERE s.usuNombre = :usuNombre"),
-    @NamedQuery(name = "SisUsuarios.findByUsuApellidos", query = "SELECT s FROM SisUsuarios s WHERE s.usuApellidos = :usuApellidos"),
-    @NamedQuery(name = "SisUsuarios.findByUsuCorreo", query = "SELECT s FROM SisUsuarios s WHERE s.usuCorreo = :usuCorreo"),
-    @NamedQuery(name = "SisUsuarios.findByUsuTelefono", query = "SELECT s FROM SisUsuarios s WHERE s.usuTelefono = :usuTelefono"),
-    @NamedQuery(name = "SisUsuarios.findByUsuCelular", query = "SELECT s FROM SisUsuarios s WHERE s.usuCelular = :usuCelular"),
-    @NamedQuery(name = "SisUsuarios.findByUsuIdioma", query = "SELECT s FROM SisUsuarios s WHERE s.usuIdioma = :usuIdioma"),
-    @NamedQuery(name = "SisUsuarios.findByUsuUsuario", query = "SELECT s FROM SisUsuarios s WHERE s.usuUsuario = :usuUsuario"),
-    @NamedQuery(name = "SisUsuarios.findByUsuClave", query = "SELECT s FROM SisUsuarios s WHERE s.usuClave = :usuClave"),
-    @NamedQuery(name = "SisUsuarios.findByUsuEstado", query = "SELECT s FROM SisUsuarios s WHERE s.usuEstado = :usuEstado"),
-    @NamedQuery(name = "SisUsuarios.findByUsuStatus", query = "SELECT s FROM SisUsuarios s WHERE s.usuStatus = :usuStatus"),
-    @NamedQuery(name = "SisUsuarios.findByUsuVersion", query = "SELECT s FROM SisUsuarios s WHERE s.usuVersion = :usuVersion")})
+    @NamedQuery(name = "Usuarios.findAll", query = "SELECT s FROM Usuarios s"),
+    @NamedQuery(name = "Usuarios.findByUsuId", query = "SELECT s FROM Usuarios s WHERE s.usuId = :usuId"),
+    @NamedQuery(name = "Usuarios.findByUsuNombre", query = "SELECT s FROM Usuarios s WHERE s.usuNombre = :usuNombre"),
+    @NamedQuery(name = "Usuarios.findByUsuApellidos", query = "SELECT s FROM Usuarios s WHERE s.usuApellidos = :usuApellidos"),
+    @NamedQuery(name = "Usuarios.findByUsuCorreo", query = "SELECT s FROM Usuarios s WHERE s.usuCorreo = :usuCorreo"),
+    @NamedQuery(name = "Usuarios.findByUsuTelefono", query = "SELECT s FROM Usuarios s WHERE s.usuTelefono = :usuTelefono"),
+    @NamedQuery(name = "Usuarios.findByUsuCelular", query = "SELECT s FROM Usuarios s WHERE s.usuCelular = :usuCelular"),
+    @NamedQuery(name = "Usuarios.findByUsuIdioma", query = "SELECT s FROM Usuarios s WHERE s.usuIdioma = :usuIdioma"),
+    @NamedQuery(name = "Usuarios.findByUsuUsuario", query = "SELECT s FROM Usuarios s WHERE s.usuUsuario = :usuUsuario"),
+    @NamedQuery(name = "Usuarios.findByUsuClave", query = "SELECT s FROM Usuarios s WHERE s.usuClave = :usuClave"),
+    @NamedQuery(name = "Usuarios.findByUsuEstado", query = "SELECT s FROM Usuarios s WHERE s.usuEstado = :usuEstado"),
+    @NamedQuery(name = "Usuarios.findByUsuStatus", query = "SELECT s FROM Usuarios s WHERE s.usuStatus = :usuStatus"),
+    @NamedQuery(name = "Usuarios.findByUsuVersion", query = "SELECT s FROM Usuarios s WHERE s.usuVersion = :usuVersion")})
 public class Usuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;

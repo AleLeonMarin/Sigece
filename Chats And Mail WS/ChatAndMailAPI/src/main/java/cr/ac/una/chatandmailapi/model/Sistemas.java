@@ -20,10 +20,10 @@ import java.io.Serializable;
 @Table(name = "SIS_SISTEMAS")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisSistemas.findAll", query = "SELECT s FROM SisSistemas s"),
-    @NamedQuery(name = "SisSistemas.findBySisId", query = "SELECT s FROM SisSistemas s WHERE s.sisId = :sisId"),
-    @NamedQuery(name = "SisSistemas.findBySisNombre", query = "SELECT s FROM SisSistemas s WHERE s.sisNombre = :sisNombre"),
-    @NamedQuery(name = "SisSistemas.findBySisVersion", query = "SELECT s FROM SisSistemas s WHERE s.sisVersion = :sisVersion")})
+    @NamedQuery(name = "Sistemas.findAll", query = "SELECT s FROM Sistemas s"),
+    @NamedQuery(name = "Sistemas.findBySisId", query = "SELECT s FROM Sistemas s WHERE s.sisId = :sisId"),
+    @NamedQuery(name = "Sistemas.findBySisNombre", query = "SELECT s FROM Sistemas s WHERE s.sisNombre = :sisNombre"),
+    @NamedQuery(name = "Sistemas.findBySisVersion", query = "SELECT s FROM Sistemas s WHERE s.sisVersion = :sisVersion")})
 public class Sistemas implements Serializable {
 
     private static final long serialVersionUID = 1L;

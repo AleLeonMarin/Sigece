@@ -21,10 +21,10 @@ import java.io.Serializable;
 @Table(name = "SIS_NOTIFICACION")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisNotificacion.findAll", query = "SELECT s FROM SisNotificacion s"),
-    @NamedQuery(name = "SisNotificacion.findByNotId", query = "SELECT s FROM SisNotificacion s WHERE s.notId = :notId"),
-    @NamedQuery(name = "SisNotificacion.findByNotNombre", query = "SELECT s FROM SisNotificacion s WHERE s.notNombre = :notNombre"),
-    @NamedQuery(name = "SisNotificacion.findByNotVersion", query = "SELECT s FROM SisNotificacion s WHERE s.notVersion = :notVersion")})
+    @NamedQuery(name = "Notificacion.findAll", query = "SELECT s FROM Notificacion s"),
+    @NamedQuery(name = "Notificacion.findByNotId", query = "SELECT s FROM Notificacion s WHERE s.notId = :notId"),
+    @NamedQuery(name = "Notificacion.findByNotNombre", query = "SELECT s FROM Notificacion s WHERE s.notNombre = :notNombre"),
+    @NamedQuery(name = "Notificacion.findByNotVersion", query = "SELECT s FROM Notificacion s WHERE s.notVersion = :notVersion")})
 public class Notificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
