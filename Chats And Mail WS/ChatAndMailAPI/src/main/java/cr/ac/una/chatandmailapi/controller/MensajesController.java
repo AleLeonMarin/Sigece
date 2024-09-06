@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 
 @Tag(name = "Mensajes", description = "Operaciones sobre Mensajes")
-@SecurityRequirement(name = "jwt-auth")
+//@SecurityRequirement(name = "jwt-auth")
 @Path("/MensajesController")
 public class MensajesController {
     

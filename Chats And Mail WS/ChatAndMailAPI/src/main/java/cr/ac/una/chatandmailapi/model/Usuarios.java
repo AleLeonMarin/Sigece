@@ -41,7 +41,6 @@ public class Usuarios implements Serializable {
     
     @Id
     @Basic(optional = false)
-    @NotNull
     @Column(name = "USU_ID")
     private Long usuId;
     

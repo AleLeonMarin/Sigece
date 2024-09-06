@@ -33,16 +33,16 @@ import java.util.logging.Logger;
  *
  * @author Kendall Fonseca
  */
-@Tag(name = "Chats", description = "Operaciones sobre Chats")
-@SecurityRequirement(name = "jwt-auth")
 @Path("/ChatsController")
+@Tag(name = "Chats", description = "Operaciones sobre Chats")
+//@SecurityRequirement(name = "jwt-auth")
+
 public class ChatsController {
 
     private static final Logger LOG = Logger.getLogger(ChatsController.class.getName());
 
     @EJB
     ChatsService chatsService;
-    MensajesService mensajesService;
 
     @GET
     @Path("/chat/{id}")
@@ -67,28 +67,7 @@ public class ChatsController {
         }
     }
     
-    @GET
-@Path("/usuario/{id}")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@Operation(description = "Obtiene un usuario por ID")
-@ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Usuario encontrado", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsuariosDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-        @ApiResponse(responseCode = "500", description = "Error interno durante la consulta", content = @Content(mediaType = MediaType.TEXT_PLAIN))
-})
-    public Response getUsuario(@Parameter(description = "ID del Usuario", required = true) @PathParam("id") Long id) {
-    try {
-        Respuesta res = chatsService.getUsuario(id);  
-        if (!res.getEstado()) {
-            return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
-        }
-        return Response.ok((UsuariosDTO) res.getResultado("Usuario")).build();
-    } catch (Exception ex) {
-        LOG.log(Level.SEVERE, "Error obteniendo el usuario", ex);
-        return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el usuario").build();
-        }
-    }
+   
 
 
     @GET
@@ -117,11 +96,7 @@ public class ChatsController {
     @Path("/chat")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Guarda o actualiza un chat")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Chat guardado o actualizado", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ChatsDTO.class))),
-            @ApiResponse(responseCode = "500", description = "Error guardando el chat", content = @Content(mediaType = MediaType.TEXT_PLAIN))
-    })
+    
     public Response guardarChat(ChatsDTO chatDto) {
         try {
             Respuesta res = chatsService.guardarChat(chatDto);
@@ -180,20 +155,6 @@ public class ChatsController {
         }
     }
     
-    @GET
-@Path("/mensajes/{id}")
-@Produces(MediaType.APPLICATION_JSON)
-public Response getMensaje(@PathParam("id") Long id) {
-    try {
-        Respuesta res = mensajesService.getMensaje(id);
-        if (!res.getEstado()) {
-            return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
-        }
-        return Response.ok((MensajesDTO) res.getResultado("Mensaje")).build();
-    } catch (Exception ex) {
-        Logger.getLogger(ChatsController.class.getName()).log(Level.SEVERE, "Ocurrió un error al obtener el mensaje.", ex);
-        return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el mensaje").build();
-    }
-}
+
 
 }

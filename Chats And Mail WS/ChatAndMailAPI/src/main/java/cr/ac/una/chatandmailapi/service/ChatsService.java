@@ -47,30 +47,7 @@ public class ChatsService {
         }
     }
     
-   public Respuesta getUsuario(Long id) {
-    try {
-        Query qryUsuario = em.createNamedQuery("Usuarios.findByUsuId", Usuarios.class);
-        qryUsuario.setParameter("usuId", id);
-
-        Usuarios usuario = (Usuarios) qryUsuario.getSingleResult();
-        if (usuario == null) {
-            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario con el ID proporcionado.", "getUsuario NoResultException");
-        }
-        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", new UsuariosDTO(usuario));
-    } catch (NoResultException ex) {
-        return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario con el ID proporcionado.", "getUsuario NoResultException");
-    } catch (NonUniqueResultException ex) {
-        LOG.log(Level.SEVERE, "Se encontró más de un resultado para el ID proporcionado.", ex);
-        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Se encontró más de un resultado para el ID proporcionado.", "getUsuario NonUniqueResultException");
-    } catch (Exception ex) {
-        LOG.log(Level.SEVERE, "Ocurrió un error al consultar el usuario.", ex);
-        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar el usuario.", "getUsuario " + ex.getMessage());
-    }
-}
-
-
-
-
+  
     // Obtener todos los chats
     public Respuesta getChats() {
         try {
@@ -90,28 +67,31 @@ public class ChatsService {
     }
 
     // Guardar o actualizar un chat
-    public Respuesta guardarChat(ChatsDTO chatDto) {
-        try {
-            Chats chat;
-            if (chatDto.getChtId() != null && chatDto.getChtId() > 0) {
-                chat = em.find(Chats.class, chatDto.getChtId());
-                if (chat == null) {
-                    return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el chat a modificar.", "guardarChat NoResultException");
-                }
-                chat.actualizar(chatDto);  
-                chat = em.merge(chat);
-            } else {
-                chat = new Chats(chatDto);  // Usamos el constructor que crea la entidad desde el DTO
-                em.persist(chat);
+public Respuesta guardarChat(ChatsDTO chatDto) {
+    try {
+        Chats chat;
+        if (chatDto.getChtId() != null && chatDto.getChtId() > 0) {
+            LOG.log(Level.INFO, "Modificando chat con ID: {0}", chatDto.getChtId());
+            chat = em.find(Chats.class, chatDto.getChtId());
+            if (chat == null) {
+                LOG.log(Level.WARNING, "No se encontró el chat con ID: {0}", chatDto.getChtId());
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el chat a modificar.", "guardarChat NoResultException");
             }
-            em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chat", new ChatsDTO(chat));
-
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Ocurrio un error al guardar el chat.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al guardar el chat.", "guardarChat " + ex.getMessage());
+            chat.actualizar(chatDto);
+            chat = em.merge(chat);
+        } else {
+            LOG.log(Level.INFO, "Creando nuevo chat");
+            chat = new Chats(chatDto);
+            em.persist(chat);
         }
+        em.flush();
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chat", new ChatsDTO(chat));
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al guardar el chat.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar el chat.", "guardarChat " + ex.getMessage());
     }
+}
+
 
     // Eliminar un chat
     public Respuesta eliminarChat(Long id) {

@@ -12,8 +12,8 @@ public class MensajesDTO implements Serializable {
     private String smsTexto;
     private Date smsTiempo;
     private Long smsVersion;
-    private Long chatId;
-    private Long emisorId;
+    private Chats chatId;
+    private Usuarios emisorId;
 
     // Constructor vacío
     public MensajesDTO() {}
@@ -24,8 +24,8 @@ public class MensajesDTO implements Serializable {
         this.smsTexto = mensaje.getSmsTexto();
         this.smsTiempo = mensaje.getSmsTiempo();
         this.smsVersion = mensaje.getSmsVersion();
-        this.chatId = mensaje.getSmsChatId().getChtId();  // Asignación del ID del chat
-        this.emisorId = mensaje.getSmsUsuIdEmisor().getUsuId();  // Asignación del ID del emisor
+        this.chatId = mensaje.getSmsChatId();  // Asignación del ID del chat
+        this.emisorId = mensaje.getSmsUsuIdEmisor();  // Asignación del ID del emisor
     }
 
     // Getters y Setters
@@ -61,19 +61,19 @@ public class MensajesDTO implements Serializable {
         this.smsVersion = smsVersion;
     }
 
-    public Long getChatId() {
+    public Chats getChatId() {
         return chatId;
     }
 
-    public void setChatId(Long chatId) {
+    public void setChatId(Chats chatId) {
         this.chatId = chatId;
     }
 
-    public Long getEmisorId() {
+    public Usuarios getEmisorId() {
         return emisorId;
     }
 
-    public void setEmisorId(Long emisorId) {
+    public void setEmisorId(Usuarios emisorId) {
         this.emisorId = emisorId;
     }
 

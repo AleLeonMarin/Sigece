@@ -75,38 +75,43 @@ public class Chats implements Serializable {
         this.chtVersion = chtVersion;
     }
 
-    public Chats(ChatsDTO chatsDto) {
-        this.chtId = chatsDto.getChtId();
-        this.chtFecha = chatsDto.getChtFecha();
-        this.chtVersion = chatsDto.getChtVersion();
-        this.chtEmisorId = new Usuarios();
-        this.chtEmisorId.setUsuId(chatsDto.getEmisorId());
-        this.chtReceptorId = new Usuarios();
-        this.chtReceptorId.setUsuId(chatsDto.getReceptorId());
+  public Chats(ChatsDTO chatDto) {
+    this.chtFecha = chatDto.getChtFecha();
+    this.chtVersion = chatDto.getChtVersion();
+    this.chtReceptorId = chatDto.getReceptorId();
+    this.chtEmisorId = chatDto.getEmisorId();
 
-        if (chatsDto.getMensajesList() != null) {
-            this.sisMensajesList = new ArrayList<>();
-            for (MensajesDTO mensajeDto : chatsDto.getMensajesList()) {
-                this.sisMensajesList.add(new Mensajes(mensajeDto));
-            }
+    if (chatDto.getMensajesList() != null) {
+        this.sisMensajesList = new ArrayList<>();
+        for (MensajesDTO mensajeDto : chatDto.getMensajesList()) {
+            Mensajes mensaje = new Mensajes(mensajeDto);
+            mensaje.setSmsChatId(this);
+            this.sisMensajesList.add(mensaje);
         }
     }
+}
 
-    public void actualizar(ChatsDTO chatsDto) {
-        this.chtFecha = chatsDto.getChtFecha();
-        this.chtVersion = chatsDto.getChtVersion();
-        this.chtEmisorId = new Usuarios();
-        this.chtEmisorId.setUsuId(chatsDto.getEmisorId());
+public void actualizar(ChatsDTO chatsDTO) {
+    this.chtFecha = chatsDTO.getChtFecha();
+    this.chtVersion = chatsDTO.getChtVersion();
+    // Si `chtReceptorId` y `chtEmisorId` son entidades relacionadas, asignamos solo los IDs
+    if (chatsDTO.getReceptorId() != null) {
         this.chtReceptorId = new Usuarios();
-        this.chtReceptorId.setUsuId(chatsDto.getReceptorId());
+        this.chtReceptorId=chatsDTO.getReceptorId();
+    }
+    if (chatsDTO.getEmisorId() != null) {
+        this.chtEmisorId = new Usuarios();
+        this.chtEmisorId=chatsDTO.getEmisorId();
+    }
 
-        if (chatsDto.getMensajesList() != null) {
-            this.sisMensajesList = new ArrayList<>();
-            for (MensajesDTO mensajeDto : chatsDto.getMensajesList()) {
-                this.sisMensajesList.add(new Mensajes(mensajeDto));
-            }
+    // Actualizamos la lista de mensajes, si está presente
+    if (chatsDTO.getMensajesList() != null) {
+        this.sisMensajesList = new ArrayList<>();
+        for (MensajesDTO mensajeDto : chatsDTO.getMensajesList()) {
+            this.sisMensajesList.add(new Mensajes(mensajeDto));  // Conversión de DTO a entidad
         }
     }
+}
 
     public Long getChtId() {
         return chtId;

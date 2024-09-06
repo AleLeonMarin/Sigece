@@ -83,13 +83,13 @@ public class Mensajes implements Serializable {
     // Asignar `smsChatId` creando un objeto `Chats` con el ID del chat
     if (mensajesDto.getChatId() != null) {
         this.smsChatId = new Chats();
-        this.smsChatId.setChtId(mensajesDto.getChatId());  // Asigna solo el ID del chat
+        this.smsChatId= mensajesDto.getChatId();  // Asigna solo el ID del chat
     }
 
     // Asignar `smsUsuIdEmisor` creando un objeto `Usuarios` con el ID del emisor
     if (mensajesDto.getEmisorId() != null) {
         this.smsUsuIdEmisor = new Usuarios();
-        this.smsUsuIdEmisor.setUsuId(mensajesDto.getEmisorId());  // Asigna solo el ID del emisor
+        this.smsUsuIdEmisor= mensajesDto.getEmisorId();  // Asigna solo el ID del emisor
     }
 }
 

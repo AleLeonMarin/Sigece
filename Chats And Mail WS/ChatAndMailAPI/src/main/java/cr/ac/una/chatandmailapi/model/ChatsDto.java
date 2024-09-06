@@ -1,5 +1,4 @@
 package cr.ac.una.chatandmailapi.model;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,8 +12,8 @@ public class ChatsDTO implements Serializable {
     private Long chtId;
     private Date chtFecha;
     private Long chtVersion;
-    private Long receptorId;
-    private Long emisorId;
+    private Usuarios receptorId;
+    private Usuarios emisorId;
     private List<MensajesDTO> mensajesList;
 
     // Constructor vacío
@@ -25,8 +24,8 @@ public class ChatsDTO implements Serializable {
         this.chtId = chat.getChtId();
         this.chtFecha = chat.getChtFecha();
         this.chtVersion = chat.getChtVersion();
-        this.receptorId = chat.getChtReceptorId().getUsuId();  // Asignación del receptor por ID
-        this.emisorId = chat.getChtEmisorId().getUsuId();      // Asignación del emisor por ID
+        this.receptorId = chat.getChtReceptorId();  // Asignación del receptor por ID
+        this.emisorId = chat.getChtEmisorId() ;      // Asignación del emisor por ID
 
         // Convertir la lista de Mensajes a MensajesDTO
         if (chat.getSisMensajesList() != null) {
@@ -62,19 +61,18 @@ public class ChatsDTO implements Serializable {
         this.chtVersion = chtVersion;
     }
 
-    public Long getReceptorId() {
+    public Usuarios getReceptorId() {
         return receptorId;
     }
 
-    public void setReceptorId(Long receptorId) {
+    public void setReceptorId(Usuarios receptorId) {
         this.receptorId = receptorId;
     }
 
-    public Long getEmisorId() {
+    public Usuarios getEmisorId() {
         return emisorId;
     }
-
-    public void setEmisorId(Long emisorId) {
+    public void setEmisorId(Usuarios emisorId) {
         this.emisorId = emisorId;
     }
 
