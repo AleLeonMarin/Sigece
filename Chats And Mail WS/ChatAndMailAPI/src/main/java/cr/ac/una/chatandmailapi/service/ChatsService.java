@@ -1,9 +1,9 @@
 package cr.ac.una.chatandmailapi.service;
 
 import cr.ac.una.chatandmailapi.model.Chats;
-import cr.ac.una.chatandmailapi.model.ChatsDto;
+import cr.ac.una.chatandmailapi.model.ChatsDTO;
 import cr.ac.una.chatandmailapi.model.Mensajes;
-import cr.ac.una.chatandmailapi.model.MensajesDto;
+import cr.ac.una.chatandmailapi.model.MensajesDTO;
 import cr.ac.una.chatandmailapi.util.CodigoRespuesta;
 import cr.ac.una.chatandmailapi.util.Respuesta;
 import jakarta.ejb.LocalBean;
@@ -33,7 +33,7 @@ public class ChatsService {
             Query qryChat = em.createNamedQuery("SisChats.findByChtId", Chats.class);
             qryChat.setParameter("chtId", id);
 
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chat", new ChatsDto((Chats) qryChat.getSingleResult()));
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chat", new ChatsDTO((Chats) qryChat.getSingleResult()));
 
         } catch (NoResultException ex) {
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un chat con el código ingresado.", "getChat NoResultException");
@@ -51,9 +51,9 @@ public class ChatsService {
         try {
             Query qryChats = em.createNamedQuery("SisChats.findAll", Chats.class);
             List<Chats> chats = qryChats.getResultList();
-            List<ChatsDto> chatsDto = new ArrayList<>();
+            List<ChatsDTO> chatsDto = new ArrayList<>();
             for (Chats chat : chats) {
-                chatsDto.add(new ChatsDto(chat.getChtId(), chat.getChtFecha(), chat.getChtEmisorId(), chat.getChtReceptorId(), chat.getChtVersion()));
+                chatsDto.add(new ChatsDTO(chat.getChtId(), chat.getChtFecha(), chat.getChtEmisorId(), chat.getChtReceptorId(), chat.getChtVersion()));
             }
 
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chats", chatsDto);
@@ -65,7 +65,7 @@ public class ChatsService {
     }
 
     // Guardar o actualizar un chat
-    public Respuesta guardarChat(ChatsDto chatDto) {
+    public Respuesta guardarChat(ChatsDTO chatDto) {
         try {
             Chats chat;
             if (chatDto.getChtId() != null && chatDto.getChtId() > 0) {
@@ -83,7 +83,7 @@ public class ChatsService {
                 em.persist(chat);
             }
             em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chat", new ChatsDto(chat));
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chat", new ChatsDTO(chat));
 
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrio un error al guardar el chat.", ex);
@@ -118,9 +118,9 @@ public class ChatsService {
             Query qryChat = em.createQuery("SELECT c FROM Chats c WHERE c.chtEmisorId = :usuarioId OR c.chtReceptorId = :usuarioId", Chats.class);
             qryChat.setParameter("usuarioId", usuarioId);
             List<Chats> chats = qryChat.getResultList();
-            List<ChatsDto> chatsDto = new ArrayList<>();
+            List<ChatsDTO> chatsDto = new ArrayList<>();
             for (Chats chat : chats) {
-                chatsDto.add(new ChatsDto(chat.getChtId(), chat.getChtFecha(), chat.getChtEmisorId(), chat.getChtReceptorId(), chat.getChtVersion()));
+                chatsDto.add(new ChatsDTO(chat.getChtId(), chat.getChtFecha(), chat.getChtEmisorId(), chat.getChtReceptorId(), chat.getChtVersion()));
             }
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chats", chatsDto);
 
@@ -138,7 +138,7 @@ public Respuesta getMensaje(Long id) {
         qryMensaje.setParameter("smsId", id);
 
         Mensajes mensaje = (Mensajes) qryMensaje.getSingleResult();
-        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensaje", new MensajesDto(mensaje));
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensaje", new MensajesDTO(mensaje));
 
     } catch (NoResultException ex) {
         return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un mensaje con el código ingresado.", "getMensaje NoResultException");
@@ -158,9 +158,9 @@ public Respuesta getMensajesByChat(Long chatId) {
         qryMensajes.setParameter("smsChatId", chatId);
 
         List<Mensajes> mensajes = qryMensajes.getResultList();
-        List<MensajesDto> mensajesDto = new ArrayList<>();
+        List<MensajesDTO> mensajesDto = new ArrayList<>();
         for (Mensajes mensaje : mensajes) {
-            mensajesDto.add(new MensajesDto(mensaje));
+            mensajesDto.add(new MensajesDTO(mensaje));
         }
 
         return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensajes", mensajesDto);
@@ -172,7 +172,7 @@ public Respuesta getMensajesByChat(Long chatId) {
 }
 
 // Guardar o actualizar un mensaje
-public Respuesta guardarMensaje(MensajesDto mensajeDto) {
+public Respuesta guardarMensaje(MensajesDTO mensajeDto) {
     try {
         Mensajes mensaje;
         if (mensajeDto.getSmsId() != null && mensajeDto.getSmsId() > 0) {
@@ -191,7 +191,7 @@ public Respuesta guardarMensaje(MensajesDto mensajeDto) {
             em.persist(mensaje);
         }
         em.flush();
-        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensaje", new MensajesDto(mensaje));
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensaje", new MensajesDTO(mensaje));
 
     } catch (Exception ex) {
         LOG.log(Level.SEVERE, "Ocurrio un error al guardar el mensaje.", ex);
@@ -227,9 +227,9 @@ public Respuesta getMensajesByUsuario(Long usuarioId) {
         qryMensajes.setParameter("usuarioId", usuarioId);
 
         List<Mensajes> mensajes = qryMensajes.getResultList();
-        List<MensajesDto> mensajesDto = new ArrayList<>();
+        List<MensajesDTO> mensajesDto = new ArrayList<>();
         for (Mensajes mensaje : mensajes) {
-            mensajesDto.add(new MensajesDto(mensaje));
+            mensajesDto.add(new MensajesDTO(mensaje));
         }
 
         return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Mensajes", mensajesDto);

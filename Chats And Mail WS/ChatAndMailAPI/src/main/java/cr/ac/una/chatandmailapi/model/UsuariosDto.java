@@ -1,17 +1,18 @@
 package cr.ac.una.chatandmailapi.model;
 
+import cr.ac.una.chatandmailapi.model.Usuarios;
 import java.io.Serializable;
 
 /**
- * DTO for Usuarios entity
- * 
+ *
  * @author Kendall Fonseca
  */
-public class UsuariosDto implements Serializable {
+public class UsuariosDTO implements Serializable {
 
     private Long usuId;
     private String usuNombre;
     private String usuApellidos;
+    private String usuCedula;
     private String usuCorreo;
     private String usuTelefono;
     private String usuCelular;
@@ -23,13 +24,14 @@ public class UsuariosDto implements Serializable {
     private String usuStatus;
     private Long usuVersion;
 
-    public UsuariosDto() {
+    public UsuariosDTO() {
     }
 
-    public UsuariosDto(Long usuId, String usuNombre, String usuApellidos, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
+    public UsuariosDTO(Long usuId, String usuNombre, String usuApellidos, String usuCedula, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
         this.usuId = usuId;
         this.usuNombre = usuNombre;
         this.usuApellidos = usuApellidos;
+        this.usuCedula = usuCedula;
         this.usuCorreo = usuCorreo;
         this.usuTelefono = usuTelefono;
         this.usuCelular = usuCelular;
@@ -42,22 +44,24 @@ public class UsuariosDto implements Serializable {
         this.usuVersion = usuVersion;
     }
     
-        public UsuariosDto(Usuarios usuario) {
-        this();  
-        this.usuId = usuario.getUsuId();
-        this.usuNombre = usuario.getUsuNombre();
-        this.usuApellidos = usuario.getUsuApellidos();
-        this.usuCorreo = usuario.getUsuCorreo();
-        this.usuTelefono = usuario.getUsuTelefono();
-        this.usuCelular = usuario.getUsuCelular();
-        this.usuIdioma = usuario.getUsuIdioma();
-        this.usuFoto = usuario.getUsuFoto();
-        this.usuUsuario = usuario.getUsuUsuario();
-        this.usuClave = usuario.getUsuClave();
-        this.usuEstado = usuario.getUsuEstado();
-        this.usuStatus = usuario.getUsuStatus();
-        this.usuVersion = usuario.getUsuVersion();
-    }
+    public UsuariosDTO(Usuarios usuario) {
+    this();
+    this.usuId = usuario.getUsuId();
+    this.usuNombre = usuario.getUsuNombre();
+    this.usuApellidos = usuario.getUsuApellidos();
+    this.usuCedula = usuario.getUsuCedula();
+    this.usuCorreo = usuario.getUsuCorreo();
+    this.usuTelefono = usuario.getUsuTelefono();
+    this.usuCelular = usuario.getUsuCelular();
+    this.usuIdioma = usuario.getUsuIdioma();
+    this.usuFoto = usuario.getUsuFoto();
+    this.usuUsuario = usuario.getUsuUsuario();
+    this.usuClave = usuario.getUsuClave();
+    this.usuEstado = usuario.getUsuEstado();
+    this.usuStatus = usuario.getUsuStatus();
+    this.usuVersion = usuario.getUsuVersion();
+}
+
 
     public Long getUsuId() {
         return usuId;
@@ -81,6 +85,14 @@ public class UsuariosDto implements Serializable {
 
     public void setUsuApellidos(String usuApellidos) {
         this.usuApellidos = usuApellidos;
+    }
+
+    public String getUsuCedula() {
+        return usuCedula;
+    }
+
+    public void setUsuCedula(String usuCedula) {
+        this.usuCedula = usuCedula;
     }
 
     public String getUsuCorreo() {
@@ -165,10 +177,11 @@ public class UsuariosDto implements Serializable {
 
     @Override
     public String toString() {
-        return "UsuariosDto{" +
+        return "UsuariosDTO{" +
                 "usuId=" + usuId +
                 ", usuNombre='" + usuNombre + '\'' +
                 ", usuApellidos='" + usuApellidos + '\'' +
+                ", usuCedula='" + usuCedula + '\'' +
                 ", usuCorreo='" + usuCorreo + '\'' +
                 ", usuTelefono='" + usuTelefono + '\'' +
                 ", usuCelular='" + usuCelular + '\'' +

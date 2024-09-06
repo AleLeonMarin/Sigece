@@ -21,19 +21,20 @@ import java.io.Serializable;
 @Table(name = "SIS_USUARIOS")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Usuarios.findAll", query = "SELECT s FROM Usuarios s"),
-    @NamedQuery(name = "Usuarios.findByUsuId", query = "SELECT s FROM Usuarios s WHERE s.usuId = :usuId"),
-    @NamedQuery(name = "Usuarios.findByUsuNombre", query = "SELECT s FROM Usuarios s WHERE s.usuNombre = :usuNombre"),
-    @NamedQuery(name = "Usuarios.findByUsuApellidos", query = "SELECT s FROM Usuarios s WHERE s.usuApellidos = :usuApellidos"),
-    @NamedQuery(name = "Usuarios.findByUsuCorreo", query = "SELECT s FROM Usuarios s WHERE s.usuCorreo = :usuCorreo"),
-    @NamedQuery(name = "Usuarios.findByUsuTelefono", query = "SELECT s FROM Usuarios s WHERE s.usuTelefono = :usuTelefono"),
-    @NamedQuery(name = "Usuarios.findByUsuCelular", query = "SELECT s FROM Usuarios s WHERE s.usuCelular = :usuCelular"),
-    @NamedQuery(name = "Usuarios.findByUsuIdioma", query = "SELECT s FROM Usuarios s WHERE s.usuIdioma = :usuIdioma"),
-    @NamedQuery(name = "Usuarios.findByUsuUsuario", query = "SELECT s FROM Usuarios s WHERE s.usuUsuario = :usuUsuario"),
-    @NamedQuery(name = "Usuarios.findByUsuClave", query = "SELECT s FROM Usuarios s WHERE s.usuClave = :usuClave"),
-    @NamedQuery(name = "Usuarios.findByUsuEstado", query = "SELECT s FROM Usuarios s WHERE s.usuEstado = :usuEstado"),
-    @NamedQuery(name = "Usuarios.findByUsuStatus", query = "SELECT s FROM Usuarios s WHERE s.usuStatus = :usuStatus"),
-    @NamedQuery(name = "Usuarios.findByUsuVersion", query = "SELECT s FROM Usuarios s WHERE s.usuVersion = :usuVersion")})
+    @NamedQuery(name = "SisUsuarios.findAll", query = "SELECT s FROM SisUsuarios s"),
+    @NamedQuery(name = "SisUsuarios.findByUsuId", query = "SELECT s FROM SisUsuarios s WHERE s.usuId = :usuId"),
+    @NamedQuery(name = "SisUsuarios.findByUsuNombre", query = "SELECT s FROM SisUsuarios s WHERE s.usuNombre = :usuNombre"),
+    @NamedQuery(name = "SisUsuarios.findByUsuApellidos", query = "SELECT s FROM SisUsuarios s WHERE s.usuApellidos = :usuApellidos"),
+    @NamedQuery(name = "SisUsuarios.findByUsuCedula", query = "SELECT s FROM SisUsuarios s WHERE s.usuCedula = :usuCedula"),
+    @NamedQuery(name = "SisUsuarios.findByUsuCorreo", query = "SELECT s FROM SisUsuarios s WHERE s.usuCorreo = :usuCorreo"),
+    @NamedQuery(name = "SisUsuarios.findByUsuTelefono", query = "SELECT s FROM SisUsuarios s WHERE s.usuTelefono = :usuTelefono"),
+    @NamedQuery(name = "SisUsuarios.findByUsuCelular", query = "SELECT s FROM SisUsuarios s WHERE s.usuCelular = :usuCelular"),
+    @NamedQuery(name = "SisUsuarios.findByUsuIdioma", query = "SELECT s FROM SisUsuarios s WHERE s.usuIdioma = :usuIdioma"),
+    @NamedQuery(name = "SisUsuarios.findByUsuUsuario", query = "SELECT s FROM SisUsuarios s WHERE s.usuUsuario = :usuUsuario"),
+    @NamedQuery(name = "SisUsuarios.findByUsuClave", query = "SELECT s FROM SisUsuarios s WHERE s.usuClave = :usuClave"),
+    @NamedQuery(name = "SisUsuarios.findByUsuEstado", query = "SELECT s FROM SisUsuarios s WHERE s.usuEstado = :usuEstado"),
+    @NamedQuery(name = "SisUsuarios.findByUsuStatus", query = "SELECT s FROM SisUsuarios s WHERE s.usuStatus = :usuStatus"),
+    @NamedQuery(name = "SisUsuarios.findByUsuVersion", query = "SELECT s FROM SisUsuarios s WHERE s.usuVersion = :usuVersion")})
 public class Usuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,6 +56,12 @@ public class Usuarios implements Serializable {
     @Size(min = 1, max = 300)
     @Column(name = "USU_APELLIDOS")
     private String usuApellidos;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "USU_CEDULA")
+    private String usuCedula;
     
     @Basic(optional = false)
     @NotNull
@@ -122,10 +129,11 @@ public class Usuarios implements Serializable {
         this.usuId = usuId;
     }
 
-    public Usuarios(Long usuId, String usuNombre, String usuApellidos, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
+    public Usuarios(Long usuId, String usuNombre, String usuApellidos, String usuCedula, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
         this.usuId = usuId;
         this.usuNombre = usuNombre;
         this.usuApellidos = usuApellidos;
+        this.usuCedula = usuCedula;
         this.usuCorreo = usuCorreo;
         this.usuTelefono = usuTelefono;
         this.usuCelular = usuCelular;
@@ -137,8 +145,6 @@ public class Usuarios implements Serializable {
         this.usuStatus = usuStatus;
         this.usuVersion = usuVersion;
     }
-    
-    
 
     public Long getUsuId() {
         return usuId;
@@ -162,6 +168,14 @@ public class Usuarios implements Serializable {
 
     public void setUsuApellidos(String usuApellidos) {
         this.usuApellidos = usuApellidos;
+    }
+
+    public String getUsuCedula() {
+        return usuCedula;
+    }
+
+    public void setUsuCedula(String usuCedula) {
+        this.usuCedula = usuCedula;
     }
 
     public String getUsuCorreo() {
@@ -257,15 +271,11 @@ public class Usuarios implements Serializable {
             return false;
         }
         Usuarios other = (Usuarios) object;
-        if ((this.usuId == null && other.usuId != null) || (this.usuId != null && !this.usuId.equals(other.usuId))) {
-            return false;
-        }
-        return true;
+        return !((this.usuId == null && other.usuId != null) || (this.usuId != null && !this.usuId.equals(other.usuId)));
     }
 
     @Override
     public String toString() {
         return "cr.ac.una.chatandmailapi.model.SisUsuarios[ usuId=" + usuId + " ]";
     }
-    
 }

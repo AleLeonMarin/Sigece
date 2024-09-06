@@ -1,40 +1,32 @@
 package cr.ac.una.chatandmailapi.model;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
- * DTO for Chats entity
+ *
+ * @author Kendall Fonseca
  */
-public class ChatsDto {
+public class ChatsDTO implements Serializable {
 
     private Long chtId;
     private Date chtFecha;
-    private Long chtEmisorId;
-    private Long chtReceptorId;
     private Long chtVersion;
+    private Long chtReceptorId;
+    private Long chtEmisorId;
+    private List<MensajesDTO> mensajesList;
 
-     public ChatsDto() {
-        this.chtFecha = new Date(); 
+    public ChatsDTO() {
     }
-    public ChatsDto(Long chtId, Date chtFecha, Long chtEmisorId, Long chtReceptorId, Long chtVersion) {
+
+    public ChatsDTO(Long chtId, Date chtFecha, Long chtVersion, Long chtReceptorId, Long chtEmisorId) {
         this.chtId = chtId;
         this.chtFecha = chtFecha;
-        this.chtEmisorId = chtEmisorId;
-        this.chtReceptorId = chtReceptorId;
         this.chtVersion = chtVersion;
+        this.chtReceptorId = chtReceptorId;
+        this.chtEmisorId = chtEmisorId;
     }
-    
-    
-
-    public ChatsDto(Chats chat) {
-        this();
-        this.chtId = chat.getChtId();
-        this.chtFecha = chat.getChtFecha();
-        this.chtEmisorId = chat.getChtEmisorId();
-        this.chtReceptorId = chat.getChtReceptorId();
-        this.chtVersion = chat.getChtVersion();
-    }
-
 
     public Long getChtId() {
         return chtId;
@@ -52,12 +44,12 @@ public class ChatsDto {
         this.chtFecha = chtFecha;
     }
 
-    public Long getChtEmisorId() {
-        return chtEmisorId;
+    public Long getChtVersion() {
+        return chtVersion;
     }
 
-    public void setChtEmisorId(Long chtEmisorId) {
-        this.chtEmisorId = chtEmisorId;
+    public void setChtVersion(Long chtVersion) {
+        this.chtVersion = chtVersion;
     }
 
     public Long getChtReceptorId() {
@@ -68,22 +60,31 @@ public class ChatsDto {
         this.chtReceptorId = chtReceptorId;
     }
 
-    public Long getChtVersion() {
-        return chtVersion;
+    public Long getChtEmisorId() {
+        return chtEmisorId;
     }
 
-    public void setChtVersion(Long chtVersion) {
-        this.chtVersion = chtVersion;
+    public void setChtEmisorId(Long chtEmisorId) {
+        this.chtEmisorId = chtEmisorId;
+    }
+
+    public List<MensajesDTO> getMensajesList() {
+        return mensajesList;
+    }
+
+    public void setMensajesList(List<MensajesDTO> mensajesList) {
+        this.mensajesList = mensajesList;
     }
 
     @Override
     public String toString() {
-        return "ChatsDto{" +
+        return "ChatsDTO{" +
                 "chtId=" + chtId +
                 ", chtFecha=" + chtFecha +
-                ", chtEmisorId=" + chtEmisorId +
-                ", chtReceptorId=" + chtReceptorId +
                 ", chtVersion=" + chtVersion +
+                ", chtReceptorId=" + chtReceptorId +
+                ", chtEmisorId=" + chtEmisorId +
+                ", mensajesList=" + mensajesList +
                 '}';
     }
 }

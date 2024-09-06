@@ -1,42 +1,31 @@
-
 package cr.ac.una.chatandmailapi.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class MensajesDto {
+/**
+ *
+ * @author Kendall Fonseca
+ */
+public class MensajesDTO implements Serializable {
 
     private Long smsId;
     private String smsTexto;
     private Date smsTiempo;
-    private Long smsUsuIdEmisor;
-    private Long smsChatId;
     private Long smsVersion;
+    private Long smsChatId;
+    private Long smsUsuIdEmisor;
 
-    public MensajesDto() {
-        // Constructor por defecto
-        this.smsTiempo = new Date();  // Inicializa la fecha actual
+    public MensajesDTO() {
     }
 
-
-    public MensajesDto(Long smsId, String smsTexto, Date smsTiempo, Long smsUsuIdEmisor, Long smsChatId, Long smsVersion) {
+    public MensajesDTO(Long smsId, String smsTexto, Date smsTiempo, Long smsVersion, Long smsChatId, Long smsUsuIdEmisor) {
         this.smsId = smsId;
         this.smsTexto = smsTexto;
         this.smsTiempo = smsTiempo;
-        this.smsUsuIdEmisor = smsUsuIdEmisor;
-        this.smsChatId = smsChatId;
         this.smsVersion = smsVersion;
-    }
-    
-  
-    // Constructor que recibe la entidad de Mensajes
-    public MensajesDto(Mensajes mensaje) {
-        this();  // Llama al constructor por defecto
-        this.smsId = mensaje.getSmsId();
-        this.smsTexto = mensaje.getSmsTexto();
-        this.smsTiempo = mensaje.getSmsTiempo();
-        this.smsUsuIdEmisor = mensaje.getSmsUsuIdEmisor();
-        this.smsChatId = mensaje.getSmsChatId();
-        this.smsVersion = mensaje.getSmsVersion();
+        this.smsChatId = smsChatId;
+        this.smsUsuIdEmisor = smsUsuIdEmisor;
     }
 
     public Long getSmsId() {
@@ -63,12 +52,12 @@ public class MensajesDto {
         this.smsTiempo = smsTiempo;
     }
 
-    public Long getSmsUsuIdEmisor() {
-        return smsUsuIdEmisor;
+    public Long getSmsVersion() {
+        return smsVersion;
     }
 
-    public void setSmsUsuIdEmisor(Long smsUsuIdEmisor) {
-        this.smsUsuIdEmisor = smsUsuIdEmisor;
+    public void setSmsVersion(Long smsVersion) {
+        this.smsVersion = smsVersion;
     }
 
     public Long getSmsChatId() {
@@ -79,11 +68,23 @@ public class MensajesDto {
         this.smsChatId = smsChatId;
     }
 
-    public Long getSmsVersion() {
-        return smsVersion;
+    public Long getSmsUsuIdEmisor() {
+        return smsUsuIdEmisor;
     }
 
-    public void setSmsVersion(Long smsVersion) {
-        this.smsVersion = smsVersion;
+    public void setSmsUsuIdEmisor(Long smsUsuIdEmisor) {
+        this.smsUsuIdEmisor = smsUsuIdEmisor;
+    }
+
+    @Override
+    public String toString() {
+        return "MensajesDTO{" +
+                "smsId=" + smsId +
+                ", smsTexto='" + smsTexto + '\'' +
+                ", smsTiempo=" + smsTiempo +
+                ", smsVersion=" + smsVersion +
+                ", smsChatId=" + smsChatId +
+                ", smsUsuIdEmisor=" + smsUsuIdEmisor +
+                '}';
     }
 }
