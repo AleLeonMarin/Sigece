@@ -3,7 +3,7 @@
   <!-- Define Persistence Unit -->
   <persistence-unit name="SigeceUnaWsPU" transaction-type="JTA">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <jta-data-source>jdbc/SigeceUna</jta-data-source>
+    <jta-data-source>jdbc/Sigece</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.logging.level.sql" value="SEVERE"/>

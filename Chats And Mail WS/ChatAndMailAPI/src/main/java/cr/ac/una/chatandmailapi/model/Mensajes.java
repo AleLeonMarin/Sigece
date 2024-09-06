@@ -25,10 +25,10 @@ import java.util.Date;
 @Table(name = "SIS_MENSAJES")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SisMensajes.findAll", query = "SELECT s FROM SisMensajes s"),
-    @NamedQuery(name = "SisMensajes.findBySmsId", query = "SELECT s FROM SisMensajes s WHERE s.smsId = :smsId"),
-    @NamedQuery(name = "SisMensajes.findBySmsTiempo", query = "SELECT s FROM SisMensajes s WHERE s.smsTiempo = :smsTiempo"),
-    @NamedQuery(name = "SisMensajes.findBySmsVersion", query = "SELECT s FROM SisMensajes s WHERE s.smsVersion = :smsVersion")})
+    @NamedQuery(name = "Mensajes.findAll", query = "SELECT s FROM Mensajes s"),
+    @NamedQuery(name = "Mensajes.findBySmsId", query = "SELECT s FROM Mensajes s WHERE s.smsId = :smsId"),
+    @NamedQuery(name = "Mensajes.findBySmsTiempo", query = "SELECT s FROM Mensajes s WHERE s.smsTiempo = :smsTiempo"),
+    @NamedQuery(name = "Mensajes.findBySmsVersion", query = "SELECT s FROM Mensajes s WHERE s.smsVersion = :smsVersion")})
 public class Mensajes implements Serializable {
 
     private static final long serialVersionUID = 1L;

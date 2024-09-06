@@ -2,6 +2,8 @@ package cr.ac.una.chatandmailapi.service;
 
 import cr.ac.una.chatandmailapi.model.Chats;
 import cr.ac.una.chatandmailapi.model.ChatsDTO;
+import cr.ac.una.chatandmailapi.model.Usuarios;
+import cr.ac.una.chatandmailapi.model.UsuariosDTO;
 import cr.ac.una.chatandmailapi.util.CodigoRespuesta;
 import cr.ac.una.chatandmailapi.util.Respuesta;
 import jakarta.ejb.LocalBean;
@@ -28,7 +30,7 @@ public class ChatsService {
     // Obtener un chat por ID
     public Respuesta getChat(Long id) {
         try {
-            Query qryChat = em.createNamedQuery("SisChats.findByChtId", Chats.class);
+            Query qryChat = em.createNamedQuery("Chats.findByChtId", Chats.class);
             qryChat.setParameter("chtId", id);
 
             Chats chat = (Chats) qryChat.getSingleResult();
@@ -44,11 +46,35 @@ public class ChatsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el chat.", "getChat " + ex.getMessage());
         }
     }
+    
+   public Respuesta getUsuario(Long id) {
+    try {
+        Query qryUsuario = em.createNamedQuery("Usuarios.findByUsuId", Usuarios.class);
+        qryUsuario.setParameter("usuId", id);
+
+        Usuarios usuario = (Usuarios) qryUsuario.getSingleResult();
+        if (usuario == null) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario con el ID proporcionado.", "getUsuario NoResultException");
+        }
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", new UsuariosDTO(usuario));
+    } catch (NoResultException ex) {
+        return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario con el ID proporcionado.", "getUsuario NoResultException");
+    } catch (NonUniqueResultException ex) {
+        LOG.log(Level.SEVERE, "Se encontró más de un resultado para el ID proporcionado.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Se encontró más de un resultado para el ID proporcionado.", "getUsuario NonUniqueResultException");
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al consultar el usuario.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar el usuario.", "getUsuario " + ex.getMessage());
+    }
+}
+
+
+
 
     // Obtener todos los chats
     public Respuesta getChats() {
         try {
-            Query qryChats = em.createNamedQuery("SisChats.findAll", Chats.class);
+            Query qryChats = em.createNamedQuery("Chats.findAll", Chats.class);
             List<Chats> chats = qryChats.getResultList();
             List<ChatsDTO> chatsDto = new ArrayList<>();
             for (Chats chat : chats) {
@@ -72,7 +98,7 @@ public class ChatsService {
                 if (chat == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el chat a modificar.", "guardarChat NoResultException");
                 }
-                chat.actualizar(chatDto);  // Usamos el método actualizar desde el DTO
+                chat.actualizar(chatDto);  
                 chat = em.merge(chat);
             } else {
                 chat = new Chats(chatDto);  // Usamos el constructor que crea la entidad desde el DTO

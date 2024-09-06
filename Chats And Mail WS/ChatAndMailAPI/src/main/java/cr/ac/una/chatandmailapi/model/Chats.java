@@ -7,35 +7,47 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Entidad Chats.
+ * Entidad Chats para manejar la tabla de chats en la base de datos.
  */
 @Entity
 @Table(name = "SIS_CHATS")
+@NamedQueries({
+    @NamedQuery(name = "Chats.findAll", query = "SELECT c FROM Chats c"),
+    @NamedQuery(name = "Chats.findByChtId", query = "SELECT c FROM Chats c WHERE c.chtId = :chtId"),
+    @NamedQuery(name = "Chats.findByChtFecha", query = "SELECT c FROM Chats c WHERE c.chtFecha = :chtFecha"),
+    @NamedQuery(name = "Chats.findByChtVersion", query = "SELECT c FROM Chats c WHERE c.chtVersion = :chtVersion")
+})
 public class Chats implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @Id
     @Basic(optional = false)
+    @NotNull
     @Column(name = "CHT_ID")
     private Long chtId;
-
+    
     @Basic(optional = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
     @Column(name = "CHT_FECHA")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date chtFecha;
-
+    
     @Basic(optional = false)
+    @NotNull
     @Column(name = "CHT_VERSION")
     private Long chtVersion;
 
@@ -50,32 +62,52 @@ public class Chats implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "smsChatId")
     private List<Mensajes> sisMensajesList;
 
-    // Constructor vacío
     public Chats() {
     }
 
-    // Constructor que recibe un DTO
-    public Chats(ChatsDTO chatsDTO) {
-        this.chtId = chatsDTO.getChtId();
-        actualizar(chatsDTO);
+    public Chats(Long chtId) {
+        this.chtId = chtId;
     }
 
-    // Método para actualizar la entidad a partir de un DTO
-    public void actualizar(ChatsDTO chatsDTO) {
-        this.chtFecha = chatsDTO.getChtFecha();
-        this.chtVersion = chatsDTO.getChtVersion();
-        this.chtReceptorId = new Usuarios(chatsDTO.getReceptorId());  // Referencia por ID
-        this.chtEmisorId = new Usuarios(chatsDTO.getEmisorId());      // Referencia por ID
+    public Chats(Long chtId, Date chtFecha, Long chtVersion) {
+        this.chtId = chtId;
+        this.chtFecha = chtFecha;
+        this.chtVersion = chtVersion;
+    }
 
-        if (chatsDTO.getMensajesList() != null) {
+    public Chats(ChatsDTO chatsDto) {
+        this.chtId = chatsDto.getChtId();
+        this.chtFecha = chatsDto.getChtFecha();
+        this.chtVersion = chatsDto.getChtVersion();
+        this.chtEmisorId = new Usuarios();
+        this.chtEmisorId.setUsuId(chatsDto.getEmisorId());
+        this.chtReceptorId = new Usuarios();
+        this.chtReceptorId.setUsuId(chatsDto.getReceptorId());
+
+        if (chatsDto.getMensajesList() != null) {
             this.sisMensajesList = new ArrayList<>();
-            chatsDTO.getMensajesList().forEach(mensajeDto -> {
-                this.sisMensajesList.add(new Mensajes((MensajesDTO) mensajeDto));
-            });
+            for (MensajesDTO mensajeDto : chatsDto.getMensajesList()) {
+                this.sisMensajesList.add(new Mensajes(mensajeDto));
+            }
         }
     }
 
-    // Getters y Setters
+    public void actualizar(ChatsDTO chatsDto) {
+        this.chtFecha = chatsDto.getChtFecha();
+        this.chtVersion = chatsDto.getChtVersion();
+        this.chtEmisorId = new Usuarios();
+        this.chtEmisorId.setUsuId(chatsDto.getEmisorId());
+        this.chtReceptorId = new Usuarios();
+        this.chtReceptorId.setUsuId(chatsDto.getReceptorId());
+
+        if (chatsDto.getMensajesList() != null) {
+            this.sisMensajesList = new ArrayList<>();
+            for (MensajesDTO mensajeDto : chatsDto.getMensajesList()) {
+                this.sisMensajesList.add(new Mensajes(mensajeDto));
+            }
+        }
+    }
+
     public Long getChtId() {
         return chtId;
     }
@@ -124,7 +156,6 @@ public class Chats implements Serializable {
         this.sisMensajesList = sisMensajesList;
     }
 
-    // hashCode, equals y toString
     @Override
     public int hashCode() {
         int hash = 0;
@@ -138,7 +169,7 @@ public class Chats implements Serializable {
             return false;
         }
         Chats other = (Chats) object;
-        return (this.chtId != null || other.chtId == null) && (this.chtId == null || this.chtId.equals(other.chtId));
+        return !((this.chtId == null && other.chtId != null) || (this.chtId != null && !this.chtId.equals(other.chtId)));
     }
 
     @Override
