@@ -7,26 +7,15 @@ import java.util.Date;
  *
  * @author Kendall Fonseca
  */
-public class MensajesDTO implements Serializable {
-
+public class MensajesDTO {
     private Long smsId;
     private String smsTexto;
     private Date smsTiempo;
     private Long smsVersion;
-    private Long smsChatId;
-    private Long smsUsuIdEmisor;
+    private Long chatId;
+    private Long emisorId;
 
-    public MensajesDTO() {
-    }
-
-    public MensajesDTO(Long smsId, String smsTexto, Date smsTiempo, Long smsVersion, Long smsChatId, Long smsUsuIdEmisor) {
-        this.smsId = smsId;
-        this.smsTexto = smsTexto;
-        this.smsTiempo = smsTiempo;
-        this.smsVersion = smsVersion;
-        this.smsChatId = smsChatId;
-        this.smsUsuIdEmisor = smsUsuIdEmisor;
-    }
+    // Getters y Setters
 
     public Long getSmsId() {
         return smsId;
@@ -60,31 +49,57 @@ public class MensajesDTO implements Serializable {
         this.smsVersion = smsVersion;
     }
 
-    public Long getSmsChatId() {
-        return smsChatId;
+    public Long getChatId() {
+        return chatId;
     }
 
-    public void setSmsChatId(Long smsChatId) {
-        this.smsChatId = smsChatId;
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 
-    public Long getSmsUsuIdEmisor() {
-        return smsUsuIdEmisor;
+    public Long getEmisorId() {
+        return emisorId;
     }
 
-    public void setSmsUsuIdEmisor(Long smsUsuIdEmisor) {
-        this.smsUsuIdEmisor = smsUsuIdEmisor;
+    public void setEmisorId(Long emisorId) {
+        this.emisorId = emisorId;
     }
+
+    // hashCode
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (smsId != null ? smsId.hashCode() : 0);
+        return hash;
+    }
+
+    // equals
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        MensajesDTO other = (MensajesDTO) obj;
+        return (this.smsId != null && this.smsId.equals(other.smsId));
+    }
+
+    // toString
 
     @Override
     public String toString() {
-        return "MensajesDTO{" +
+        return "MensajesDto{" +
                 "smsId=" + smsId +
                 ", smsTexto='" + smsTexto + '\'' +
                 ", smsTiempo=" + smsTiempo +
                 ", smsVersion=" + smsVersion +
-                ", smsChatId=" + smsChatId +
-                ", smsUsuIdEmisor=" + smsUsuIdEmisor +
+                ", chatId=" + chatId +
+                ", emisorId=" + emisorId +
                 '}';
     }
 }
+

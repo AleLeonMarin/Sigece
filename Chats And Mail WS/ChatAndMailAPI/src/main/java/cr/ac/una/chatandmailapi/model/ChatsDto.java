@@ -1,3 +1,9 @@
+
+
+/**
+ *
+ * @author Kendall Fonseca
+ */
 package cr.ac.una.chatandmailapi.model;
 
 import java.io.Serializable;
@@ -8,26 +14,15 @@ import java.util.List;
  *
  * @author Kendall Fonseca
  */
-public class ChatsDTO implements Serializable {
-
+public class ChatsDTO{
     private Long chtId;
     private Date chtFecha;
     private Long chtVersion;
-    private Long chtReceptorId;
-    private Long chtEmisorId;
-    private List<MensajesDTO> mensajesList;
+    private Long receptorId;
+    private Long emisorId;
+    private List<MensajesDTO> mensajesList;  // Asumiendo que Mensajes tiene su propio DTO
 
-    public ChatsDTO() {
-    }
-
-    public ChatsDTO(Long chtId, Date chtFecha, Long chtVersion, Long chtReceptorId, Long chtEmisorId) {
-        this.chtId = chtId;
-        this.chtFecha = chtFecha;
-        this.chtVersion = chtVersion;
-        this.chtReceptorId = chtReceptorId;
-        this.chtEmisorId = chtEmisorId;
-    }
-
+    // Getters y Setters
     public Long getChtId() {
         return chtId;
     }
@@ -52,38 +47,58 @@ public class ChatsDTO implements Serializable {
         this.chtVersion = chtVersion;
     }
 
-    public Long getChtReceptorId() {
-        return chtReceptorId;
+    public Long getReceptorId() {
+        return receptorId;
     }
 
-    public void setChtReceptorId(Long chtReceptorId) {
-        this.chtReceptorId = chtReceptorId;
+    public void setReceptorId(Long receptorId) {
+        this.receptorId = receptorId;
     }
 
-    public Long getChtEmisorId() {
-        return chtEmisorId;
+    public Long getEmisorId() {
+        return emisorId;
     }
 
-    public void setChtEmisorId(Long chtEmisorId) {
-        this.chtEmisorId = chtEmisorId;
+    public void setEmisorId(Long emisorId) {
+        this.emisorId = emisorId;
     }
 
-    public List<MensajesDTO> getMensajesList() {
+    public List<MensajesDto> getMensajesList() {
         return mensajesList;
     }
 
-    public void setMensajesList(List<MensajesDTO> mensajesList) {
+    public void setMensajesList(List<MensajesDto> mensajesList) {
         this.mensajesList = mensajesList;
+    }
+
+    // hashCode, equals, toString
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (chtId != null ? chtId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        ChatsDTO other = (ChatsDTO) obj;
+        return (this.chtId != null && this.chtId.equals(other.chtId));
     }
 
     @Override
     public String toString() {
-        return "ChatsDTO{" +
+        return "ChatsDto{" +
                 "chtId=" + chtId +
                 ", chtFecha=" + chtFecha +
                 ", chtVersion=" + chtVersion +
-                ", chtReceptorId=" + chtReceptorId +
-                ", chtEmisorId=" + chtEmisorId +
+                ", receptorId=" + receptorId +
+                ", emisorId=" + emisorId +
                 ", mensajesList=" + mensajesList +
                 '}';
     }

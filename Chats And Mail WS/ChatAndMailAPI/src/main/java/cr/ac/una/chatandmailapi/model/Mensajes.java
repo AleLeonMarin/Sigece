@@ -64,19 +64,27 @@ public class Mensajes implements Serializable {
     @ManyToOne(optional = false)
     private Usuarios smsUsuIdEmisor;
 
+    // Constructor vacío
     public Mensajes() {
     }
 
-    public Mensajes(Long smsId) {
-        this.smsId = smsId;
+    // Constructor que recibe el DTO
+    public Mensajes(MensajesDTO mensajesDto) {
+        this.smsId = mensajesDto.getSmsId();
+        actualizar(mensajesDto);
     }
 
-    public Mensajes(Long smsId, String smsTexto, Date smsTiempo, Long smsVersion) {
-        this.smsId = smsId;
-        this.smsTexto = smsTexto;
-        this.smsTiempo = smsTiempo;
-        this.smsVersion = smsVersion;
+    // Método actualizar basado en el DTO
+    public void actualizar(MensajesDTO mensajesDto) {
+        this.smsTexto = mensajesDto.getSmsTexto();
+        this.smsTiempo = mensajesDto.getSmsTiempo();
+        this.smsVersion = mensajesDto.getSmsVersion();
+        // Asumimos que `smsChatId` y `smsUsuIdEmisor` son entidades que se asignan por su ID
+        this.smsChatId = new Chats(mensajesDto.getChatId());
+        this.smsUsuIdEmisor = new Usuarios(mensajesDto.getEmisorId());
     }
+
+    // Getters y Setters
 
     public Long getSmsId() {
         return smsId;
@@ -146,5 +154,4 @@ public class Mensajes implements Serializable {
     public String toString() {
         return "cr.ac.una.chatandmailapi.model.SisMensajes[ smsId=" + smsId + " ]";
     }
-    
 }

@@ -145,6 +145,22 @@ public class Usuarios implements Serializable {
         this.usuStatus = usuStatus;
         this.usuVersion = usuVersion;
     }
+    
+    public void actualizar(UsuariosDTO usuariosDto) {
+    this.usuNombre = usuariosDto.getUsuNombre();
+    this.usuApellidos = usuariosDto.getUsuApellidos();
+    this.usuCedula = usuariosDto.getUsuCedula();
+    this.usuCorreo = usuariosDto.getUsuCorreo();
+    this.usuTelefono = usuariosDto.getUsuTelefono();
+    this.usuCelular = usuariosDto.getUsuCelular();
+    this.usuIdioma = usuariosDto.getUsuIdioma();
+    this.usuFoto = usuariosDto.getUsuFoto();
+    this.usuUsuario = usuariosDto.getUsuUsuario();
+    this.usuClave = usuariosDto.getUsuClave();
+    this.usuEstado = usuariosDto.getUsuEstado();
+    this.usuStatus = usuariosDto.getUsuStatus();
+    this.usuVersion = usuariosDto.getUsuVersion();
+    }
 
     public Long getUsuId() {
         return usuId;

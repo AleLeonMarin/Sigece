@@ -7,70 +7,75 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- *
- * @author Kendall Fonseca
+ * Entidad Chats.
  */
 @Entity
 @Table(name = "SIS_CHATS")
-@XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "SisChats.findAll", query = "SELECT s FROM SisChats s"),
-    @NamedQuery(name = "SisChats.findByChtId", query = "SELECT s FROM SisChats s WHERE s.chtId = :chtId"),
-    @NamedQuery(name = "SisChats.findByChtFecha", query = "SELECT s FROM SisChats s WHERE s.chtFecha = :chtFecha"),
-    @NamedQuery(name = "SisChats.findByChtVersion", query = "SELECT s FROM SisChats s WHERE s.chtVersion = :chtVersion")})
 public class Chats implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
-    @NotNull
     @Column(name = "CHT_ID")
     private Long chtId;
+
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "CHT_FECHA")
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CHT_FECHA")
     private Date chtFecha;
+
     @Basic(optional = false)
-    @NotNull
     @Column(name = "CHT_VERSION")
     private Long chtVersion;
+
     @JoinColumn(name = "CHT_RECEPTOR_ID", referencedColumnName = "USU_ID")
     @ManyToOne(optional = false)
     private Usuarios chtReceptorId;
+
     @JoinColumn(name = "CHT_EMISOR_ID", referencedColumnName = "USU_ID")
     @ManyToOne(optional = false)
     private Usuarios chtEmisorId;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "smsChatId")
     private List<Mensajes> sisMensajesList;
 
+    // Constructor vacío
     public Chats() {
     }
 
-    public Chats(Long chtId) {
-        this.chtId = chtId;
+    // Constructor que recibe un DTO
+    public Chats(ChatsDTO chatsDTO) {
+        this.chtId = chatsDTO.getChtId();
+        actualizar(chatsDTO);
     }
 
-    public Chats(Long chtId, Date chtFecha, Long chtVersion) {
-        this.chtId = chtId;
-        this.chtFecha = chtFecha;
-        this.chtVersion = chtVersion;
+    // Método para actualizar la entidad a partir de un DTO
+    public void actualizar(ChatsDTO chatsDTO) {
+        this.chtFecha = chatsDTO.getChtFecha();
+        this.chtVersion = chatsDTO.getChtVersion();
+        this.chtReceptorId = new Usuarios(chatsDTO.getReceptorId());  // Referencia por ID
+        this.chtEmisorId = new Usuarios(chatsDTO.getEmisorId());      // Referencia por ID
+
+        if (chatsDTO.getMensajesList() != null) {
+            this.sisMensajesList = new ArrayList<>();
+            chatsDTO.getMensajesList().forEach(mensajeDto -> {
+                this.sisMensajesList.add(new Mensajes(mensajeDto));
+            });
+        }
     }
 
+    // Getters y Setters
     public Long getChtId() {
         return chtId;
     }
@@ -111,7 +116,6 @@ public class Chats implements Serializable {
         this.chtEmisorId = chtEmisorId;
     }
 
-    @XmlTransient
     public List<Mensajes> getSisMensajesList() {
         return sisMensajesList;
     }
@@ -120,6 +124,7 @@ public class Chats implements Serializable {
         this.sisMensajesList = sisMensajesList;
     }
 
+    // hashCode, equals y toString
     @Override
     public int hashCode() {
         int hash = 0;
@@ -133,12 +138,11 @@ public class Chats implements Serializable {
             return false;
         }
         Chats other = (Chats) object;
-        return !((this.chtId == null && other.chtId != null) || (this.chtId != null && !this.chtId.equals(other.chtId)));
+        return (this.chtId != null || other.chtId == null) && (this.chtId == null || this.chtId.equals(other.chtId));
     }
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.model.SisChats[ chtId=" + chtId + " ]";
+        return "cr.ac.una.chatandmailapi.model.Chats[ chtId=" + chtId + " ]";
     }
-    
 }
