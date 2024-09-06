@@ -128,7 +128,7 @@ public class Usuarios implements Serializable {
     @Column(name = "USU_VERSION")
     private Long version;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "usuarios")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "usuarios")
     private List<Roles> roles;
 
     public Usuarios() {
