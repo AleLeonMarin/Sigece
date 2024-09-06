@@ -76,13 +76,23 @@ public class Mensajes implements Serializable {
 
     // Método actualizar basado en el DTO
     public void actualizar(MensajesDTO mensajesDto) {
-        this.smsTexto = mensajesDto.getSmsTexto();
-        this.smsTiempo = mensajesDto.getSmsTiempo();
-        this.smsVersion = mensajesDto.getSmsVersion();
-        // Asumimos que `smsChatId` y `smsUsuIdEmisor` son entidades que se asignan por su ID
-        this.smsChatId = new Chats(mensajesDto.getChatId());
-        this.smsUsuIdEmisor = new Usuarios(mensajesDto.getEmisorId());
+    this.smsTexto = mensajesDto.getSmsTexto();
+    this.smsTiempo = mensajesDto.getSmsTiempo();
+    this.smsVersion = mensajesDto.getSmsVersion();
+
+    // Asignar `smsChatId` creando un objeto `Chats` con el ID del chat
+    if (mensajesDto.getChatId() != null) {
+        this.smsChatId = new Chats();
+        this.smsChatId.setChtId(mensajesDto.getChatId());  // Asigna solo el ID del chat
     }
+
+    // Asignar `smsUsuIdEmisor` creando un objeto `Usuarios` con el ID del emisor
+    if (mensajesDto.getEmisorId() != null) {
+        this.smsUsuIdEmisor = new Usuarios();
+        this.smsUsuIdEmisor.setUsuId(mensajesDto.getEmisorId());  // Asigna solo el ID del emisor
+    }
+}
+
 
     // Getters y Setters
 

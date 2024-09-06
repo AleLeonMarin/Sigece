@@ -1,26 +1,41 @@
-
-
-/**
- *
- * @author Kendall Fonseca
- */
 package cr.ac.una.chatandmailapi.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- *
- * @author Kendall Fonseca
+ * DTO para la entidad Chats.
  */
-public class ChatsDTO{
+public class ChatsDTO implements Serializable {
+
     private Long chtId;
     private Date chtFecha;
     private Long chtVersion;
     private Long receptorId;
     private Long emisorId;
-    private List<MensajesDTO> mensajesList;  // Asumiendo que Mensajes tiene su propio DTO
+    private List<MensajesDTO> mensajesList;
+
+    // Constructor vacío
+    public ChatsDTO() {}
+
+    // Constructor que recibe la entidad Chats
+    public ChatsDTO(Chats chat) {
+        this.chtId = chat.getChtId();
+        this.chtFecha = chat.getChtFecha();
+        this.chtVersion = chat.getChtVersion();
+        this.receptorId = chat.getChtReceptorId().getUsuId();  // Asignación del receptor por ID
+        this.emisorId = chat.getChtEmisorId().getUsuId();      // Asignación del emisor por ID
+
+        // Convertir la lista de Mensajes a MensajesDTO
+        if (chat.getSisMensajesList() != null) {
+            this.mensajesList = new ArrayList<>();
+            for (Mensajes mensaje : chat.getSisMensajesList()) {
+                this.mensajesList.add(new MensajesDTO(mensaje));  // Conversión de cada mensaje
+            }
+        }
+    }
 
     // Getters y Setters
     public Long getChtId() {
@@ -63,15 +78,16 @@ public class ChatsDTO{
         this.emisorId = emisorId;
     }
 
-    public List<MensajesDto> getMensajesList() {
+    public List<MensajesDTO> getMensajesList() {
         return mensajesList;
     }
 
-    public void setMensajesList(List<MensajesDto> mensajesList) {
+    public void setMensajesList(List<MensajesDTO> mensajesList) {
         this.mensajesList = mensajesList;
     }
 
     // hashCode, equals, toString
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -93,7 +109,7 @@ public class ChatsDTO{
 
     @Override
     public String toString() {
-        return "ChatsDto{" +
+        return "ChatsDTO{" +
                 "chtId=" + chtId +
                 ", chtFecha=" + chtFecha +
                 ", chtVersion=" + chtVersion +

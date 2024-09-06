@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
- * @author Kendall Fonseca
+ * DTO para la entidad Mensajes.
  */
-public class MensajesDTO {
+public class MensajesDTO implements Serializable {
+
     private Long smsId;
     private String smsTexto;
     private Date smsTiempo;
@@ -15,8 +15,20 @@ public class MensajesDTO {
     private Long chatId;
     private Long emisorId;
 
-    // Getters y Setters
+    // Constructor vacío
+    public MensajesDTO() {}
 
+    // Constructor que recibe la entidad Mensajes
+    public MensajesDTO(Mensajes mensaje) {
+        this.smsId = mensaje.getSmsId();
+        this.smsTexto = mensaje.getSmsTexto();
+        this.smsTiempo = mensaje.getSmsTiempo();
+        this.smsVersion = mensaje.getSmsVersion();
+        this.chatId = mensaje.getSmsChatId().getChtId();  // Asignación del ID del chat
+        this.emisorId = mensaje.getSmsUsuIdEmisor().getUsuId();  // Asignación del ID del emisor
+    }
+
+    // Getters y Setters
     public Long getSmsId() {
         return smsId;
     }
@@ -65,7 +77,7 @@ public class MensajesDTO {
         this.emisorId = emisorId;
     }
 
-    // hashCode
+    // hashCode, equals, toString
 
     @Override
     public int hashCode() {
@@ -73,8 +85,6 @@ public class MensajesDTO {
         hash = 31 * hash + (smsId != null ? smsId.hashCode() : 0);
         return hash;
     }
-
-    // equals
 
     @Override
     public boolean equals(Object obj) {
@@ -88,11 +98,9 @@ public class MensajesDTO {
         return (this.smsId != null && this.smsId.equals(other.smsId));
     }
 
-    // toString
-
     @Override
     public String toString() {
-        return "MensajesDto{" +
+        return "MensajesDTO{" +
                 "smsId=" + smsId +
                 ", smsTexto='" + smsTexto + '\'' +
                 ", smsTiempo=" + smsTiempo +
@@ -102,4 +110,3 @@ public class MensajesDTO {
                 '}';
     }
 }
-

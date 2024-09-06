@@ -70,7 +70,7 @@ public class Chats implements Serializable {
         if (chatsDTO.getMensajesList() != null) {
             this.sisMensajesList = new ArrayList<>();
             chatsDTO.getMensajesList().forEach(mensajeDto -> {
-                this.sisMensajesList.add(new Mensajes(mensajeDto));
+                this.sisMensajesList.add(new Mensajes((MensajesDTO) mensajeDto));
             });
         }
     }
