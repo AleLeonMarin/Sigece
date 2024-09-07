@@ -1,0 +1,37 @@
+{
+    "resourcePackages": [
+        "cr.ac.una.chatandmailapi.controller"
+    ],
+    "prettyPrint": true,
+    "cacheTTL": 0,
+    "openAPI": {
+        "info": {
+            "version": "1.0.0",
+            "title": "Chat And Mail API",
+            "description": "API REST ChatAndMailApi",
+            "contact": {
+                "name": "Kendall Fonseca",
+                "email": "kendall.fonseca.hidalgo@est.una.ac.cr.com"
+            }
+        },
+        "servers": [
+            {
+                "url": "http://localhost:8080/ChatAndMailAPI/"
+            },
+            {
+                "url": "https://localhost:8181/ChatAndMailAPI/"
+            }
+        ],
+        "components": {
+            "securitySchemes": {
+                "jwt-auth": {
+                    "type": "http",
+                    "description": "Json Web Token (JWT)",
+                    "in": "header",
+                    "scheme": "bearer",
+                    "bearerFormat": "JWT"
+                }
+            }
+        }
+    }
+}
