@@ -20,5 +20,5 @@ dependency-reduced-pom.xml
 # Ignorar archivos de texto genéricos
 .userphotos/
 account_types.json
-*.json
+
 
