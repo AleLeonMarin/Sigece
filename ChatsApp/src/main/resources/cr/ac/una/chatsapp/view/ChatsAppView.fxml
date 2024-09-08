@@ -5,6 +5,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -18,13 +20,26 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <VBox prefHeight="649.0" prefWidth="255.0" />
+                  <VBox prefHeight="649.0" prefWidth="255.0">
+                     <children>
+                        <TableView fx:id="tbvContactos" prefHeight="436.0" prefWidth="255.0">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                           <columns>
+                              <TableColumn fx:id="tbcContactos" prefWidth="254.0" text="Contactos" />
+                           </columns>
+                        </TableView>
+                     </children></VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox alignment="CENTER" prefHeight="629.0" prefWidth="750.0">
                      <children>
                         <ScrollPane prefHeight="580.0" prefWidth="739.0">
                            <content>
-                              <VBox prefHeight="574.0" prefWidth="730.0" />
+                              <VBox fx:id="vboxChats" prefHeight="574.0" prefWidth="730.0" />
                            </content>
                         </ScrollPane>
                         <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="764.0" spacing="10.0">

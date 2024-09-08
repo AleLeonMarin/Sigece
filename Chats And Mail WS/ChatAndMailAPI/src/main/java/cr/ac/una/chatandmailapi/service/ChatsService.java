@@ -131,4 +131,37 @@ public Respuesta guardarChat(ChatsDTO chatDto) {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar los chats del usuario.", "getChatsByUsuario " + ex.getMessage());
         }
     }
+    
+   
+    
+    public Respuesta getChatsEntreUsuarios(Long idEmisor, Long idReceptor) {
+    try {
+        // Consulta para obtener los chats entre los dos usuarios
+        Query qryChats = em.createQuery("SELECT c FROM Chats c WHERE (c.chtEmisorId.usuId = :idEmisor AND c.chtReceptorId.usuId = :idReceptor) "
+                                      + "OR (c.chtEmisorId.usuId = :idReceptor AND c.chtReceptorId.usuId = :idEmisor)", Chats.class);
+        qryChats.setParameter("idEmisor", idEmisor);
+        qryChats.setParameter("idReceptor", idReceptor);
+
+        // Ejecutamos la consulta y obtenemos los resultados
+        List<Chats> chats = qryChats.getResultList();
+
+        // Convertimos las entidades a DTO
+        List<ChatsDTO> chatsDto = new ArrayList<>();
+        for (Chats chat : chats) {
+            chatsDto.add(new ChatsDTO(chat));
+        }
+
+        // Devolvemos la respuesta con la lista de chats DTO
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chats", chatsDto);
+
+    } catch (Exception ex) {
+        // Manejamos cualquier excepción y devolvemos un error
+        LOG.log(Level.SEVERE, "Ocurrió un error al consultar los chats entre usuarios.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los chats entre usuarios.", "getChatsEntreUsuarios " + ex.getMessage());
+    }
+}
+    
+    
+    
+
 }

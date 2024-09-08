@@ -1,5 +1,6 @@
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -60,6 +61,7 @@ public class Chats implements Serializable {
     private Usuarios chtEmisorId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "smsChatId")
+    @JsonbTransient  // O @JsonIgnore si usas Jackson
     private List<Mensajes> sisMensajesList;
 
     public Chats() {

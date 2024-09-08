@@ -155,6 +155,33 @@ public class ChatsController {
         }
     }
     
+    
+    @GET
+@Path("/chats/{idEmisor}/{idReceptor}")
+@Produces(MediaType.APPLICATION_JSON)
+public Response getChatsEntreUsuarios(@PathParam("idEmisor") Long idEmisor, @PathParam("idReceptor") Long idReceptor) {
+    try {
+        // Llamada al servicio que obtiene los chats entre el emisor y el receptor
+        Respuesta respuesta = chatsService.getChatsEntreUsuarios(idEmisor, idReceptor);
+
+        // Verificamos si la respuesta es exitosa
+        if (respuesta.getEstado()) {
+            // Obtenemos la lista de chats de la respuesta
+            List<ChatsDTO> chats = (List<ChatsDTO>) respuesta.getResultado("Chats");
+
+            // Devolvemos la lista de chats como una respuesta HTTP
+            return Response.ok(new GenericEntity<List<ChatsDTO>>(chats) {}).build();
+        } else {
+            // Si hubo un error, devolvemos el código y mensaje de error
+            return Response.status(respuesta.getCodigoRespuesta().getValue()).entity(respuesta.getMensaje()).build();
+        }
+    } catch (Exception e) {
+        // Si ocurre una excepción, devolvemos un error interno del servidor
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                       .entity("Error al obtener los chats entre usuarios: " + e.getMessage())
+                       .build();
+    }
+}
 
 
 }

@@ -1,5 +1,6 @@
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,8 +58,10 @@ public class Mensajes implements Serializable {
     private Long smsVersion;
     
     @JoinColumn(name = "SMS_CHAT_ID", referencedColumnName = "CHT_ID")
+    @JsonbTransient
     @ManyToOne(optional = false)
     private Chats smsChatId;
+
     
     @JoinColumn(name = "SMS_USU_ID_EMISOR", referencedColumnName = "USU_ID")
     @ManyToOne(optional = false)

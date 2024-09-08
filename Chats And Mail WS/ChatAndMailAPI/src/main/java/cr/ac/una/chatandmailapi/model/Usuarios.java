@@ -90,8 +90,8 @@ public class Usuarios implements Serializable {
     @NotNull
     @Lob
     @Column(name = "USU_FOTO")
-    private Serializable usuFoto;
-    
+    private byte[] usuFoto;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -128,7 +128,7 @@ public class Usuarios implements Serializable {
         this.usuId = usuId;
     }
 
-    public Usuarios(Long usuId, String usuNombre, String usuApellidos, String usuCedula, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
+    public Usuarios(Long usuId, String usuNombre, String usuApellidos, String usuCedula, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, byte[] usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
         this.usuId = usuId;
         this.usuNombre = usuNombre;
         this.usuApellidos = usuApellidos;
@@ -153,7 +153,7 @@ public class Usuarios implements Serializable {
     this.usuTelefono = usuariosDto.getUsuTelefono();
     this.usuCelular = usuariosDto.getUsuCelular();
     this.usuIdioma = usuariosDto.getUsuIdioma();
-    this.usuFoto = usuariosDto.getUsuFoto();
+    this.usuFoto = (byte[]) (Serializable) usuariosDto.getUsuFoto();
     this.usuUsuario = usuariosDto.getUsuUsuario();
     this.usuClave = usuariosDto.getUsuClave();
     this.usuEstado = usuariosDto.getUsuEstado();
@@ -229,7 +229,7 @@ public class Usuarios implements Serializable {
         return usuFoto;
     }
 
-    public void setUsuFoto(Serializable usuFoto) {
+    public void setUsuFoto(byte[] usuFoto) {
         this.usuFoto = usuFoto;
     }
 

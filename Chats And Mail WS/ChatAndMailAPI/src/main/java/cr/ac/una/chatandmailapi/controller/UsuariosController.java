@@ -25,6 +25,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,5 +68,31 @@ public Response getUsuario(@Parameter(description = "ID del Usuario", required =
         return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el usuario").build();
     }
 }
+
+@GET
+@Path("/usuarios")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+@Operation(description = "Obtiene todos los usuarios")
+@ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Usuarios encontrados", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UsuariosDTO.class))),
+    @ApiResponse(responseCode = "500", description = "Error interno durante la obtención de los usuarios", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+})
+public Response getAllUsuarios() {
+    try {
+        Respuesta res = usuariosService.getAllUsuarios();  
+        if (!res.getEstado()) {
+            return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+        }
+
+        List<UsuariosDTO> usuariosList = (List<UsuariosDTO>) res.getResultado("Usuarios");
+
+        return Response.ok(usuariosList).build();
+    } catch (Exception ex) {
+        Logger.getLogger(UsuariosController.class.getName()).log(Level.SEVERE, "Error obteniendo los usuarios", ex);
+        return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo los usuarios").build();
+    }
+}
+
 
 }
