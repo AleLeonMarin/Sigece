@@ -39,8 +39,11 @@
                      <children>
                         <ScrollPane prefHeight="580.0" prefWidth="739.0">
                            <content>
-                              <VBox fx:id="vboxChats" prefHeight="574.0" prefWidth="730.0" />
+                              <VBox fx:id="vboxChats" prefHeight="574.0" prefWidth="744.0" spacing="30.0" />
                            </content>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
                         </ScrollPane>
                         <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="764.0" spacing="10.0">
                            <children>

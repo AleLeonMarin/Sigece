@@ -16,16 +16,16 @@ public class MensajesDTO implements Serializable {
     private String smsTexto;
     private Date smsTiempo;
     private Long smsVersion;
-    private String chatId;
-    private String emisorId;
+    private ChatsDTO chatId;
+    private UsuariosDTO emisorId;
 
     // Constructor vacío
     public MensajesDTO() {
         this.smsId = "";
         this.smsTexto = "";
         this.smsTiempo = new Date();
-        this.chatId = "";
-        this.emisorId = "";
+        this.chatId = new ChatsDTO();
+        this.emisorId = new UsuariosDTO();
     }
 
 
@@ -61,19 +61,19 @@ public class MensajesDTO implements Serializable {
         this.smsVersion = smsVersion;
     }
 
-    public String getChatId() {
+    public ChatsDTO getChatId() {
         return chatId;
     }
 
-    public void setChatId(String chatId) {
+    public void setChatId(ChatsDTO chatId) {
         this.chatId = chatId;
     }
 
-    public String getEmisorId() {
+    public UsuariosDTO getEmisorId() {
         return emisorId;
     }
 
-    public void setEmisorId(String emisorId) {
+    public void setEmisorId(UsuariosDTO emisorId) {
         this.emisorId = emisorId;
     }
 

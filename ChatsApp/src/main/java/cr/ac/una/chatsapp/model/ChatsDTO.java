@@ -10,16 +10,16 @@ public class ChatsDTO implements Serializable {
     private String chtId;
     private Date chtFecha;
     private Long chtVersion;
-    private String emisorId;  // Cambiado a String
-    private String receptorId;
+    private UsuariosDTO emisorId;  // Cambiado a UsuariosDTO
+    private UsuariosDTO receptorId;
     private List<MensajesDTO> mensajesList;
 
     public ChatsDTO() {
         this.chtId = "";
         this.chtFecha = new Date();
         this.chtVersion = 0L;
-        this.emisorId = "";
-        this.receptorId = "";
+        this.emisorId = new UsuariosDTO();
+        this.receptorId = new UsuariosDTO();
         this.mensajesList = new ArrayList<>();
     }
 
@@ -47,19 +47,19 @@ public class ChatsDTO implements Serializable {
         this.chtVersion = chtVersion;
     }
 
-    public String getEmisorId() {
+    public UsuariosDTO getEmisorId() {
         return emisorId;
     }
 
-    public void setEmisorId(String emisorId) {
+    public void setEmisorId(UsuariosDTO emisorId) {
         this.emisorId = emisorId;
     }
 
-    public String getReceptorId() {
+    public UsuariosDTO getReceptorId() {
         return receptorId;
     }
 
-    public void setReceptorId(String receptorId) {
+    public void setReceptorId(UsuariosDTO receptorId) {
         this.receptorId = receptorId;
     }
 

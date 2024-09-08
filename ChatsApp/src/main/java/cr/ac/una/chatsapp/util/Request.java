@@ -152,6 +152,9 @@ public class Request {
     }
 
     // TODO
+    public String getResponseAsString() {
+        return response.readEntity(String.class); // Retorna el cuerpo de la respuesta como una cadena
+    }
 
     // TODO
 

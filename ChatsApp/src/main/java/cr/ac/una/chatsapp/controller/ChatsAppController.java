@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import cr.ac.una.chatsapp.model.ChatsDTO;
 import cr.ac.una.chatsapp.model.MensajesDTO;
 import cr.ac.una.chatsapp.model.UsuariosDTO;
 import cr.ac.una.chatsapp.service.ChatsService;
@@ -40,7 +41,7 @@ public class ChatsAppController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Obtener el ID del usuario actual (emisor)
+
         idEmisor = obtenerIdEmisorActual();
 
         cargarUsuarios();
@@ -60,7 +61,7 @@ public class ChatsAppController extends Controller implements Initializable {
 
     private Long obtenerIdEmisorActual() {
         // Método ficticio para obtener el ID del usuario que está usando la aplicación
-        return 1L; // Supongamos que el ID del emisor es 1
+        return 2L; // Supongamos que el ID del emisor es 1
     }
 
     private void cargarUsuarios() {
@@ -115,30 +116,64 @@ public class ChatsAppController extends Controller implements Initializable {
 
         Respuesta respuesta = chatsService.getChatsEntreUsuarios(idEmisor, idReceptor);
         if (respuesta.getEstado()) {
-            List<MensajesDTO> mensajes = (List<MensajesDTO>) respuesta.getResultado("Mensajes");
+            List<ChatsDTO> chats = (List<ChatsDTO>) respuesta.getResultado("Chats");
 
-            if (mensajes != null && !mensajes.isEmpty()) {  // Verifica si la lista no es nula ni está vacía
-                for (MensajesDTO mensaje : mensajes) {
-                    HBox hbox = new HBox();
-                    Label mensajeLabel = new Label(mensaje.getSmsTexto());
+            if (chats != null && !chats.isEmpty()) {
+                for (ChatsDTO chat : chats) {
+                    List<MensajesDTO> mensajes = chat.getMensajesList();
+                    if (mensajes != null && !mensajes.isEmpty()) {
+                        for (MensajesDTO mensaje : mensajes) {
+                            // Procesar cada mensaje
+                            HBox hbox = new HBox();
+                            Label mensajeLabel = new Label(mensaje.getSmsTexto());
 
-                    if (mensaje.getEmisorId().equals(idEmisor)) {
-                        hbox.setAlignment(Pos.CENTER_RIGHT);
-                        mensajeLabel.setStyle("-fx-background-color: lightblue; -fx-padding: 10px; -fx-background-radius: 10px;");
-                    } else {
-                        hbox.setAlignment(Pos.CENTER_LEFT);
-                        mensajeLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10px; -fx-background-radius: 10px;");
+                            // Establecer ancho preferido para el HBox
+                            hbox.setPrefWidth(vboxChats.getPrefWidth() - 20); // Ajusta el ancho al VBox
+                            hbox.setMaxWidth(vboxChats.getPrefWidth() - 20);
+
+                            // Configurar el estilo del Label y su máximo ancho
+                            mensajeLabel.setWrapText(true); // Habilitar el texto envuelto
+                            mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75); // El texto ocupará el 75% del HBox
+
+                            // Obtener el usuId del emisor del mensaje
+                            Long emisorIdMensaje = mensaje.getEmisorId().getUsuId();
+                            System.out.println("EmisorId del mensaje: " + emisorIdMensaje);
+                            System.out.println("idEmisor (actual usuario): " + idEmisor);
+
+                            // Comparación corregida
+                            if (emisorIdMensaje != null && emisorIdMensaje.equals(idEmisor)) {
+                                // Mensaje del emisor (actual usuario)
+                                hbox.setAlignment(Pos.CENTER_RIGHT);
+                                mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
+                                System.out.println("Mensaje del emisor (actual usuario)");
+                            } else {
+                                // Mensaje del receptor (otro usuario)
+                                hbox.setAlignment(Pos.CENTER_LEFT);
+                                mensajeLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10px; -fx-background-radius: 10px;");
+                                System.out.println("Mensaje del receptor (otro usuario)");
+                            }
+
+                            hbox.getChildren().add(mensajeLabel);
+                            vboxChats.getChildren().add(hbox);
+                        }
                     }
-
-                    hbox.getChildren().add(mensajeLabel);
-                    vboxChats.getChildren().add(hbox);
                 }
             } else {
-                System.out.println("No hay mensajes en este chat.");
+                System.out.println("No hay chats en este chat.");
             }
         } else {
-            System.out.println("Error obteniendo los mensajes: " + respuesta.getMensaje());
+            System.out.println("Error obteniendo los chats: " + respuesta.getMensaje());
         }
     }
 
+
+
+
+
+
+
+
 }
+
+
+

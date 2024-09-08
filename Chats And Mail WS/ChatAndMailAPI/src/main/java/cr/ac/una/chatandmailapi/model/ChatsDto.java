@@ -27,11 +27,11 @@ public class ChatsDTO implements Serializable {
         this.receptorId = chat.getChtReceptorId();  // Asignación del receptor por ID
         this.emisorId = chat.getChtEmisorId() ;      // Asignación del emisor por ID
 
-        // Convertir la lista de Mensajes a MensajesDTO
+   
         if (chat.getSisMensajesList() != null) {
             this.mensajesList = new ArrayList<>();
             for (Mensajes mensaje : chat.getSisMensajesList()) {
-                this.mensajesList.add(new MensajesDTO(mensaje));  // Conversión de cada mensaje
+                this.mensajesList.add(new MensajesDTO(mensaje)); 
             }
         }
     }
