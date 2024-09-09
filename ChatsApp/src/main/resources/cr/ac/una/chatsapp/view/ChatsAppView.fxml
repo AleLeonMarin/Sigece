@@ -35,8 +35,7 @@
                         </TableView>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                            <children>
-                              <MFXButton text="Nuevo Chat" />
-                              <MFXButton fx:id="BtnDeleteChat" text="Eliminar Chat" />
+                              <MFXButton fx:id="BtnDeleteChat" onAction="#onActionBtnDeleteChat" prefHeight="40.0" prefWidth="91.0" text="Eliminar Chat" />
                            </children>
                         </HBox>
                      </children></VBox>

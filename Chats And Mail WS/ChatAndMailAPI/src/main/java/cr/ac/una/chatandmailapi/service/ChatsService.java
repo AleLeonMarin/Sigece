@@ -73,28 +73,26 @@ public class ChatsService {
         }
     }
 
-    // Guardar o actualizar un chat
-public Respuesta guardarChat(ChatsDTO chatDto) {
+   public Respuesta guardarChat(ChatsDTO chatDto) {
     try {
         Chats chat;
         if (chatDto.getChtId() != null && chatDto.getChtId() > 0) {
-            LOG.log(Level.INFO, "Modificando chat con ID: {0}", chatDto.getChtId());
+            // Si el ID del chat ya existe, buscar el chat y actualizarlo
             chat = em.find(Chats.class, chatDto.getChtId());
             if (chat == null) {
-                LOG.log(Level.WARNING, "No se encontró el chat con ID: {0}", chatDto.getChtId());
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el chat a modificar.", "guardarChat NoResultException");
             }
-            chat.actualizar(chatDto);
-            chat = em.merge(chat);
+            chat.actualizar(chatDto);  // Actualizar los campos del chat
+            chat = em.merge(chat);  // Hacer merge en la entidad para actualizarla
         } else {
-            LOG.log(Level.INFO, "Creando nuevo chat");
+            // Crear un nuevo chat
             chat = new Chats(chatDto);
-            em.persist(chat);
+            em.persist(chat);  // Persistir el nuevo chat en la base de datos
         }
-        em.flush();
+        em.flush();  // Asegurar que los cambios se guarden en la base de datos
         return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chat", new ChatsDTO(chat));
     } catch (Exception ex) {
-        LOG.log(Level.SEVERE, "Ocurrió un error al guardar el chat.", ex);
+        Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Ocurrió un error al guardar el chat.", ex);
         return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar el chat.", "guardarChat " + ex.getMessage());
     }
 }
@@ -102,24 +100,20 @@ public Respuesta guardarChat(ChatsDTO chatDto) {
 
     // Eliminar un chat
     public Respuesta eliminarChat(Long id) {
-        try {
-            Chats chat;
-            if (id != null && id > 0) {
-                chat = em.find(Chats.class, id);
-                if (chat == null) {
-                    return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el chat a eliminar.", "eliminarChat NoResultException");
-                }
-                em.remove(chat);
-            } else {
-                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "Debe cargar el chat a eliminar.", "eliminarChat NoResultException");
-            }
-            em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Ocurrio un error al eliminar el chat.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el chat.", "eliminarChat " + ex.getMessage());
+    try {
+        Chats chat = em.find(Chats.class, id);
+        if (chat == null) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el chat a eliminar.", "eliminarChat NoResultException");
         }
+        em.remove(chat);
+        em.flush();
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "Chat eliminado correctamente.", "");
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al eliminar el chat.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al eliminar el chat.", "eliminarChat " + ex.getMessage());
     }
+}
+
 
     // Buscar chats por emisor o receptor
     public Respuesta getChatsByUsuario(Long usuarioId) {

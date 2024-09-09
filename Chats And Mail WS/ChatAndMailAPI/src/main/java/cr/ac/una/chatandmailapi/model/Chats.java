@@ -5,12 +5,15 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -38,6 +41,8 @@ public class Chats implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_chats_seq")
+    @SequenceGenerator(name = "sis_chats_seq", sequenceName = "SIS_CHATS_SEQ01", allocationSize = 1)
     @Column(name = "CHT_ID")
     private Long chtId;
     
@@ -61,7 +66,7 @@ public class Chats implements Serializable {
     private Usuarios chtEmisorId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "smsChatId")
-    @JsonbTransient  // O @JsonIgnore si usas Jackson
+    @JsonbTransient 
     private List<Mensajes> sisMensajesList;
 
     public Chats() {

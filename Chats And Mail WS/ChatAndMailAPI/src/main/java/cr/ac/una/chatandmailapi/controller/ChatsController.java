@@ -1,14 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.chatandmailapi.controller;
 
 import cr.ac.una.chatandmailapi.model.ChatsDTO;
-import cr.ac.una.chatandmailapi.model.MensajesDTO;
-import cr.ac.una.chatandmailapi.model.UsuariosDTO;
 import cr.ac.una.chatandmailapi.service.ChatsService;
-import cr.ac.una.chatandmailapi.service.MensajesService;
 import cr.ac.una.chatandmailapi.util.CodigoRespuesta;
 import cr.ac.una.chatandmailapi.util.Respuesta;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
@@ -29,20 +21,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Kendall Fonseca
- */
 @Path("/ChatsController")
 @Tag(name = "Chats", description = "Operaciones sobre Chats")
-//@SecurityRequirement(name = "jwt-auth")
-
 public class ChatsController {
 
     private static final Logger LOG = Logger.getLogger(ChatsController.class.getName());
 
     @EJB
-    ChatsService chatsService;
+    private ChatsService chatsService;
 
     @GET
     @Path("/chat/{id}")
@@ -66,9 +52,6 @@ public class ChatsController {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el chat").build();
         }
     }
-    
-   
-
 
     @GET
     @Path("/chats")
@@ -96,42 +79,64 @@ public class ChatsController {
     @Path("/chat")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    
-    public Response guardarChat(ChatsDTO chatDto) {
+    @Operation(description = "Agrega o actualiza un chat")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Chat agregado o actualizado", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ChatsDTO.class))),
+            @ApiResponse(responseCode = "500", description = "Error al guardar el chat", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    })
+    public Response guardarChat(@Parameter(description = "Datos del chat a agregar o actualizar", required = true) ChatsDTO chatDto) {
         try {
-            Respuesta res = chatsService.guardarChat(chatDto);
-            if (!res.getEstado()) {
-                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            Respuesta respuesta = chatsService.guardarChat(chatDto);
+            if (respuesta.getEstado()) {
+                return Response.ok((ChatsDTO) respuesta.getResultado("Chat")).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(respuesta.getMensaje())
+                        .build();
             }
-            return Response.ok((ChatsDTO) res.getResultado("Chat")).build();
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Error guardando el chat", ex);
-            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando el chat").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error guardando el chat: " + ex.getMessage())
+                    .build();
         }
     }
 
+ 
+    
     @DELETE
-    @Path("/chat/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Elimina un chat por ID")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Chat eliminado"),
-            @ApiResponse(responseCode = "404", description = "Chat no encontrado", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
-            @ApiResponse(responseCode = "500", description = "Error interno durante la eliminación", content = @Content(mediaType = MediaType.TEXT_PLAIN))
-    })
-    public Response eliminarChat(@PathParam("id") Long id) {
-        try {
-            Respuesta res = chatsService.eliminarChat(id);
-            if (!res.getEstado()) {
-                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
-            }
+@Path("/chat/{id}")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+@Operation(description = "Elimina un chat por ID")
+@ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Chat eliminado exitosamente"),
+    @ApiResponse(responseCode = "404", description = "Chat no encontrado", content = @Content(mediaType = MediaType.TEXT_PLAIN)),
+    @ApiResponse(responseCode = "500", description = "Error interno durante la eliminación", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+})
+public Response eliminarChat(@PathParam("id") Long id) {
+    try {
+        Respuesta respuesta = chatsService.eliminarChat(id);
+        
+        if (respuesta.getEstado()) {
+            // Si el chat fue eliminado correctamente, devolvemos el código 200
             return Response.ok().build();
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error eliminando el chat", ex);
-            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error eliminando el chat").build();
+        } else {
+            // Si el chat no fue encontrado o ocurrió un error
+            return Response.status(respuesta.getCodigoRespuesta().getValue())
+                           .entity(respuesta.getMensaje())
+                           .build();
         }
+    } catch (Exception ex) {
+        // Capturamos cualquier excepción inesperada
+        LOG.log(Level.SEVERE, "Error eliminando el chat", ex);
+        return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())
+                       .entity("Error eliminando el chat: " + ex.getMessage())
+                       .build();
     }
+}
+    
+    
 
     @GET
     @Path("/chats/usuario/{usuarioId}")
@@ -154,34 +159,28 @@ public class ChatsController {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo los chats del usuario").build();
         }
     }
-    
-    
+
     @GET
-@Path("/chats/{idEmisor}/{idReceptor}")
-@Produces(MediaType.APPLICATION_JSON)
-public Response getChatsEntreUsuarios(@PathParam("idEmisor") Long idEmisor, @PathParam("idReceptor") Long idReceptor) {
-    try {
-        // Llamada al servicio que obtiene los chats entre el emisor y el receptor
-        Respuesta respuesta = chatsService.getChatsEntreUsuarios(idEmisor, idReceptor);
-
-        // Verificamos si la respuesta es exitosa
-        if (respuesta.getEstado()) {
-            // Obtenemos la lista de chats de la respuesta
-            List<ChatsDTO> chats = (List<ChatsDTO>) respuesta.getResultado("Chats");
-
-            // Devolvemos la lista de chats como una respuesta HTTP
-            return Response.ok(new GenericEntity<List<ChatsDTO>>(chats) {}).build();
-        } else {
-            // Si hubo un error, devolvemos el código y mensaje de error
-            return Response.status(respuesta.getCodigoRespuesta().getValue()).entity(respuesta.getMensaje()).build();
+    @Path("/chats/{idEmisor}/{idReceptor}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Obtiene los chats entre dos usuarios (emisor y receptor)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Chats entre los usuarios obtenidos", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ChatsDTO.class))),
+            @ApiResponse(responseCode = "500", description = "Error al obtener los chats entre usuarios", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    })
+    public Response getChatsEntreUsuarios(@PathParam("idEmisor") Long idEmisor, @PathParam("idReceptor") Long idReceptor) {
+        try {
+            Respuesta respuesta = chatsService.getChatsEntreUsuarios(idEmisor, idReceptor);
+            if (respuesta.getEstado()) {
+                List<ChatsDTO> chats = (List<ChatsDTO>) respuesta.getResultado("Chats");
+                return Response.ok(new GenericEntity<List<ChatsDTO>>(chats) {}).build();
+            } else {
+                return Response.status(respuesta.getCodigoRespuesta().getValue()).entity(respuesta.getMensaje()).build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al obtener los chats entre usuarios: " + e.getMessage())
+                    .build();
         }
-    } catch (Exception e) {
-        // Si ocurre una excepción, devolvemos un error interno del servidor
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                       .entity("Error al obtener los chats entre usuarios: " + e.getMessage())
-                       .build();
     }
-}
-
-
 }

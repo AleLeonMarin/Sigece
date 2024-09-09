@@ -42,7 +42,11 @@ public class ChatsDTO implements Serializable {
     }
 
     public void setChtId(Long chtId) {
-        this.chtId = chtId;
+        if (chtId != null) {
+            this.chtId = chtId;
+        } else {
+            this.chtId = null;
+        }
     }
 
     public Date getChtFecha() {

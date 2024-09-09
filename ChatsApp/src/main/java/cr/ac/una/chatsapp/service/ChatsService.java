@@ -66,4 +66,42 @@ public class ChatsService {
         }
     }
 
+    // Método para agregar un nuevo chat en el ChatsService del cliente
+    public Respuesta guardarChat(ChatsDTO chatDto) {
+        try {
+            Request request = new Request("ChatsController/chat");
+            request.post(chatDto); // Usar el método POST para enviar el nuevo chat
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            ChatsDTO chatGuardado = (ChatsDTO) request.readEntity(ChatsDTO.class);  // Convertir la respuesta en ChatsDTO
+            return new Respuesta(true, "", "", "Chat", chatGuardado);
+        } catch (Exception ex) {
+            Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error guardando el chat.", ex);
+            return new Respuesta(false, "Error guardando el chat.", "guardarChat " + ex.getMessage());
+        }
+    }
+
+    public Respuesta eliminarChat(String idChat) {
+        try {
+            // Crear la solicitud DELETE para eliminar el chat
+            Request request = new Request("ChatsController/chat/" + idChat);
+            request.delete(); // Usamos el método DELETE
+
+            // Manejo de errores en la solicitud
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            // Si no hay error, retornamos una respuesta exitosa
+            return new Respuesta(true, "", "", "Chat eliminado correctamente.", null);
+        } catch (Exception ex) {
+            Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error eliminando el chat con ID: " + idChat, ex);
+            return new Respuesta(false, "Error eliminando el chat.", "eliminarChat " + ex.getMessage());
+        }
+    }
+
+
 }

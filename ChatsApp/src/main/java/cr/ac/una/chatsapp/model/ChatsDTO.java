@@ -15,7 +15,7 @@ public class ChatsDTO implements Serializable {
     private List<MensajesDTO> mensajesList;
 
     public ChatsDTO() {
-        this.chtId = "";
+        this.chtId = null;
         this.chtFecha = new Date();
         this.chtVersion = 0L;
         this.emisorId = new UsuariosDTO();

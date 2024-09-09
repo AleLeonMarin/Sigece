@@ -45,8 +45,12 @@ public class ChatsAppController extends Controller implements Initializable {
     @FXML
     private MFXTextField txtMensaje;
 
+    @FXML
+    private MFXButton BtnDeleteChat;
+
     private ChatsDTO currentChat;
 
+    //pruebas
     private Timeline timeline;
 
     @Override
@@ -66,11 +70,10 @@ public class ChatsAppController extends Controller implements Initializable {
             }
         });
 
-        // Inicializar el Timeline para la actualización periódica
         iniciarActualizacionPeriodica();
     }
     private Long obtenerIdEmisorActual() {
-        return 2L;
+        return 3L;
     }
 
     private void cargarUsuarios() {
@@ -126,6 +129,8 @@ public class ChatsAppController extends Controller implements Initializable {
 
     private void cargarChatConUsuario(Long idReceptor) {
         vboxChats.getChildren().clear();
+        currentChat = null;
+
         Respuesta respuesta = chatsService.getChatsEntreUsuarios(idEmisor, idReceptor);
 
         if (respuesta.getEstado()) {
@@ -134,12 +139,15 @@ public class ChatsAppController extends Controller implements Initializable {
                 currentChat = chats.get(0);
                 mostrarMensajesDelChat(currentChat.getMensajesList());
             } else {
-                System.out.println("No hay chats en este chat.");
+                Label noChatLabel = new Label("No hay un chat con este usuario, se creará cuando envíes un mensaje.");
+                noChatLabel.setStyle("-fx-text-fill: gray; -fx-font-size: 14px;");
+                vboxChats.getChildren().add(noChatLabel);
             }
         } else {
             System.out.println("Error obteniendo los chats: " + respuesta.getMensaje());
         }
     }
+
 
     private void mostrarMensajesDelChat(List<MensajesDTO> mensajes) {
         vboxChats.getChildren().clear();
@@ -165,8 +173,13 @@ public class ChatsAppController extends Controller implements Initializable {
                 hbox.getChildren().add(mensajeLabel);
                 vboxChats.getChildren().add(hbox);
             }
+        } else {
+            Label noMessagesLabel = new Label("No hay mensajes en este chat.");
+            noMessagesLabel.setStyle("-fx-text-fill: gray; -fx-font-size: 14px;");
+            vboxChats.getChildren().add(noMessagesLabel);
         }
     }
+
 
     // Iniciar el timeline para actualización periódica
     private void iniciarActualizacionPeriodica() {
@@ -195,44 +208,121 @@ public class ChatsAppController extends Controller implements Initializable {
     @FXML
     void onActonBtnSend(ActionEvent event) {
         String textoMensaje = txtMensaje.getText();
+
         if (textoMensaje.isEmpty()) {
             Mensaje mensaje = new Mensaje();
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "El campo de mensaje no puede estar vacío.");
             return;
         }
+
         Long idReceptor = tbvContactos.getSelectionModel().getSelectedItem().getUsuId();
-        if (currentChat == null) {
-            System.out.println("Error: No hay chat cargado.");
+        if (idReceptor == null) {
+            System.out.println("Error: No se ha seleccionado ningún contacto.");
             return;
         }
 
+        // Verificar si hay un chat cargado, si no, crearlo
+        if (currentChat == null) {
+            System.out.println("No hay chat cargado. Creando nuevo chat...");
+
+            // Crear un nuevo chat entre el emisor y el receptor
+            ChatsDTO nuevoChat = new ChatsDTO();
+            UsuariosDTO emisor = new UsuariosDTO();
+            UsuariosDTO receptor = new UsuariosDTO();
+
+            emisor.setUsuId(obtenerIdEmisorActual());
+            receptor.setUsuId(idReceptor);
+
+            nuevoChat.setEmisorId(emisor);
+            nuevoChat.setReceptorId(receptor);
+
+            // Guardar el nuevo chat en la base de datos
+            Respuesta respuestaChat = chatsService.guardarChat(nuevoChat);
+            if (respuestaChat.getEstado()) {
+                currentChat = (ChatsDTO) respuestaChat.getResultado("Chat");
+                System.out.println("Nuevo chat creado con éxito.");
+            } else {
+                System.out.println("Error creando el chat: " + respuestaChat.getMensaje());
+                return;
+            }
+        }
+
+        // Crear el mensaje para el chat actual o nuevo
         MensajesDTO mensajeDto = new MensajesDTO();
         mensajeDto.setSmsTexto(textoMensaje);
-        UsuariosDTO receptor = new UsuariosDTO();
+
         UsuariosDTO emisor = new UsuariosDTO();
+        UsuariosDTO receptor = new UsuariosDTO();
         receptor.setUsuId(idReceptor);
         emisor.setUsuId(obtenerIdEmisorActual());
         mensajeDto.setEmisorId(emisor);
         mensajeDto.setChatId(currentChat);
 
+        // Llamar al servicio para guardar el mensaje
         MensajesService mensajesService = new MensajesService();
         Respuesta respuesta = mensajesService.guardarMensaje(mensajeDto);
 
         if (respuesta.getEstado()) {
             System.out.println("Mensaje enviado correctamente.");
+
+            // Manually add the new message to the VBox
             HBox hbox = new HBox();
             Label mensajeLabel = new Label(textoMensaje);
             hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
             hbox.setMaxWidth(vboxChats.getPrefWidth() - 20);
             mensajeLabel.setWrapText(true);
             mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
+
+            // Since this is the sender's message, align it to the right
             hbox.setAlignment(Pos.CENTER_RIGHT);
             mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
+
             hbox.getChildren().add(mensajeLabel);
-            vboxChats.getChildren().add(hbox);
+            vboxChats.getChildren().add(hbox);  // Add the message directly to the VBox
             txtMensaje.clear();
         } else {
             System.out.println("Error enviando el mensaje: " + respuesta.getMensaje());
         }
     }
+
+    @FXML
+    void onActionBtnDeleteChat(ActionEvent event) {
+        if (currentChat == null) {
+            Mensaje mensaje = new Mensaje();
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "No hay ningún chat seleccionado para eliminar.");
+            return;
+        }
+
+        // Mostrar una alerta de confirmación
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Eliminar chat");
+        alert.setHeaderText("¿Está seguro de que desea eliminar este chat?");
+        alert.setContentText("Esta acción no se puede deshacer.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Eliminar el chat usando el servicio
+            Respuesta respuesta = chatsService.eliminarChat(currentChat.getChtId());
+
+            if (respuesta.getEstado()) {
+                Mensaje mensaje = new Mensaje();
+                mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "El chat ha sido eliminado correctamente.");
+
+                // Limpiar la vista y actualizar la tabla de contactos
+                currentChat = null;
+                vboxChats.getChildren().clear();
+                Label noChatLabel = new Label("El chat ha sido eliminado.");
+                noChatLabel.setStyle("-fx-text-fill: gray; -fx-font-size: 14px;");
+                vboxChats.getChildren().add(noChatLabel);
+            } else {
+                Mensaje mensaje = new Mensaje();
+                mensaje.show(Alert.AlertType.ERROR, "Error", "Ocurrió un error al eliminar el chat: " + respuesta.getMensaje());
+            }
+        } else {
+            System.out.println("Eliminación de chat cancelada.");
+        }
+    }
+
+
+
 }
