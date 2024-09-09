@@ -4,12 +4,15 @@ import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -37,6 +40,8 @@ public class Mensajes implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_mensajes_seq")
+    @SequenceGenerator(name = "sis_mensajes_seq", sequenceName = "SIS_MENSAJES_SEQ01", allocationSize = 1)
     @Column(name = "SMS_ID")
     private Long smsId;
     
@@ -53,7 +58,6 @@ public class Mensajes implements Serializable {
     private Date smsTiempo;
     
     @Basic(optional = false)
-    @NotNull
     @Column(name = "SMS_VERSION")
     private Long smsVersion;
     
@@ -78,23 +82,25 @@ public class Mensajes implements Serializable {
     }
 
     // Método actualizar basado en el DTO
-    public void actualizar(MensajesDTO mensajesDto) {
+  public void actualizar(MensajesDTO mensajesDto) {
     this.smsTexto = mensajesDto.getSmsTexto();
     this.smsTiempo = mensajesDto.getSmsTiempo();
     this.smsVersion = mensajesDto.getSmsVersion();
 
     // Asignar `smsChatId` creando un objeto `Chats` con el ID del chat
     if (mensajesDto.getChatId() != null) {
-        this.smsChatId = new Chats();
-        this.smsChatId= mensajesDto.getChatId();  // Asigna solo el ID del chat
+        Chats chat = new Chats();
+        chat.setChtId(mensajesDto.getChatId().getChtId());  // Asigna solo el ID del chat
+        this.smsChatId = chat;
     }
 
     // Asignar `smsUsuIdEmisor` creando un objeto `Usuarios` con el ID del emisor
     if (mensajesDto.getEmisorId() != null) {
-        this.smsUsuIdEmisor = new Usuarios();
-        this.smsUsuIdEmisor= mensajesDto.getEmisorId();  // Asigna solo el ID del emisor
+        Usuarios emisor = new Usuarios();
+        emisor.setUsuId(mensajesDto.getEmisorId().getUsuId());  // Asigna solo el ID del emisor
+        this.smsUsuIdEmisor = emisor;
+         }
     }
-}
 
 
     // Getters y Setters

@@ -23,6 +23,8 @@ public class MensajesDTO implements Serializable {
     public MensajesDTO() {
         this.smsId = "";
         this.smsTexto = "";
+        this.smsVersion = 0L;
+
         this.smsTiempo = new Date();
         this.chatId = new ChatsDTO();
         this.emisorId = new UsuariosDTO();

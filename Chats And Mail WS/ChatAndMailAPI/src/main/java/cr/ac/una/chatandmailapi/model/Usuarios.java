@@ -1,8 +1,11 @@
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
@@ -42,6 +45,7 @@ public class Usuarios implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "USU_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long usuId;
     
     @Basic(optional = false)
@@ -90,6 +94,7 @@ public class Usuarios implements Serializable {
     @NotNull
     @Lob
     @Column(name = "USU_FOTO")
+    @JsonbTransient
     private byte[] usuFoto;
 
     @Basic(optional = false)
@@ -128,21 +133,9 @@ public class Usuarios implements Serializable {
         this.usuId = usuId;
     }
 
-    public Usuarios(Long usuId, String usuNombre, String usuApellidos, String usuCedula, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, byte[] usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
-        this.usuId = usuId;
-        this.usuNombre = usuNombre;
-        this.usuApellidos = usuApellidos;
-        this.usuCedula = usuCedula;
-        this.usuCorreo = usuCorreo;
-        this.usuTelefono = usuTelefono;
-        this.usuCelular = usuCelular;
-        this.usuIdioma = usuIdioma;
-        this.usuFoto = usuFoto;
-        this.usuUsuario = usuUsuario;
-        this.usuClave = usuClave;
-        this.usuEstado = usuEstado;
-        this.usuStatus = usuStatus;
-        this.usuVersion = usuVersion;
+    public Usuarios(UsuariosDTO usuarioDTO) {
+        this.usuId = usuarioDTO.getUsuId();
+        actualizar(usuarioDTO);
     }
     
     public void actualizar(UsuariosDTO usuariosDto) {
@@ -153,12 +146,13 @@ public class Usuarios implements Serializable {
     this.usuTelefono = usuariosDto.getUsuTelefono();
     this.usuCelular = usuariosDto.getUsuCelular();
     this.usuIdioma = usuariosDto.getUsuIdioma();
-    this.usuFoto = (byte[]) (Serializable) usuariosDto.getUsuFoto();
+  
     this.usuUsuario = usuariosDto.getUsuUsuario();
     this.usuClave = usuariosDto.getUsuClave();
     this.usuEstado = usuariosDto.getUsuEstado();
     this.usuStatus = usuariosDto.getUsuStatus();
     this.usuVersion = usuariosDto.getUsuVersion();
+   
     }
 
     public Long getUsuId() {
@@ -225,7 +219,7 @@ public class Usuarios implements Serializable {
         this.usuIdioma = usuIdioma;
     }
 
-    public Serializable getUsuFoto() {
+      public byte[] getUsuFoto() {
         return usuFoto;
     }
 

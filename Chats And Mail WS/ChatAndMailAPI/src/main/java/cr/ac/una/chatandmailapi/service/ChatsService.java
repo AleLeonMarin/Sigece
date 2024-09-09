@@ -32,8 +32,9 @@ public class ChatsService {
         try {
             Query qryChat = em.createNamedQuery("Chats.findByChtId", Chats.class);
             qryChat.setParameter("chtId", id);
-
+            
             Chats chat = (Chats) qryChat.getSingleResult();
+            em.refresh(chat);
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chat", new ChatsDTO(chat));
 
         } catch (NoResultException ex) {
@@ -52,7 +53,13 @@ public class ChatsService {
     public Respuesta getChats() {
         try {
             Query qryChats = em.createNamedQuery("Chats.findAll", Chats.class);
+            
             List<Chats> chats = qryChats.getResultList();
+           
+                for (Chats chat : chats) {
+            em.refresh(chat); 
+                 }
+            
             List<ChatsDTO> chatsDto = new ArrayList<>();
             for (Chats chat : chats) {
                 chatsDto.add(new ChatsDTO(chat)); // Usamos el constructor que convierte entidad a DTO
@@ -120,6 +127,7 @@ public Respuesta guardarChat(ChatsDTO chatDto) {
             Query qryChat = em.createQuery("SELECT c FROM Chats c WHERE c.chtEmisorId.usuId = :usuarioId OR c.chtReceptorId.usuId = :usuarioId", Chats.class);
             qryChat.setParameter("usuarioId", usuarioId);
             List<Chats> chats = qryChat.getResultList();
+            em.refresh(chats);
             List<ChatsDTO> chatsDto = new ArrayList<>();
             for (Chats chat : chats) {
                 chatsDto.add(new ChatsDTO(chat));  // Conversión a DTO
@@ -144,6 +152,10 @@ public Respuesta guardarChat(ChatsDTO chatDto) {
 
         // Ejecutamos la consulta y obtenemos los resultados
         List<Chats> chats = qryChats.getResultList();
+        
+         for (Chats chat : chats) {
+            em.refresh(chat);  // Refrescar cada entidad si es necesario
+        }
 
         // Convertimos las entidades a DTO
         List<ChatsDTO> chatsDto = new ArrayList<>();

@@ -33,6 +33,12 @@
                               <TableColumn fx:id="tbcContactos" prefWidth="254.0" text="Contactos" />
                            </columns>
                         </TableView>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                           <children>
+                              <MFXButton text="Nuevo Chat" />
+                              <MFXButton fx:id="BtnDeleteChat" text="Eliminar Chat" />
+                           </children>
+                        </HBox>
                      </children></VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox alignment="CENTER" prefHeight="629.0" prefWidth="750.0">
@@ -47,8 +53,8 @@
                         </ScrollPane>
                         <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="764.0" spacing="10.0">
                            <children>
-                              <MFXTextField floatMode="DISABLED" prefHeight="31.0" prefWidth="552.0" />
-                              <MFXButton prefHeight="37.0" prefWidth="60.0" text="Enviar" />
+                              <MFXTextField fx:id="txtMensaje" floatMode="DISABLED" prefHeight="31.0" prefWidth="552.0" />
+                              <MFXButton fx:id="btnSend" onAction="#onActonBtnSend" prefHeight="37.0" prefWidth="60.0" text="Enviar" />
                            </children>
                            <VBox.margin>
                               <Insets left="20.0" />

@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.chatsapp.service;
 
 import cr.ac.una.chatsapp.model.ChatsDTO;
-import cr.ac.una.chatsapp.model.MensajesDTO;
 import cr.ac.una.chatsapp.model.UsuariosDTO;
 import cr.ac.una.chatsapp.util.Request;
 import cr.ac.una.chatsapp.util.Respuesta;
@@ -28,13 +23,15 @@ public class ChatsService {
             Request request = new Request("UsuariosController/usuarios");
             request.get();
 
-
+            // Manejo de errores en la solicitud
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
             }
 
+
             List<UsuariosDTO> usuariosList = (List<UsuariosDTO>) request.readEntity(new GenericType<List<UsuariosDTO>>() {});
 
+            // Retornar la respuesta con la lista de usuarios
             return new Respuesta(true, "", "", "Usuarios", usuariosList);
         } catch (Exception ex) {
             Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error obteniendo la lista de usuarios.", ex);
@@ -58,7 +55,7 @@ public class ChatsService {
                 return new Respuesta(false, request.getError(), "");
             }
 
-            // Leer la lista de chats desde el servidor y deserializar
+            // Hacer casting a List<ChatsDTO> usando el método readEntity con GenericType
             List<ChatsDTO> chatsList = (List<ChatsDTO>) request.readEntity(new GenericType<List<ChatsDTO>>() {});
 
             // Retornar la respuesta con la lista de chats
@@ -69,10 +66,4 @@ public class ChatsService {
         }
     }
 
-
-
 }
-
-
-
-

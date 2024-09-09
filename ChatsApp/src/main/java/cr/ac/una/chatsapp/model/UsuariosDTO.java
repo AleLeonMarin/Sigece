@@ -1,14 +1,11 @@
 package cr.ac.una.chatsapp.model;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 import java.io.Serializable;
+import java.util.Base64;
 
 /**
  * DTO para la entidad Usuarios, contiene la información de los usuarios.
  */
-
 public class UsuariosDTO implements Serializable {
 
     private String usuId;
@@ -19,7 +16,7 @@ public class UsuariosDTO implements Serializable {
     private String usuTelefono;
     private String usuCelular;
     private String usuIdioma;
-    private byte[] usuFoto;
+    private byte[] usuFoto; // Almacenamos el byte[] directamente
     private String usuUsuario;
     private String usuClave;
     private String usuEstado;
@@ -36,7 +33,7 @@ public class UsuariosDTO implements Serializable {
         this.usuTelefono = "";
         this.usuCelular = "";
         this.usuIdioma = "";
-        this.usuFoto = null;
+        this.usuFoto = null;  // Iniciamos el byte[] como null
         this.usuUsuario = "";
         this.usuClave = "";
         this.usuEstado = "";
@@ -78,14 +75,12 @@ public class UsuariosDTO implements Serializable {
     }
 
     public String getUsuCorreo() {
-        return this.usuCorreo;
+        return usuCorreo;
     }
-
 
     public void setUsuCorreo(String usuCorreo) {
         this.usuCorreo = usuCorreo;
     }
-
 
     public String getUsuTelefono() {
         return usuTelefono;
@@ -111,12 +106,24 @@ public class UsuariosDTO implements Serializable {
         this.usuIdioma = usuIdioma;
     }
 
+    // Getter para obtener el byte[] de la foto
     public byte[] getUsuFoto() {
         return usuFoto;
     }
 
+    // Setter para establecer la foto desde un byte[]
     public void setUsuFoto(byte[] usuFoto) {
         this.usuFoto = usuFoto;
+    }
+
+    // Método para obtener la foto como Base64 (para transferencias)
+    public String getUsuFotoBase64() {
+        return usuFoto != null ? Base64.getEncoder().encodeToString(usuFoto) : null;
+    }
+
+    // Setter para establecer la foto desde una cadena Base64
+    public void setUsuFotoBase64(String usuFotoBase64) {
+        this.usuFoto = usuFotoBase64 != null ? Base64.getDecoder().decode(usuFotoBase64) : null;
     }
 
     public String getUsuUsuario() {
@@ -170,7 +177,7 @@ public class UsuariosDTO implements Serializable {
                 ", usuTelefono='" + usuTelefono + '\'' +
                 ", usuCelular='" + usuCelular + '\'' +
                 ", usuIdioma='" + usuIdioma + '\'' +
-                ", usuFoto=" + usuFoto +
+                ", usuFoto(Base64)=" + getUsuFotoBase64() +
                 ", usuUsuario='" + usuUsuario + '\'' +
                 ", usuClave='" + usuClave + '\'' +
                 ", usuEstado='" + usuEstado + '\'' +
@@ -179,4 +186,3 @@ public class UsuariosDTO implements Serializable {
                 '}';
     }
 }
-

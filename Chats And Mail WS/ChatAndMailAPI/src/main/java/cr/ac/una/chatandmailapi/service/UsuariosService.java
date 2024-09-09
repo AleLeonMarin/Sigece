@@ -16,6 +16,7 @@ import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,17 +54,20 @@ public class UsuariosService {
         return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar el usuario.", "getUsuario " + ex.getMessage());
     }
 }
-     public Respuesta getAllUsuarios() {
+public Respuesta getAllUsuarios() {
     try {
         Query qryUsuarios = em.createNamedQuery("Usuarios.findAll", Usuarios.class);
-        
-        // Obtener la lista de usuarios desde la base de datos
         List<Usuarios> usuarios = qryUsuarios.getResultList();
         List<UsuariosDTO> usuariosDto = new ArrayList<>();
-        
-        // Convertimos la lista de entidades Usuarios a DTO
+
         for (Usuarios usuario : usuarios) {
-            usuariosDto.add(new UsuariosDTO(usuario));
+           UsuariosDTO usuarioDTO = new UsuariosDTO(usuario);
+        if (usuario.getUsuFoto() != null) {
+                usuarioDTO.setUsuFotoBase64(Base64.getEncoder().encodeToString(usuario.getUsuFoto()));
+            }
+
+
+            usuariosDto.add(usuarioDTO);
         }
 
         return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuarios", usuariosDto);
@@ -76,5 +80,8 @@ public class UsuariosService {
     }
 }
 
-     
 }
+
+
+     
+

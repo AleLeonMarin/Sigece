@@ -1,14 +1,24 @@
 package cr.ac.una.chatandmailapi.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Objects;
 
 /**
  * DTO para la entidad Usuarios, contiene la información de los usuarios.
  */
+
+@JsonbPropertyOrder({
+    "usuId", "usuNombre", "usuApellidos", "usuCedula", "usuCorreo", "usuTelefono",
+    "usuCelular", "usuIdioma", "usuUsuario", "usuClave", "usuEstado", "usuStatus", 
+    "usuVersion", "usuFoto"
+})
+
 @Schema(description = "Esta clase contiene la información de un usuario")
 public class UsuariosDTO implements Serializable {
 
@@ -37,7 +47,7 @@ public class UsuariosDTO implements Serializable {
     private String usuIdioma;
 
     @Schema(description = "Foto del usuario")
-     private byte[] usuFoto; 
+      private byte[] usuFoto;
 
     @Schema(description = "Nombre de usuario", example = "kendallfonseca")
     private String usuUsuario;
@@ -57,23 +67,6 @@ public class UsuariosDTO implements Serializable {
     // Constructor vacío
     public UsuariosDTO() {}
 
-    // Constructor que recibe parámetros
-    public UsuariosDTO(Long usuId, String usuNombre, String usuApellidos, String usuCedula, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma,  byte[] usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
-        this.usuId = usuId;
-        this.usuNombre = usuNombre;
-        this.usuApellidos = usuApellidos;
-        this.usuCedula = usuCedula;
-        this.usuCorreo = usuCorreo;
-        this.usuTelefono = usuTelefono;
-        this.usuCelular = usuCelular;
-        this.usuIdioma = usuIdioma;
-        this.usuFoto = usuFoto;
-        this.usuUsuario = usuUsuario;
-        this.usuClave = usuClave;
-        this.usuEstado = usuEstado;
-        this.usuStatus = usuStatus;
-        this.usuVersion = usuVersion;
-    }
 
     // Constructor que recibe una entidad Usuarios
     public UsuariosDTO(Usuarios usuario) {
@@ -86,12 +79,14 @@ public class UsuariosDTO implements Serializable {
         this.usuTelefono = usuario.getUsuTelefono();
         this.usuCelular = usuario.getUsuCelular();
         this.usuIdioma = usuario.getUsuIdioma();
-        this.usuFoto =  (byte[]) (Serializable) usuario.getUsuFoto();
         this.usuUsuario = usuario.getUsuUsuario();
         this.usuClave = usuario.getUsuClave();
         this.usuEstado = usuario.getUsuEstado();
         this.usuStatus = usuario.getUsuStatus();
         this.usuVersion = usuario.getUsuVersion();
+        
+    
+
     }
 
     // Getters y Setters
@@ -160,14 +155,24 @@ public class UsuariosDTO implements Serializable {
         this.usuIdioma = usuIdioma;
     }
 
-    public byte[] getUsuFoto() {
+    
+     public byte[] getUsuFoto() {
         return usuFoto;
     }
 
     public void setUsuFoto(byte[] usuFoto) {
         this.usuFoto = usuFoto;
     }
+     public String getUsuFotoBase64() {
+        return usuFoto != null ? Base64.getEncoder().encodeToString(usuFoto) : null;
+    }
 
+     public void setUsuFotoBase64(String usuFotoBase64) {
+        this.usuFoto = usuFotoBase64 != null ? Base64.getDecoder().decode(usuFotoBase64) : null;
+    }
+  
+    
+    
     public String getUsuUsuario() {
         return usuUsuario;
     }
@@ -227,12 +232,12 @@ public class UsuariosDTO implements Serializable {
                 ", usuTelefono='" + usuTelefono + '\'' +
                 ", usuCelular='" + usuCelular + '\'' +
                 ", usuIdioma='" + usuIdioma + '\'' +
-                ", usuFoto=" + Arrays.toString(usuFoto) +
-                ", usuUsuario='" + usuUsuario + '\'' +
                 ", usuClave='" + usuClave + '\'' +
                 ", usuEstado='" + usuEstado + '\'' +
                 ", usuStatus='" + usuStatus + '\'' +
                 ", usuVersion=" + usuVersion +
+                ", usuFoto=" + usuFoto +
+
                 '}';
     }
 }
