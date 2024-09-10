@@ -1,12 +1,18 @@
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -26,8 +32,6 @@ import java.util.Date;
     @NamedQuery(name = "Mensajes.findAll", query = "SELECT s FROM Mensajes s"),
     @NamedQuery(name = "Mensajes.findBySmsId", query = "SELECT s FROM Mensajes s WHERE s.smsId = :smsId"),
     @NamedQuery(name = "Mensajes.findBySmsTiempo", query = "SELECT s FROM Mensajes s WHERE s.smsTiempo = :smsTiempo"),
-    @NamedQuery(name = "Mensajes.findBySmsUsuIdEmisor", query = "SELECT s FROM Mensajes s WHERE s.smsUsuIdEmisor = :smsUsuIdEmisor"),
-    @NamedQuery(name = "Mensajes.findBySmsChatId", query = "SELECT s FROM Mensajes s WHERE s.smsChatId = :smsChatId"),
     @NamedQuery(name = "Mensajes.findBySmsVersion", query = "SELECT s FROM Mensajes s WHERE s.smsVersion = :smsVersion")})
 public class Mensajes implements Serializable {
 
@@ -36,6 +40,8 @@ public class Mensajes implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_mensajes_seq")
+    @SequenceGenerator(name = "sis_mensajes_seq", sequenceName = "SIS_MENSAJES_SEQ01", allocationSize = 1)
     @Column(name = "SMS_ID")
     private Long smsId;
     
@@ -52,38 +58,52 @@ public class Mensajes implements Serializable {
     private Date smsTiempo;
     
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "SMS_USU_ID_EMISOR")
-    private Long smsUsuIdEmisor;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "SMS_CHAT_ID")
-    private Long smsChatId;
-    
-    
- 
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "SMS_VERSION")
-    
     private Long smsVersion;
+    
+    @JoinColumn(name = "SMS_CHAT_ID", referencedColumnName = "CHT_ID")
+    @JsonbTransient
+    @ManyToOne(optional = false)
+    private Chats smsChatId;
 
+    
+    @JoinColumn(name = "SMS_USU_ID_EMISOR", referencedColumnName = "USU_ID")
+    @ManyToOne(optional = false)
+    private Usuarios smsUsuIdEmisor;
+
+    // Constructor vacío
     public Mensajes() {
     }
 
-    public Mensajes(Long smsId) {
-        this.smsId = smsId;
+    // Constructor que recibe el DTO
+    public Mensajes(MensajesDTO mensajesDto) {
+        this.smsId = mensajesDto.getSmsId();
+        actualizar(mensajesDto);
     }
 
-    public Mensajes(Long smsId, String smsTexto, Date smsTiempo, Long smsUsuIdEmisor, Long smsChatId, Long smsVersion) {
-        this.smsId = smsId;
-        this.smsTexto = smsTexto;
-        this.smsTiempo = smsTiempo;
-        this.smsUsuIdEmisor = smsUsuIdEmisor;
-        this.smsChatId = smsChatId;
-        this.smsVersion = smsVersion;
+    // Método actualizar basado en el DTO
+  public void actualizar(MensajesDTO mensajesDto) {
+    this.smsTexto = mensajesDto.getSmsTexto();
+    this.smsTiempo = mensajesDto.getSmsTiempo();
+    this.smsVersion = mensajesDto.getSmsVersion();
+
+    // Asignar `smsChatId` creando un objeto `Chats` con el ID del chat
+    if (mensajesDto.getChatId() != null) {
+        Chats chat = new Chats();
+        chat.setChtId(mensajesDto.getChatId().getChtId());  // Asigna solo el ID del chat
+        this.smsChatId = chat;
     }
+
+    // Asignar `smsUsuIdEmisor` creando un objeto `Usuarios` con el ID del emisor
+    if (mensajesDto.getEmisorId() != null) {
+        Usuarios emisor = new Usuarios();
+        emisor.setUsuId(mensajesDto.getEmisorId().getUsuId());  // Asigna solo el ID del emisor
+        this.smsUsuIdEmisor = emisor;
+         }
+    }
+
+
+    // Getters y Setters
 
     public Long getSmsId() {
         return smsId;
@@ -109,28 +129,28 @@ public class Mensajes implements Serializable {
         this.smsTiempo = smsTiempo;
     }
 
-    public Long getSmsUsuIdEmisor() {
-        return smsUsuIdEmisor;
-    }
-
-    public void setSmsUsuIdEmisor(Long smsUsuIdEmisor) {
-        this.smsUsuIdEmisor = smsUsuIdEmisor;
-    }
-
-    public Long getSmsChatId() {
-        return smsChatId;
-    }
-
-    public void setSmsChatId(Long smsChatId) {
-        this.smsChatId = smsChatId;
-    }
-
     public Long getSmsVersion() {
         return smsVersion;
     }
 
     public void setSmsVersion(Long smsVersion) {
         this.smsVersion = smsVersion;
+    }
+
+    public Chats getSmsChatId() {
+        return smsChatId;
+    }
+
+    public void setSmsChatId(Chats smsChatId) {
+        this.smsChatId = smsChatId;
+    }
+
+    public Usuarios getSmsUsuIdEmisor() {
+        return smsUsuIdEmisor;
+    }
+
+    public void setSmsUsuIdEmisor(Usuarios smsUsuIdEmisor) {
+        this.smsUsuIdEmisor = smsUsuIdEmisor;
     }
 
     @Override
@@ -146,10 +166,7 @@ public class Mensajes implements Serializable {
             return false;
         }
         Mensajes other = (Mensajes) object;
-        if ((this.smsId == null && other.smsId != null) || (this.smsId != null && !this.smsId.equals(other.smsId))) {
-            return false;
-        }
-        return true;
+        return (this.smsId != null || other.smsId == null) && (this.smsId == null || this.smsId.equals(other.smsId));
     }
 
     @Override

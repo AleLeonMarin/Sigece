@@ -1,8 +1,11 @@
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
@@ -25,6 +28,7 @@ import java.io.Serializable;
     @NamedQuery(name = "Usuarios.findByUsuId", query = "SELECT s FROM Usuarios s WHERE s.usuId = :usuId"),
     @NamedQuery(name = "Usuarios.findByUsuNombre", query = "SELECT s FROM Usuarios s WHERE s.usuNombre = :usuNombre"),
     @NamedQuery(name = "Usuarios.findByUsuApellidos", query = "SELECT s FROM Usuarios s WHERE s.usuApellidos = :usuApellidos"),
+    @NamedQuery(name = "Usuarios.findByUsuCedula", query = "SELECT s FROM Usuarios s WHERE s.usuCedula = :usuCedula"),
     @NamedQuery(name = "Usuarios.findByUsuCorreo", query = "SELECT s FROM Usuarios s WHERE s.usuCorreo = :usuCorreo"),
     @NamedQuery(name = "Usuarios.findByUsuTelefono", query = "SELECT s FROM Usuarios s WHERE s.usuTelefono = :usuTelefono"),
     @NamedQuery(name = "Usuarios.findByUsuCelular", query = "SELECT s FROM Usuarios s WHERE s.usuCelular = :usuCelular"),
@@ -40,8 +44,8 @@ public class Usuarios implements Serializable {
     
     @Id
     @Basic(optional = false)
-    @NotNull
     @Column(name = "USU_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long usuId;
     
     @Basic(optional = false)
@@ -55,6 +59,12 @@ public class Usuarios implements Serializable {
     @Size(min = 1, max = 300)
     @Column(name = "USU_APELLIDOS")
     private String usuApellidos;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "USU_CEDULA")
+    private String usuCedula;
     
     @Basic(optional = false)
     @NotNull
@@ -84,8 +94,9 @@ public class Usuarios implements Serializable {
     @NotNull
     @Lob
     @Column(name = "USU_FOTO")
-    private Serializable usuFoto;
-    
+    @JsonbTransient
+    private byte[] usuFoto;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -122,23 +133,27 @@ public class Usuarios implements Serializable {
         this.usuId = usuId;
     }
 
-    public Usuarios(Long usuId, String usuNombre, String usuApellidos, String usuCorreo, String usuTelefono, String usuCelular, String usuIdioma, Serializable usuFoto, String usuUsuario, String usuClave, String usuEstado, String usuStatus, Long usuVersion) {
-        this.usuId = usuId;
-        this.usuNombre = usuNombre;
-        this.usuApellidos = usuApellidos;
-        this.usuCorreo = usuCorreo;
-        this.usuTelefono = usuTelefono;
-        this.usuCelular = usuCelular;
-        this.usuIdioma = usuIdioma;
-        this.usuFoto = usuFoto;
-        this.usuUsuario = usuUsuario;
-        this.usuClave = usuClave;
-        this.usuEstado = usuEstado;
-        this.usuStatus = usuStatus;
-        this.usuVersion = usuVersion;
+    public Usuarios(UsuariosDTO usuarioDTO) {
+        this.usuId = usuarioDTO.getUsuId();
+        actualizar(usuarioDTO);
     }
     
-    
+    public void actualizar(UsuariosDTO usuariosDto) {
+    this.usuNombre = usuariosDto.getUsuNombre();
+    this.usuApellidos = usuariosDto.getUsuApellidos();
+    this.usuCedula = usuariosDto.getUsuCedula();
+    this.usuCorreo = usuariosDto.getUsuCorreo();
+    this.usuTelefono = usuariosDto.getUsuTelefono();
+    this.usuCelular = usuariosDto.getUsuCelular();
+    this.usuIdioma = usuariosDto.getUsuIdioma();
+  
+    this.usuUsuario = usuariosDto.getUsuUsuario();
+    this.usuClave = usuariosDto.getUsuClave();
+    this.usuEstado = usuariosDto.getUsuEstado();
+    this.usuStatus = usuariosDto.getUsuStatus();
+    this.usuVersion = usuariosDto.getUsuVersion();
+   
+    }
 
     public Long getUsuId() {
         return usuId;
@@ -162,6 +177,14 @@ public class Usuarios implements Serializable {
 
     public void setUsuApellidos(String usuApellidos) {
         this.usuApellidos = usuApellidos;
+    }
+
+    public String getUsuCedula() {
+        return usuCedula;
+    }
+
+    public void setUsuCedula(String usuCedula) {
+        this.usuCedula = usuCedula;
     }
 
     public String getUsuCorreo() {
@@ -196,11 +219,11 @@ public class Usuarios implements Serializable {
         this.usuIdioma = usuIdioma;
     }
 
-    public Serializable getUsuFoto() {
+      public byte[] getUsuFoto() {
         return usuFoto;
     }
 
-    public void setUsuFoto(Serializable usuFoto) {
+    public void setUsuFoto(byte[] usuFoto) {
         this.usuFoto = usuFoto;
     }
 
@@ -257,15 +280,11 @@ public class Usuarios implements Serializable {
             return false;
         }
         Usuarios other = (Usuarios) object;
-        if ((this.usuId == null && other.usuId != null) || (this.usuId != null && !this.usuId.equals(other.usuId))) {
-            return false;
-        }
-        return true;
+        return !((this.usuId == null && other.usuId != null) || (this.usuId != null && !this.usuId.equals(other.usuId)));
     }
 
     @Override
     public String toString() {
         return "cr.ac.una.chatandmailapi.model.SisUsuarios[ usuId=" + usuId + " ]";
     }
-    
 }

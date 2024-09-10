@@ -1,5 +1,9 @@
-package cr.ac.una.chatandmailapi.model;
+package cr.ac.una.chatsapp.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javassist.Loader;
+
+import javax.print.DocFlavor;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,33 +12,31 @@ import java.util.Date;
  */
 public class MensajesDTO implements Serializable {
 
-    private Long smsId;
+    private String smsId;
     private String smsTexto;
     private Date smsTiempo;
     private Long smsVersion;
-    private Chats chatId;
-    private Usuarios emisorId;
+    private ChatsDTO chatId;
+    private UsuariosDTO emisorId;
 
     // Constructor vacío
-    public MensajesDTO() {}
+    public MensajesDTO() {
+        this.smsId = "";
+        this.smsTexto = "";
+        this.smsVersion = 0L;
 
-    // Constructor que recibe la entidad Mensajes
-    public MensajesDTO(Mensajes mensaje) {
-        this.smsId = mensaje.getSmsId();
-        this.smsTexto = mensaje.getSmsTexto();
-        this.smsTiempo = mensaje.getSmsTiempo();
-        this.smsVersion = mensaje.getSmsVersion();
-        this.chatId = mensaje.getSmsChatId();  // Asignación del ID del chat
-        this.emisorId = mensaje.getSmsUsuIdEmisor();  // Asignación del ID del emisor
+        this.smsTiempo = new Date();
+        this.chatId = new ChatsDTO();
+        this.emisorId = new UsuariosDTO();
     }
 
-    // Getters y Setters
+
     public Long getSmsId() {
-        return smsId;
+        return smsId != null && !smsId.isEmpty() ? Long.parseLong(smsId) : null;
     }
 
     public void setSmsId(Long smsId) {
-        this.smsId = smsId;
+        this.smsId = smsId != null ? smsId.toString() : "";
     }
 
     public String getSmsTexto() {
@@ -61,23 +63,21 @@ public class MensajesDTO implements Serializable {
         this.smsVersion = smsVersion;
     }
 
-    public Chats getChatId() {
+    public ChatsDTO getChatId() {
         return chatId;
     }
 
-    public void setChatId(Chats chatId) {
+    public void setChatId(ChatsDTO chatId) {
         this.chatId = chatId;
     }
 
-    public Usuarios getEmisorId() {
+    public UsuariosDTO getEmisorId() {
         return emisorId;
     }
 
-    public void setEmisorId(Usuarios emisorId) {
+    public void setEmisorId(UsuariosDTO emisorId) {
         this.emisorId = emisorId;
     }
-
-    // hashCode, equals, toString
 
     @Override
     public int hashCode() {

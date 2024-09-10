@@ -1,37 +1,39 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
- *
- * @author Kendall Fonseca
+ * Entidad Chats para manejar la tabla de chats en la base de datos.
  */
 @Entity
 @Table(name = "SIS_CHATS")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Chats.findAll", query = "SELECT s FROM Chats s"),
-    @NamedQuery(name = "Chats.findByChtId", query = "SELECT s FROM Chats s WHERE s.chtId = :chtId"),
-    @NamedQuery(name = "Chats.findByChtFecha", query = "SELECT s FROM Chats s WHERE s.chtFecha = :chtFecha"),
-    @NamedQuery(name = "Chats.findByChtEmisorId", query = "SELECT s FROM Chats s WHERE s.chtEmisorId = :chtEmisorId"),
-    @NamedQuery(name = "Chats.findByChtReceptorId", query = "SELECT s FROM Chats s WHERE s.chtReceptorId = :chtReceptorId"),
-    @NamedQuery(name = "Chats.findByChtVersion", query = "SELECT s FROM Chats s WHERE s.chtVersion = :chtVersion")})
+    @NamedQuery(name = "Chats.findAll", query = "SELECT c FROM Chats c"),
+    @NamedQuery(name = "Chats.findByChtId", query = "SELECT c FROM Chats c WHERE c.chtId = :chtId"),
+    @NamedQuery(name = "Chats.findByChtFecha", query = "SELECT c FROM Chats c WHERE c.chtFecha = :chtFecha"),
+    @NamedQuery(name = "Chats.findByChtVersion", query = "SELECT c FROM Chats c WHERE c.chtVersion = :chtVersion")
+})
 public class Chats implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,6 +41,8 @@ public class Chats implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_chats_seq")
+    @SequenceGenerator(name = "sis_chats_seq", sequenceName = "SIS_CHATS_SEQ01", allocationSize = 1)
     @Column(name = "CHT_ID")
     private Long chtId;
     
@@ -50,18 +54,20 @@ public class Chats implements Serializable {
     
     @Basic(optional = false)
     @NotNull
-    @Column(name = "CHT_EMISOR_ID")
-    private Long chtEmisorId;
-    
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "CHT_RECEPTOR_ID")
-    private Long chtReceptorId;
-    
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "CHT_VERSION")
     private Long chtVersion;
+
+    @JoinColumn(name = "CHT_RECEPTOR_ID", referencedColumnName = "USU_ID")
+    @ManyToOne(optional = false)
+    private Usuarios chtReceptorId;
+
+    @JoinColumn(name = "CHT_EMISOR_ID", referencedColumnName = "USU_ID")
+    @ManyToOne(optional = false)
+    private Usuarios chtEmisorId;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "smsChatId")
+    @JsonbTransient 
+    private List<Mensajes> sisMensajesList;
 
     public Chats() {
     }
@@ -70,13 +76,49 @@ public class Chats implements Serializable {
         this.chtId = chtId;
     }
 
-    public Chats(Long chtId, Date chtFecha, Long chtEmisorId, Long chtReceptorId, Long chtVersion) {
+    public Chats(Long chtId, Date chtFecha, Long chtVersion) {
         this.chtId = chtId;
         this.chtFecha = chtFecha;
-        this.chtEmisorId = chtEmisorId;
-        this.chtReceptorId = chtReceptorId;
         this.chtVersion = chtVersion;
     }
+
+  public Chats(ChatsDTO chatDto) {
+    this.chtFecha = chatDto.getChtFecha();
+    this.chtVersion = chatDto.getChtVersion();
+    this.chtReceptorId = chatDto.getReceptorId();
+    this.chtEmisorId = chatDto.getEmisorId();
+
+    if (chatDto.getMensajesList() != null) {
+        this.sisMensajesList = new ArrayList<>();
+        for (MensajesDTO mensajeDto : chatDto.getMensajesList()) {
+            Mensajes mensaje = new Mensajes(mensajeDto);
+            mensaje.setSmsChatId(this);
+            this.sisMensajesList.add(mensaje);
+        }
+    }
+}
+
+public void actualizar(ChatsDTO chatsDTO) {
+    this.chtFecha = chatsDTO.getChtFecha();
+    this.chtVersion = chatsDTO.getChtVersion();
+    // Si `chtReceptorId` y `chtEmisorId` son entidades relacionadas, asignamos solo los IDs
+    if (chatsDTO.getReceptorId() != null) {
+        this.chtReceptorId = new Usuarios();
+        this.chtReceptorId=chatsDTO.getReceptorId();
+    }
+    if (chatsDTO.getEmisorId() != null) {
+        this.chtEmisorId = new Usuarios();
+        this.chtEmisorId=chatsDTO.getEmisorId();
+    }
+
+    // Actualizamos la lista de mensajes, si está presente
+    if (chatsDTO.getMensajesList() != null) {
+        this.sisMensajesList = new ArrayList<>();
+        for (MensajesDTO mensajeDto : chatsDTO.getMensajesList()) {
+            this.sisMensajesList.add(new Mensajes(mensajeDto));  // Conversión de DTO a entidad
+        }
+    }
+}
 
     public Long getChtId() {
         return chtId;
@@ -94,28 +136,36 @@ public class Chats implements Serializable {
         this.chtFecha = chtFecha;
     }
 
-    public Long getChtEmisorId() {
-        return chtEmisorId;
-    }
-
-    public void setChtEmisorId(Long chtEmisorId) {
-        this.chtEmisorId = chtEmisorId;
-    }
-
-    public Long getChtReceptorId() {
-        return chtReceptorId;
-    }
-
-    public void setChtReceptorId(Long chtReceptorId) {
-        this.chtReceptorId = chtReceptorId;
-    }
-
     public Long getChtVersion() {
         return chtVersion;
     }
 
     public void setChtVersion(Long chtVersion) {
         this.chtVersion = chtVersion;
+    }
+
+    public Usuarios getChtReceptorId() {
+        return chtReceptorId;
+    }
+
+    public void setChtReceptorId(Usuarios chtReceptorId) {
+        this.chtReceptorId = chtReceptorId;
+    }
+
+    public Usuarios getChtEmisorId() {
+        return chtEmisorId;
+    }
+
+    public void setChtEmisorId(Usuarios chtEmisorId) {
+        this.chtEmisorId = chtEmisorId;
+    }
+
+    public List<Mensajes> getSisMensajesList() {
+        return sisMensajesList;
+    }
+
+    public void setSisMensajesList(List<Mensajes> sisMensajesList) {
+        this.sisMensajesList = sisMensajesList;
     }
 
     @Override
@@ -131,14 +181,11 @@ public class Chats implements Serializable {
             return false;
         }
         Chats other = (Chats) object;
-        if ((this.chtId == null && other.chtId != null) || (this.chtId != null && !this.chtId.equals(other.chtId))) {
-            return false;
-        }
-        return true;
+        return !((this.chtId == null && other.chtId != null) || (this.chtId != null && !this.chtId.equals(other.chtId)));
     }
 
     @Override
     public String toString() {
-        return "cr.ac.una.chatandmailapi.model.SisChats[ chtId=" + chtId + " ]";
+        return "cr.ac.una.chatandmailapi.model.Chats[ chtId=" + chtId + " ]";
     }
 }
