@@ -2,10 +2,7 @@ package cr.ac.una.chatandmailapi.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
-import jakarta.json.bind.annotation.JsonbTransient;
-
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
 
