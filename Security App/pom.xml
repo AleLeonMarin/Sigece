@@ -99,7 +99,6 @@
                             <wsdlFiles>
                                 <wsdlFile>localhost_8080/SecurityWS/SigeceSoapWS.wsdl</wsdlFile>
                             </wsdlFiles>
-                            <packageName></packageName>
                             <vmArgs>
                                 <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
                             </vmArgs>
