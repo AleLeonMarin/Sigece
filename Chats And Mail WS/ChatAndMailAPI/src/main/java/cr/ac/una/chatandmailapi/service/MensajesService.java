@@ -89,21 +89,7 @@ public class MensajesService {
 }
 
 
-    // Eliminar un mensaje
-    public Respuesta eliminarMensaje(Long id) {
-        try {
-            Mensajes mensaje = em.find(Mensajes.class, id);
-            if (mensaje == null) {
-                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el mensaje a eliminar.", "eliminarMensaje NoResultException");
-            }
-            em.remove(mensaje);
-            em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Ocurrió un error al eliminar el mensaje.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al eliminar el mensaje.", "eliminarMensaje " + ex.getMessage());
-        }
-    }
+   
     
 
     // Enviar mensajes a un chat
@@ -120,6 +106,22 @@ public class MensajesService {
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al enviar los mensajes.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al enviar los mensajes.", "enviarMensajes " + ex.getMessage());
+        }
+    }
+   
+    
+    public Respuesta eliminarMensaje(Long id) {
+        try {
+            Mensajes mensaje = em.find(Mensajes.class, id);
+            if (mensaje == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el mensaje a eliminar.", "eliminarMensaje NoResultException");
+            }
+            em.remove(mensaje);
+            em.flush();
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al eliminar el mensaje.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al eliminar el mensaje.", "eliminarMensaje " + ex.getMessage());
         }
     }
 

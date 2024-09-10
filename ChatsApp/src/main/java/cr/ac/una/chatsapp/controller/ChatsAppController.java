@@ -73,7 +73,7 @@ public class ChatsAppController extends Controller implements Initializable {
         iniciarActualizacionPeriodica();
     }
     private Long obtenerIdEmisorActual() {
-        return 3L;
+        return 2L;
     }
 
     private void cargarUsuarios() {
@@ -148,7 +148,6 @@ public class ChatsAppController extends Controller implements Initializable {
         }
     }
 
-
     private void mostrarMensajesDelChat(List<MensajesDTO> mensajes) {
         vboxChats.getChildren().clear();
         if (mensajes != null && !mensajes.isEmpty()) {
@@ -161,6 +160,12 @@ public class ChatsAppController extends Controller implements Initializable {
                 mensajeLabel.setWrapText(true);
                 mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
 
+                // Crear botón de eliminar
+                Button btnEliminar = new Button("Eliminar");
+                btnEliminar.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+                btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje)); // Acción para eliminar el mensaje
+
+                // Determinar si el mensaje fue enviado por el emisor actual
                 Long emisorIdMensaje = mensaje.getEmisorId().getUsuId();
                 if (emisorIdMensaje != null && emisorIdMensaje.equals(idEmisor)) {
                     hbox.setAlignment(Pos.CENTER_RIGHT);
@@ -170,7 +175,7 @@ public class ChatsAppController extends Controller implements Initializable {
                     mensajeLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10px; -fx-background-radius: 10px;");
                 }
 
-                hbox.getChildren().add(mensajeLabel);
+                hbox.getChildren().addAll(mensajeLabel, btnEliminar);
                 vboxChats.getChildren().add(hbox);
             }
         } else {
@@ -320,6 +325,32 @@ public class ChatsAppController extends Controller implements Initializable {
             }
         } else {
             System.out.println("Eliminación de chat cancelada.");
+        }
+    }
+
+
+    private void onActionEliminarMensaje(MensajesDTO mensaje) {
+        // Confirmación de eliminación
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Eliminar mensaje");
+        alert.setHeaderText("¿Está seguro de que desea eliminar este mensaje?");
+        alert.setContentText("Esta acción no se puede deshacer.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Llamar al servicio para eliminar el mensaje
+            MensajesService mensajesService = new MensajesService();
+            Respuesta respuesta = mensajesService.eliminarMensaje(mensaje.getSmsId());
+
+            if (respuesta.getEstado()) {
+                Mensaje mensajeAlerta = new Mensaje();
+                mensajeAlerta.show(Alert.AlertType.INFORMATION, "Éxito", "El mensaje ha sido eliminado correctamente.");
+                currentChat.getMensajesList().remove(mensaje); // Eliminar mensaje de la lista
+                mostrarMensajesDelChat(currentChat.getMensajesList()); // Actualizar la vista
+            } else {
+                Mensaje mensajeAlerta = new Mensaje();
+                mensajeAlerta.show(Alert.AlertType.ERROR, "Error", "Ocurrió un error al eliminar el mensaje: " + respuesta.getMensaje());
+            }
         }
     }
 

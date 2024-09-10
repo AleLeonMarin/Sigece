@@ -27,5 +27,21 @@ public class MensajesService {
         }
     }
 
+    public Respuesta eliminarMensaje(Long id) {
+        try {
+            Request request = new Request("MensajesController/mensajes/" + id);
+            request.delete();  // Enviar solicitud DELETE
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            return new Respuesta(true, "", "");
+        } catch (Exception ex) {
+            Logger.getLogger(MensajesService.class.getName()).log(Level.SEVERE, "Ocurrió un error al eliminar el mensaje.", ex);
+            return new Respuesta(false, "Ocurrió un error al eliminar el mensaje.", "eliminarMensaje " + ex.getMessage());
+        }
+    }
+
 
 }

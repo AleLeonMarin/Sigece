@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -68,6 +69,22 @@ public Response guardarMensaje(MensajesDTO mensaje) {
     } catch (Exception ex) {
         Logger.getLogger(MensajesController.class.getName()).log(Level.SEVERE, "Error guardando el mensaje.", ex);
         return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando el mensaje").build();
+    }
+}
+
+@DELETE
+@Path("/mensajes/{id}")
+@Produces(MediaType.APPLICATION_JSON)
+public Response eliminarMensaje(@PathParam("id") Long id) {
+    try {
+        Respuesta res = mensajesService.eliminarMensaje(id);
+        if (!res.getEstado()) {
+            return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+        }
+        return Response.ok().build();  // Responder con éxito
+    } catch (Exception ex) {
+        Logger.getLogger(MensajesController.class.getName()).log(Level.SEVERE, "Ocurrió un error al eliminar el mensaje.", ex);
+        return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error eliminando el mensaje").build();
     }
 }
 
