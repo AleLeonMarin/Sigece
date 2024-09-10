@@ -3,20 +3,20 @@ package cr.ac.una.tarea.service;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import cr.ac.una.securityws.controller.SecurityController;
-import cr.ac.una.securityws.controller.SecurityController_Service;
+import cr.ac.una.securityws.controller.SigeceSoapWS;
+import cr.ac.una.securityws.controller.SigeceSoapWS_Service;
 import cr.ac.una.tarea.model.UsuariosDto;
 import cr.ac.una.tarea.util.Respuesta;
 
 public class UsuariosService {
 
-    SecurityController securityWs;
+    SigeceSoapWS securityWs;
 
     public Respuesta logIn(String user, String password) {
 
         try {
-            SecurityController_Service service = new SecurityController_Service();
-            securityWs = service.getSecurityControllerPort();
+            SigeceSoapWS_Service service = new SigeceSoapWS_Service();
+            securityWs = service.getSigeceSoapWSPort();
             securityWs.logIn(user, password);
 
             if (securityWs.logIn(user, password).equals(false)) {
@@ -24,7 +24,7 @@ public class UsuariosService {
             }
             UsuariosDto usuario = new UsuariosDto(
                     (cr.ac.una.securityws.controller.UsuariosDto) securityWs.logIn(user, password));
-            return new Respuesta(true, "", "", "TarUsuario", usuario);
+            return new Respuesta(true, "", "", "Usuario", usuario);
         } catch (Exception ex) {
             Logger.getLogger(UsuariosService.class.getName()).log(Level.SEVERE,
                     "Error obteniendo el usuario [" + user + "]", ex);

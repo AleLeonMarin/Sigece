@@ -11,14 +11,17 @@ public class SistemasDto  implements Serializable {
     private Long version;
     private Boolean modificado;
     List<RolesDto> rolesDto;
+    List<RolesDto> elminados;
 
 
     public SistemasDto() {
         this.modificado = false;
         rolesDto = new ArrayList<>();
+        elminados = new ArrayList<>();
     }
 
     public SistemasDto(Sistemas sistema){
+        this();
         this.id = sistema.getId();
         this.nombre = sistema.getNombre();
         this.version = sistema.getVersion();
@@ -44,6 +47,7 @@ public class SistemasDto  implements Serializable {
         return rolesDto;
     }
 
+
     public void setRolesDto(List<RolesDto> rolesDto) {
         this.rolesDto = rolesDto;
     }
@@ -62,6 +66,14 @@ public class SistemasDto  implements Serializable {
 
     public void setModificado(Boolean modificado) {
         this.modificado = modificado;
+    }
+
+    public List<RolesDto> getElminados() {
+        return elminados;
+    }
+
+    public void setElminados(List<RolesDto> elminados) {
+        this.elminados = elminados;
     }
 
     

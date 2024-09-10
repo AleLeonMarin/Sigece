@@ -31,6 +31,7 @@
 <xs:complexType name="usuariosDto">
 <xs:sequence>
 <xs:element name="apellidos" type="xs:string" minOccurs="0"/>
+<xs:element name="cedula" type="xs:string" minOccurs="0"/>
 <xs:element name="celular" type="xs:string" minOccurs="0"/>
 <xs:element name="clave" type="xs:string" minOccurs="0"/>
 <xs:element name="correo" type="xs:string" minOccurs="0"/>
@@ -53,7 +54,7 @@
 <xs:element name="id" type="xs:long" minOccurs="0"/>
 <xs:element name="modificado" type="xs:boolean" minOccurs="0"/>
 <xs:element name="nombre" type="xs:string" minOccurs="0"/>
-<xs:element name="sisId" type="tns:sistemasDto" minOccurs="0"/>
+<xs:element name="sistema" type="tns:sistemasDto" minOccurs="0"/>
 <xs:element name="usuariosDto" type="tns:usuariosDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
 <xs:element name="version" type="xs:long" minOccurs="0"/>
 </xs:sequence>
@@ -69,6 +70,18 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="saveUser">
+<xs:sequence>
+<xs:element name="arg0" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="saveUserResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="logIn">
 <xs:sequence>
 <xs:element name="usuario" type="xs:string" minOccurs="0"/>
@@ -77,18 +90,6 @@
 </xs:complexType>
 
 <xs:complexType name="logInResponse">
-<xs:sequence>
-<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="saveUser">
-<xs:sequence>
-<xs:element name="arg0" type="tns:usuariosDto" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="saveUserResponse">
 <xs:sequence>
 <xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
 </xs:sequence>

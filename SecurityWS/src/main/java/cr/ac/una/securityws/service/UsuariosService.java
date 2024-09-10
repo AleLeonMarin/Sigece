@@ -28,12 +28,24 @@ public class UsuariosService {
 
     public Respuesta validateUser(String usuario, String clave) {
         try {
+            LOG.log(Level.INFO, "Ejecutando consulta con usuario: {0} y clave: {1}", new Object[] { usuario, clave });
+
+            // Realiza la consulta para encontrar el usuario con las credenciales
+            // proporcionadas
             Query query = em.createNamedQuery("Usuarios.findByUsuClave", Usuarios.class);
             query.setParameter("usuario", usuario);
             query.setParameter("clave", clave);
             Usuarios usuarios = (Usuarios) query.getSingleResult();
+
+            if (usuarios == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                        "No existe un usuario con las credenciales ingresadas.", "validateUser Usuario nulo");
+            }
+
+            // Crea un DTO de Usuarios basado en el usuario encontrado
             UsuariosDto usuariosDto = new UsuariosDto(usuarios);
 
+            // Agrega los roles del usuario al DTO
             for (Roles rol : usuarios.getRoles()) {
                 usuariosDto.getRolesDto().add(new RolesDto(rol));
             }
@@ -41,17 +53,23 @@ public class UsuariosService {
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", usuariosDto);
 
         } catch (NoResultException ex) {
+            LOG.log(Level.INFO, "No se encontró ningún usuario con las credenciales proporcionadas.");
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                     "No existe un usuario con las credenciales ingresadas.", "validateUser NoResultException");
         } catch (NonUniqueResultException ex) {
-             LOG.log(Level.SEVERE, "Ocurrio un error al consultar el tipo de planilla.",
-             ex);
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar el usuario. Más de un resultado encontrado.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
-                    "Ocurrio un error al consultar el usuario.", "validateUser NonUniqueResultException");
+                    "Ocurrió un error al consultar el usuario. Más de un resultado encontrado.",
+                    "validateUser NonUniqueResultException");
+        } catch (NullPointerException ex) {
+            LOG.log(Level.SEVERE, "Error de referencia nula en la consulta o procesamiento del usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Error de referencia nula en la consulta o procesamiento del usuario.",
+                    "validateUser NullPointerException");
         } catch (Exception ex) {
-             LOG.log(Level.SEVERE, "Ocurrio un error al consultar el empleado.", ex);
+            LOG.log(Level.SEVERE, "Ocurrió un error inesperado al consultar el usuario.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
-                    "Ocurrio un error al consultar el usuario.", "validateUser " + ex.getMessage());
+                    "Ocurrió un error inesperado al consultar el usuario.", "validateUser " + ex.getMessage());
         }
     }
 
@@ -63,7 +81,7 @@ public class UsuariosService {
                 usuarios = em.find(Usuarios.class, usuariosDto.getId());
                 if (usuarios == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
-                            "No se encontro el usuario a modificar.", "saveUser NoResultException");
+                            "No se encontró el usuario a modificar.", "saveUser NoResultException");
                 }
 
                 usuarios.actualizar(usuariosDto);
@@ -72,12 +90,28 @@ public class UsuariosService {
                 usuarios = new Usuarios(usuariosDto);
                 em.persist(usuarios);
             }
+
+            // Aseguramos que los cambios se confirmen en la base de datos
             em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "El usuario se guardo correctamente", "", "Usuario",
+
+            // Log para confirmar que el usuario fue guardado correctamente
+            LOG.log(Level.INFO, "Usuario guardado correctamente: {0}", usuarios);
+
+            // Retornamos la respuesta de éxito
+            return new Respuesta(true, CodigoRespuesta.CORRECTO,
+                    "El usuario se guardó correctamente", "", "Usuario",
                     new UsuariosDto(usuarios));
+        } catch (NoResultException ex) {
+            // Manejo de excepción específica cuando no se encuentra el usuario
+            LOG.log(Level.SEVERE, "Usuario no encontrado.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                    "No se encontró el usuario a modificar.",
+                    "saveUser " + ex.getMessage());
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Ocurrio un error al guardar el usuario.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al guardar el usuario.",
+            // Manejo de cualquier otra excepción no esperada
+            LOG.log(Level.SEVERE, "Ocurrió un error al guardar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
+                    "Ocurrió un error al guardar el usuario.",
                     "saveUser " + ex.getMessage());
         }
     }
@@ -110,21 +144,51 @@ public class UsuariosService {
 
         try {
             Query query = em.createNamedQuery("Usuarios.findAll", Usuarios.class);
-            List<Usuarios> usuarios = (List<Usuarios>) query.getResultList();
+            List<Usuarios> usuarios = query.getResultList(); // No hacemos cast aquí
             List<UsuariosDto> usuariosDto = new ArrayList<>();
             for (Usuarios usuario : usuarios) {
-                usuariosDto.add(new UsuariosDto(usuario));
+                UsuariosDto usuarioDto = new UsuariosDto(usuario);
+                usuariosDto.add(usuarioDto);
             }
 
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuarios", usuariosDto);
         } catch (NoResultException ex) {
-            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "","getAllUsers NoResultException",ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "", "getAllUsers NoResultException", ex);
         } catch (NonUniqueResultException ex) {
-            Logger.getLogger(UsuariosService.class.getName()).log(Level.SEVERE, "Ocurrio un error al consultar los usuarios.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "","getAllUsers NonUniqueResultException");
+            Logger.getLogger(UsuariosService.class.getName()).log(Level.SEVERE,
+                    "Ocurrio un error al consultar los usuarios.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "", "getAllUsers NonUniqueResultException");
         } catch (Exception ex) {
-            Logger.getLogger(UsuariosService.class.getName()).log(Level.SEVERE, "Ocurrio un error al consultar los usuarios.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "","getAllUsers NonUniqueResultException");
+            Logger.getLogger(UsuariosService.class.getName()).log(Level.SEVERE,
+                    "Ocurrio un error al consultar los usuarios.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "", "getAllUsers NonUniqueResultException");
+        }
+    }
+
+    public Respuesta getUsuario(Long id) {
+        try {
+            Query query = em.createNamedQuery("Usuarios.findById", Usuarios.class);
+            query.setParameter("id", id);
+            Usuarios usuarios = (Usuarios) query.getSingleResult();
+            UsuariosDto usuariosDto = new UsuariosDto(usuarios);
+
+            for (Roles rol : usuarios.getRoles()) {
+                usuariosDto.getRolesDto().add(new RolesDto(rol));
+            }
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", usuariosDto);
+
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                    "No existe un usuario con el código ingresado.", "getUsuario NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.",
+                    "getUsuario NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuairo.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.",
+                    "getUsuario " + ex.getMessage());
         }
     }
 

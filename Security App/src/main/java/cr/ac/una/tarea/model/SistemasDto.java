@@ -22,6 +22,9 @@ public class SistemasDto  implements Serializable {
         this.id = sistema.getId();
         this.nombre = sistema.getNombre();
         this.version = sistema.getVersion();
+        for(cr.ac.una.securityws.controller.RolesDto rol : sistema.getRolesDto()){
+            this.rolesDto.add(new RolesDto(rol));
+        }
     }
 
     public Long getId() {

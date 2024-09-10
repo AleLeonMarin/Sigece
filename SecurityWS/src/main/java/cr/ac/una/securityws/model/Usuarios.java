@@ -29,11 +29,9 @@ import java.util.List;
 @Table(name = "SIS_USUARIOS", schema = "SigeceUNA")
 @NamedQueries({
         @NamedQuery(name = "Usuarios.findAll", query = "SELECT s FROM Usuarios s"),
-        @NamedQuery(name = "Usuarios.findByUsuClave", query = "SELECT s FROM Usuarios s WHERE s.usuario = :usuario AND s.clave = :clave"),
+        @NamedQuery(name = "Usuarios.findByUsuClave", query = "SELECT s FROM Usuarios s LEFT JOIN FETCH s.roles WHERE s.usuario = :usuario AND s.clave = :clave"),
+        @NamedQuery(name = "Usuarios.findById", query = "SELECT s FROM Usuarios s WHERE s.id = :id")
 /*
- * @NamedQuery(name = "SisUsuarios.findByUsuId", query =
- * "SELECT s FROM SisUsuarios s WHERE s.usuId = :id"),
- * 
  * @NamedQuery(name = "SisUsuarios.findByUsuNombre", query =
  * "SELECT s FROM SisUsuarios s WHERE s.usuNombre = :usuNombre"),
  * 
@@ -74,8 +72,8 @@ public class Usuarios implements Serializable {
     // consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
-    @SequenceGenerator(name = "GENERATOR_USUARIOS_SEQUENCE", sequenceName = "SIS_USUARIOS_SEQ_01", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SIS_USUARIOS_SEQ_01")
+    @SequenceGenerator(name = "GENERATOR_USUARIOS_SEQUENCE", sequenceName = "sigeceuna.SIS_USUARIOS_SEQ01", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GENERATOR_USUARIOS_SEQUENCE")
     @Column(name = "USU_ID")
     private Long id;
 
@@ -86,6 +84,10 @@ public class Usuarios implements Serializable {
     @Basic(optional = false)
     @Column(name = "USU_APELLIDOS")
     private String apellidos;
+
+    @Basic(optional = false)
+    @Column(name = "USU_CEDULA")
+    private String cedula;
 
     @Basic(optional = false)
     @Column(name = "USU_CORREO")
@@ -106,7 +108,7 @@ public class Usuarios implements Serializable {
     @Basic(optional = false)
     @Lob
     @Column(name = "USU_FOTO")
-    private Serializable foto;
+    private byte[] foto;
 
     @Basic(optional = false)
     @Column(name = "USU_USUARIO")
@@ -128,7 +130,7 @@ public class Usuarios implements Serializable {
     @Column(name = "USU_VERSION")
     private Long version;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "usuarios")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "usuarios")
     private List<Roles> roles;
 
     public Usuarios() {
@@ -146,6 +148,7 @@ public class Usuarios implements Serializable {
     public void actualizar(UsuariosDto usuariosDto) {
         this.nombre = usuariosDto.getNombre();
         this.apellidos = usuariosDto.getApellidos();
+        this.cedula = usuariosDto.getCedula();
         this.correo = usuariosDto.getCorreo();
         this.telefono = usuariosDto.getTelefono();
         this.celular = usuariosDto.getCelular();
@@ -169,6 +172,10 @@ public class Usuarios implements Serializable {
         return apellidos;
     }
 
+    public String getCedula() {
+        return cedula;
+    }
+
     public String getCorreo() {
         return correo;
     }
@@ -185,7 +192,7 @@ public class Usuarios implements Serializable {
         return idioma;
     }
 
-    public Serializable getFoto() {
+    public byte[] getFoto() {
         return foto;
     }
 
@@ -225,6 +232,10 @@ public class Usuarios implements Serializable {
         this.apellidos = apellidos;
     }
 
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
     public void setCorreo(String correo) {
         this.correo = correo;
     }
@@ -241,7 +252,7 @@ public class Usuarios implements Serializable {
         this.idioma = idioma;
     }
 
-    public void setFoto(Serializable foto) {
+    public void setFoto(byte[] foto) {
         this.foto = foto;
     }
 

@@ -7,6 +7,7 @@ package cr.ac.una.securityws.model;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,8 +50,8 @@ public class Roles implements Serializable {
     // consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
-    @SequenceGenerator(name = "GENERATOR_ROLES_SEQUENCE", sequenceName = "SIS_ROLES_SEQ_01", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SIS_ROLES_SEQ_01")
+    @SequenceGenerator(name = "GENERATOR_ROLES_SEQUENCE", sequenceName = "SIS_ROLES_SEQ01", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GENERATOR_ROLES_SEQUENCE")
     @Column(name = "ROL_ID")
     private Long id;
 
@@ -58,19 +59,18 @@ public class Roles implements Serializable {
     @Column(name = "ROL_NOMBRE")
     private String nombre;
 
-    @Column(name = "ROL_DESCRIPCION")
-    private String descripcion;
-
     @Version
     @Column(name = "ROL_VERSION")
     private Long version;
 
-    @JoinColumn(name = "SIS_ID", referencedColumnName = "SIS_ID")
-    @ManyToOne(optional = false)
-    private Sistemas sisId;
+    @JoinColumn(name = "ROL_SIS_ID", referencedColumnName = "SIS_ID")
+    @ManyToOne(optional = false , fetch = FetchType.LAZY)
+    private Sistemas sistema;
 
-    @ManyToMany
-    @JoinTable(name = "SIS_USUARIOS_ROLES", joinColumns = @JoinColumn(name = "ROL_ID"), inverseJoinColumns = @JoinColumn(name = "USU_ID"))
+    @JoinTable(name = "SIS_SISTEMAS_ROLES_USUARIOS", joinColumns = {
+        @JoinColumn(name = "SRS_ROL_ID", referencedColumnName = "ROL_ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "SRS_USU_ID", referencedColumnName = "USU_ID")})
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Usuarios> usuarios;
 
     public Roles() {
@@ -88,7 +88,7 @@ public class Roles implements Serializable {
 
     public void actualizar(RolesDto rolesDto) {
         this.nombre = rolesDto.getNombre();
-        this.sisId = new Sistemas(rolesDto.getSisId());
+        this.sistema = new Sistemas(rolesDto.getSistema());
         this.version = rolesDto.getVersion();
     }
 
@@ -124,12 +124,12 @@ public class Roles implements Serializable {
         this.usuarios = usuarios;
     }
 
-    public Sistemas getSisId() {
-        return sisId;
+    public Sistemas getSistema() {
+        return sistema;
     }
 
-    public void setSisId(Sistemas sistema) {
-        this.sisId = sistema;
+    public void setSistema(Sistemas sistema) {
+        this.sistema = sistema;
     }
 
     @Override

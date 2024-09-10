@@ -8,6 +8,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,8 +49,8 @@ public class Sistemas implements Serializable {
     // consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
-    @SequenceGenerator(name = "GENERATOR_SISTEMAS_SEQUENCE", sequenceName = "SIS_SISTEMAS_SEQ_01", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SIS_SISTEMAS_SEQ_01")
+    @SequenceGenerator(name = "GENERATOR_SISTEMAS_SEQUENCE", sequenceName = "SIS_SISTEMAS_SEQ01", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GENERATOR_SISTEMAS_SEQUENCE")
     @Column(name = "SIS_ID")
     private Long id;
 
@@ -61,7 +62,7 @@ public class Sistemas implements Serializable {
     @Column(name = "SIS_VERSION")
     private Long version;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sisId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sistema", fetch = FetchType.LAZY)
     private List<Roles> roles;
 
     public Sistemas() {

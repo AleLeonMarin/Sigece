@@ -5,20 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RolesDto implements Serializable {
-
+    
     private Long id;
     private String nombre;
     private Long version;
-    private SistemasDto sisId;
+    private SistemasDto sistema;
     private Boolean modificado;
     List<UsuariosDto> usuariosDto;
+
 
     public RolesDto() {
         this.modificado = false;
         usuariosDto = new ArrayList<>();
     }
 
-    public RolesDto(cr.ac.una.securityws.controller.RolesDto rol) {
+    public RolesDto(cr.ac.una.securityws.controller.RolesDto rol){
         this.id = rol.getId();
         this.nombre = rol.getNombre();
         this.version = rol.getVersion();
@@ -64,12 +65,15 @@ public class RolesDto implements Serializable {
         this.modificado = modificado;
     }
 
-    public SistemasDto getSisId() {
-        return sisId;
+    public SistemasDto getSistema() {
+        return sistema;
     }
 
-    public void setSisId(SistemasDto sisId) {
-        this.sisId = sisId;
+    public void setSistema(SistemasDto sistema) {
+        this.sistema = sistema;
     }
 
+
+
+    
 }

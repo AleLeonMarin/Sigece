@@ -3,13 +3,13 @@ package cr.ac.una.securityws.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UsuariosDto implements Serializable {
 
     private Long id;
     private String nombre;
     private String apellidos;
+    private String cedula;
     private String correo;
     private String telefono;
     private String celular;
@@ -24,16 +24,17 @@ public class UsuariosDto implements Serializable {
     List<RolesDto> rolesDto;
 
     public UsuariosDto() {
-
         this.modificado = false;
         rolesDto = new ArrayList<>();
     }
 
     public UsuariosDto(Usuarios usuarios) {
 
+        this();
         this.id = usuarios.getId();
         this.nombre = usuarios.getNombre();
         this.apellidos = usuarios.getApellidos();
+        this.cedula = usuarios.getCedula();
         this.correo = usuarios.getCorreo();
         this.telefono = usuarios.getTelefono();
         this.celular = usuarios.getCelular();
@@ -44,9 +45,6 @@ public class UsuariosDto implements Serializable {
         this.estado = usuarios.getEstado();
         this.status = usuarios.getStatus();
         this.version = usuarios.getVersion();
-        this.rolesDto = usuarios.getRoles().stream()
-                .map(RolesDto::new)
-                .collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -59,6 +57,10 @@ public class UsuariosDto implements Serializable {
 
     public String getApellidos() {
         return apellidos;
+    }
+
+    public String getCedula() {
+        return cedula;
     }
 
     public String getCorreo() {
@@ -119,6 +121,10 @@ public class UsuariosDto implements Serializable {
 
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
     }
 
     public void setCorreo(String correo) {
