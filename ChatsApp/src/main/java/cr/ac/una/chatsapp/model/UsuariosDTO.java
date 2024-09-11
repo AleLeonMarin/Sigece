@@ -1,5 +1,8 @@
 package cr.ac.una.chatsapp.model;
 
+import jakarta.json.bind.annotation.JsonbProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.io.Serializable;
 import java.util.Base64;
 
@@ -8,102 +11,107 @@ import java.util.Base64;
  */
 public class UsuariosDTO implements Serializable {
 
-    private String usuId;
-    private String usuNombre;
-    private String usuApellidos;
-    private String usuCedula;
-    private String usuCorreo;
-    private String usuTelefono;
-    private String usuCelular;
-    private String usuIdioma;
+    private SimpleStringProperty usuId;
+    private SimpleStringProperty usuNombre;
+    private SimpleStringProperty usuApellidos;
+    private SimpleStringProperty usuCedula;
+    private SimpleStringProperty usuCorreo;
+    private SimpleStringProperty usuTelefono;
+    private SimpleStringProperty usuCelular;
+    private SimpleStringProperty usuIdioma;
     private byte[] usuFoto; // Almacenamos el byte[] directamente
-    private String usuUsuario;
-    private String usuClave;
-    private String usuEstado;
-    private String usuStatus;
+    private SimpleStringProperty usuUsuario;
+    private SimpleStringProperty usuClave;
+    private SimpleStringProperty usuEstado;
+    private SimpleStringProperty usuStatus;
     private Long usuVersion;
 
     // Constructor vacío
-    public UsuariosDTO() {
-        this.usuId = "";
-        this.usuNombre = "";
-        this.usuApellidos = "";
-        this.usuCedula = "";
-        this.usuCorreo = "";
-        this.usuTelefono = "";
-        this.usuCelular = "";
-        this.usuIdioma = "";
-        this.usuFoto = null;  // Iniciamos el byte[] como null
-        this.usuUsuario = "";
-        this.usuClave = "";
-        this.usuEstado = "";
-        this.usuStatus = "";
+             public UsuariosDTO() {
+             this.usuId = new SimpleStringProperty("");
+             this.usuNombre = new SimpleStringProperty("");
+            this.usuApellidos = new SimpleStringProperty("");
+            this.usuCedula = new SimpleStringProperty("");
+            this.usuCorreo = new SimpleStringProperty("");
+            this.usuTelefono = new SimpleStringProperty("");
+            this.usuCelular = new SimpleStringProperty("");
+            this.usuIdioma = new SimpleStringProperty("");
+            this.usuFoto = null;
+            this.usuUsuario = new SimpleStringProperty("");
+            this.usuClave = new SimpleStringProperty("");
+            this.usuEstado = new SimpleStringProperty("");
+            this.usuStatus = new SimpleStringProperty("");
+            this.usuVersion = 0L;
     }
 
     // Getters and Setters
 
     public Long getUsuId() {
-        return usuId != null && !usuId.isEmpty() ? Long.parseLong(usuId) : null;
+        if (this.usuId.get() != null && !this.usuId.get().isEmpty()) {
+            return Long.valueOf(this.usuId.get());
+        } else {
+            return null;
+        }
     }
 
     public void setUsuId(Long usuId) {
-        this.usuId = usuId != null ? usuId.toString() : "";
+        this.usuId.set(usuId.toString());
     }
 
     public String getUsuNombre() {
-        return usuNombre;
+        return usuNombre.get();
     }
 
     public void setUsuNombre(String usuNombre) {
-        this.usuNombre = usuNombre;
+        this.usuNombre.set(usuNombre);
     }
 
     public String getUsuApellidos() {
-        return usuApellidos;
+        return usuApellidos.get();
     }
 
     public void setUsuApellidos(String usuApellidos) {
-        this.usuApellidos = usuApellidos;
+        this.usuApellidos.set(usuApellidos);
     }
 
     public String getUsuCedula() {
-        return usuCedula;
+        return usuCedula.get();
     }
 
     public void setUsuCedula(String usuCedula) {
-        this.usuCedula = usuCedula;
+        this.usuCedula.set(usuCedula);
     }
 
     public String getUsuCorreo() {
-        return usuCorreo;
+        return usuCorreo.get();
     }
-
+    @JsonbProperty("correo")
     public void setUsuCorreo(String usuCorreo) {
-        this.usuCorreo = usuCorreo;
+        this.usuCorreo.set(usuCorreo);
     }
 
     public String getUsuTelefono() {
-        return usuTelefono;
+        return usuTelefono.get();
     }
 
     public void setUsuTelefono(String usuTelefono) {
-        this.usuTelefono = usuTelefono;
+        this.usuTelefono.set(usuTelefono);
     }
 
     public String getUsuCelular() {
-        return usuCelular;
+        return usuCelular.get();
     }
 
     public void setUsuCelular(String usuCelular) {
-        this.usuCelular = usuCelular;
+        this.usuCelular.set(usuCelular);
     }
 
     public String getUsuIdioma() {
-        return usuIdioma;
+        return usuIdioma.get();
     }
 
     public void setUsuIdioma(String usuIdioma) {
-        this.usuIdioma = usuIdioma;
+        this.usuIdioma.set(usuIdioma);
     }
 
     // Getter para obtener el byte[] de la foto
@@ -127,35 +135,35 @@ public class UsuariosDTO implements Serializable {
     }
 
     public String getUsuUsuario() {
-        return usuUsuario;
+        return usuUsuario.get();
     }
 
     public void setUsuUsuario(String usuUsuario) {
-        this.usuUsuario = usuUsuario;
+        this.usuUsuario.set(usuUsuario);
     }
 
     public String getUsuClave() {
-        return usuClave;
+        return usuClave.get();
     }
 
     public void setUsuClave(String usuClave) {
-        this.usuClave = usuClave;
+        this.usuClave.set(usuClave);
     }
 
     public String getUsuEstado() {
-        return usuEstado;
+        return usuEstado.get();
     }
 
     public void setUsuEstado(String usuEstado) {
-        this.usuEstado = usuEstado;
+        this.usuEstado.set(usuEstado);
     }
 
     public String getUsuStatus() {
-        return usuStatus;
+        return usuStatus.get();
     }
 
     public void setUsuStatus(String usuStatus) {
-        this.usuStatus = usuStatus;
+        this.usuStatus.set(usuStatus);
     }
 
     public Long getUsuVersion() {

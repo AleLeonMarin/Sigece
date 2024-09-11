@@ -12,7 +12,7 @@ public class MensajesService {
     public Respuesta guardarMensaje(MensajesDTO mensajeDto) {
         try {
             Request request = new Request("MensajesController/mensajes");
-            request.post(mensajeDto);  // Enviar el DTO del mensaje
+            request.post(mensajeDto);
 
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
@@ -30,7 +30,7 @@ public class MensajesService {
     public Respuesta eliminarMensaje(Long id) {
         try {
             Request request = new Request("MensajesController/mensajes/" + id);
-            request.delete();  // Enviar solicitud DELETE
+            request.delete();
 
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");

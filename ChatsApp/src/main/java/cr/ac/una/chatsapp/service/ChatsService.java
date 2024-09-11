@@ -23,15 +23,12 @@ public class ChatsService {
             Request request = new Request("UsuariosController/usuarios");
             request.get();
 
-            // Manejo de errores en la solicitud
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
             }
 
-
             List<UsuariosDTO> usuariosList = (List<UsuariosDTO>) request.readEntity(new GenericType<List<UsuariosDTO>>() {});
 
-            // Retornar la respuesta con la lista de usuarios
             return new Respuesta(true, "", "", "Usuarios", usuariosList);
         } catch (Exception ex) {
             Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error obteniendo la lista de usuarios.", ex);
@@ -41,24 +38,19 @@ public class ChatsService {
 
     public Respuesta getChatsEntreUsuarios(Long idEmisor, Long idReceptor) {
         try {
-            // Crear un mapa de parámetros
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("idEmisor", idEmisor);
             parametros.put("idReceptor", idReceptor);
 
-            // Crear la solicitud con los parámetros
             Request request = new Request("ChatsController/chats", "/{idEmisor}/{idReceptor}", parametros);
             request.get();
 
-            // Manejo de errores en la solicitud
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
             }
 
-            // Hacer casting a List<ChatsDTO> usando el método readEntity con GenericType
             List<ChatsDTO> chatsList = (List<ChatsDTO>) request.readEntity(new GenericType<List<ChatsDTO>>() {});
 
-            // Retornar la respuesta con la lista de chats
             return new Respuesta(true, "", "", "Chats", chatsList);
         } catch (Exception ex) {
             Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error obteniendo los chats entre usuarios [idEmisor: " + idEmisor + ", idReceptor: " + idReceptor + "]", ex);
@@ -66,11 +58,11 @@ public class ChatsService {
         }
     }
 
-    // Método para agregar un nuevo chat en el ChatsService del cliente
+
     public Respuesta guardarChat(ChatsDTO chatDto) {
         try {
             Request request = new Request("ChatsController/chat");
-            request.post(chatDto); // Usar el método POST para enviar el nuevo chat
+            request.post(chatDto);
 
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
@@ -86,16 +78,15 @@ public class ChatsService {
 
     public Respuesta eliminarChat(String idChat) {
         try {
-            // Crear la solicitud DELETE para eliminar el chat
-            Request request = new Request("ChatsController/chat/" + idChat);
-            request.delete(); // Usamos el método DELETE
 
-            // Manejo de errores en la solicitud
+            Request request = new Request("ChatsController/chat/" + idChat);
+            request.delete();
+
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
             }
 
-            // Si no hay error, retornamos una respuesta exitosa
+
             return new Respuesta(true, "", "", "Chat eliminado correctamente.", null);
         } catch (Exception ex) {
             Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error eliminando el chat con ID: " + idChat, ex);

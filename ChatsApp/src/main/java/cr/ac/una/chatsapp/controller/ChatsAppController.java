@@ -50,7 +50,6 @@ public class ChatsAppController extends Controller implements Initializable {
 
     private ChatsDTO currentChat;
 
-    //pruebas
     private Timeline timeline;
 
     @Override
@@ -185,12 +184,11 @@ public class ChatsAppController extends Controller implements Initializable {
         }
     }
 
-
     // Iniciar el timeline para actualización periódica
     private void iniciarActualizacionPeriodica() {
-        timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> actualizarMensajes()));
-        timeline.setCycleCount(Timeline.INDEFINITE);  // Se repite indefinidamente
-        timeline.play();  // Iniciar la actualización automática
+        timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> actualizarMensajes()));
+        timeline.setCycleCount(Timeline.INDEFINITE);  // se repite indefinidamente
+        timeline.play();  // iniciar la actualización automática
     }
 
     private void actualizarMensajes() {
@@ -226,9 +224,9 @@ public class ChatsAppController extends Controller implements Initializable {
             return;
         }
 
-        // Verificar si hay un chat cargado, si no, crearlo
+        // verificar si hay un chat cargado, si no, crearlo
         if (currentChat == null) {
-            System.out.println("No hay chat cargado. Creando nuevo chat...");
+          //  System.out.println("No hay chat cargado. Creando nuevo chat...");
 
             // Crear un nuevo chat entre el emisor y el receptor
             ChatsDTO nuevoChat = new ChatsDTO();
@@ -263,14 +261,12 @@ public class ChatsAppController extends Controller implements Initializable {
         mensajeDto.setEmisorId(emisor);
         mensajeDto.setChatId(currentChat);
 
-        // Llamar al servicio para guardar el mensaje
         MensajesService mensajesService = new MensajesService();
         Respuesta respuesta = mensajesService.guardarMensaje(mensajeDto);
 
         if (respuesta.getEstado()) {
             System.out.println("Mensaje enviado correctamente.");
 
-            // Manually add the new message to the VBox
             HBox hbox = new HBox();
             Label mensajeLabel = new Label(textoMensaje);
             hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
@@ -283,7 +279,7 @@ public class ChatsAppController extends Controller implements Initializable {
             mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
 
             hbox.getChildren().add(mensajeLabel);
-            vboxChats.getChildren().add(hbox);  // Add the message directly to the VBox
+            vboxChats.getChildren().add(hbox);
             txtMensaje.clear();
         } else {
             System.out.println("Error enviando el mensaje: " + respuesta.getMensaje());
@@ -298,7 +294,6 @@ public class ChatsAppController extends Controller implements Initializable {
             return;
         }
 
-        // Mostrar una alerta de confirmación
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Eliminar chat");
         alert.setHeaderText("¿Está seguro de que desea eliminar este chat?");
@@ -306,14 +301,13 @@ public class ChatsAppController extends Controller implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Eliminar el chat usando el servicio
+
             Respuesta respuesta = chatsService.eliminarChat(currentChat.getChtId());
 
             if (respuesta.getEstado()) {
                 Mensaje mensaje = new Mensaje();
                 mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "El chat ha sido eliminado correctamente.");
 
-                // Limpiar la vista y actualizar la tabla de contactos
                 currentChat = null;
                 vboxChats.getChildren().clear();
                 Label noChatLabel = new Label("El chat ha sido eliminado.");
@@ -330,7 +324,7 @@ public class ChatsAppController extends Controller implements Initializable {
 
 
     private void onActionEliminarMensaje(MensajesDTO mensaje) {
-        // Confirmación de eliminación
+       
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Eliminar mensaje");
         alert.setHeaderText("¿Está seguro de que desea eliminar este mensaje?");
