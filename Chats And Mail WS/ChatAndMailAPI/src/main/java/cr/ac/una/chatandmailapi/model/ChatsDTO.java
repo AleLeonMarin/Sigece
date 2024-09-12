@@ -16,16 +16,15 @@ public class ChatsDTO implements Serializable {
     private Usuarios emisorId;
     private List<MensajesDTO> mensajesList;
 
-    // Constructor vacío
+
     public ChatsDTO() {}
 
-    // Constructor que recibe la entidad Chats
     public ChatsDTO(Chats chat) {
         this.chtId = chat.getChtId();
         this.chtFecha = chat.getChtFecha();
         this.chtVersion = chat.getChtVersion();
-        this.receptorId = chat.getChtReceptorId();  // Asignación del receptor por ID
-        this.emisorId = chat.getChtEmisorId() ;      // Asignación del emisor por ID
+        this.receptorId = chat.getChtReceptorId();
+        this.emisorId = chat.getChtEmisorId() ; 
 
    
         if (chat.getSisMensajesList() != null) {
@@ -36,7 +35,7 @@ public class ChatsDTO implements Serializable {
         }
     }
 
-    // Getters y Setters
+
     public Long getChtId() {
         return chtId;
     }

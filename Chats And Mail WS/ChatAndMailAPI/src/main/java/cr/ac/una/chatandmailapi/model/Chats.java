@@ -101,7 +101,6 @@ public class Chats implements Serializable {
 public void actualizar(ChatsDTO chatsDTO) {
     this.chtFecha = chatsDTO.getChtFecha();
     this.chtVersion = chatsDTO.getChtVersion();
-    // Si `chtReceptorId` y `chtEmisorId` son entidades relacionadas, asignamos solo los IDs
     if (chatsDTO.getReceptorId() != null) {
         this.chtReceptorId = new Usuarios();
         this.chtReceptorId=chatsDTO.getReceptorId();
@@ -111,11 +110,11 @@ public void actualizar(ChatsDTO chatsDTO) {
         this.chtEmisorId=chatsDTO.getEmisorId();
     }
 
-    // Actualizamos la lista de mensajes, si está presente
+
     if (chatsDTO.getMensajesList() != null) {
         this.sisMensajesList = new ArrayList<>();
         for (MensajesDTO mensajeDto : chatsDTO.getMensajesList()) {
-            this.sisMensajesList.add(new Mensajes(mensajeDto));  // Conversión de DTO a entidad
+            this.sisMensajesList.add(new Mensajes(mensajeDto));
         }
     }
 }
