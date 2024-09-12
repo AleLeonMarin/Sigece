@@ -1,11 +1,19 @@
 module cr.ac.una.mailapp {
     requires javafx.controls;
     requires javafx.fxml;
-    requires java.base;
-    requires java.logging;
     requires MaterialFX;
-    requires javafx.graphics;
-    requires cr.ac.una.tarea;
+    requires jakarta.ws.rs;
+    requires java.logging;
+    requires jakarta.json;
+    requires javassist;
+    requires java.base;
+    requires java.sql;
+    requires jakarta.xml.bind;
+    requires jakarta.json.bind;
+    requires jersey.common;
+    requires transitive javafx.graphics;
+
+    //opens cr.ac.una.mailapp.model;
 
     opens cr.ac.una.mailapp to javafx.fxml;
     exports cr.ac.una.mailapp;

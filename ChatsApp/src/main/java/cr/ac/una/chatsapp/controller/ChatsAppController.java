@@ -3,6 +3,7 @@ package cr.ac.una.chatsapp.controller;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import cr.ac.una.chatsapp.model.ChatsDTO;
 import cr.ac.una.chatsapp.model.MensajesDTO;
@@ -79,13 +80,12 @@ public class ChatsAppController extends Controller implements Initializable {
         Respuesta respuesta = chatsService.getUsuarios();
         if (respuesta.getEstado()) {
             List<UsuariosDTO> usuarios = (List<UsuariosDTO>) respuesta.getResultado("Usuarios");
-            List<UsuariosDTO> usuariosActivos = new ArrayList<>();
-            for (UsuariosDTO usuario : usuarios) {
-                if ("A".equals(usuario.getUsuEstado()) || "I".equals(usuario.getUsuEstado())) {
-                    usuariosActivos.add(usuario);
-                }
-            }
-            ObservableList<UsuariosDTO> usuariosList = FXCollections.observableArrayList(usuariosActivos);
+            ObservableList<UsuariosDTO> usuariosList = FXCollections.observableArrayList(
+                    usuarios.stream()
+                            .filter(usuario -> "A".equals(usuario.getUsuEstado()) || "I".equals(usuario.getUsuEstado()))
+                            .collect(Collectors.toList())
+            );
+
             tbvContactos.setItems(usuariosList);
             tbcContactos.setCellFactory(new Callback<TableColumn<UsuariosDTO, String>, TableCell<UsuariosDTO, String>>() {
                 @Override
@@ -150,8 +150,9 @@ public class ChatsAppController extends Controller implements Initializable {
     private void mostrarMensajesDelChat(List<MensajesDTO> mensajes) {
         vboxChats.getChildren().clear();
         if (mensajes != null && !mensajes.isEmpty()) {
-            mensajes.sort(Comparator.comparing(MensajesDTO::getSmsTiempo));
-            for (MensajesDTO mensaje : mensajes) {
+            mensajes.stream()
+                    .sorted(Comparator.comparing(MensajesDTO::getSmsTiempo))
+                    .forEach(mensaje -> {
                 HBox hbox = new HBox();
                 Label mensajeLabel = new Label(mensaje.getSmsTexto());
                 hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
@@ -176,7 +177,7 @@ public class ChatsAppController extends Controller implements Initializable {
 
                 hbox.getChildren().addAll(mensajeLabel, btnEliminar);
                 vboxChats.getChildren().add(hbox);
-            }
+                    });
         } else {
             Label noMessagesLabel = new Label("No hay mensajes en este chat.");
             noMessagesLabel.setStyle("-fx-text-fill: gray; -fx-font-size: 14px;");
@@ -192,20 +193,19 @@ public class ChatsAppController extends Controller implements Initializable {
     }
 
     private void actualizarMensajes() {
-        if (currentChat != null) {
-            Respuesta respuesta = chatsService.getChatsEntreUsuarios(idEmisor, currentChat.getReceptorId().getUsuId());
-            if (respuesta.getEstado()) {
-                List<ChatsDTO> chats = (List<ChatsDTO>) respuesta.getResultado("Chats");
-                if (chats != null && !chats.isEmpty()) {
-                    ChatsDTO nuevoChat = chats.get(0);  // Obtener la nueva lista de mensajes
+        Optional.ofNullable(currentChat)
+                .map(chat -> chatsService.getChatsEntreUsuarios(idEmisor, chat.getReceptorId().getUsuId()))
+                .filter(Respuesta::getEstado)
+                .map(respuesta -> (List<ChatsDTO>) respuesta.getResultado("Chats"))
+                .filter(chats -> !chats.isEmpty())
+                .map(chats -> chats.get(0))
+                .ifPresent(nuevoChat -> {
                     List<MensajesDTO> nuevosMensajes = nuevoChat.getMensajesList();
-                    if (!nuevosMensajes.equals(currentChat.getMensajesList())) {  // Solo actualizar si hay nuevos mensajes
+                    if (!nuevosMensajes.equals(currentChat.getMensajesList())) {
                         currentChat = nuevoChat;
-                        mostrarMensajesDelChat(nuevosMensajes);  // Actualizar la interfaz
+                        mostrarMensajesDelChat(nuevosMensajes);
                     }
-                }
-            }
-        }
+                });
     }
 
     @FXML
@@ -226,7 +226,6 @@ public class ChatsAppController extends Controller implements Initializable {
 
         // verificar si hay un chat cargado, si no, crearlo
         if (currentChat == null) {
-          //  System.out.println("No hay chat cargado. Creando nuevo chat...");
 
             // Crear un nuevo chat entre el emisor y el receptor
             ChatsDTO nuevoChat = new ChatsDTO();
@@ -268,18 +267,18 @@ public class ChatsAppController extends Controller implements Initializable {
             System.out.println("Mensaje enviado correctamente.");
 
             HBox hbox = new HBox();
-            Label mensajeLabel = new Label(textoMensaje);
             hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
             hbox.setMaxWidth(vboxChats.getPrefWidth() - 20);
+            hbox.setAlignment(Pos.CENTER_RIGHT);
+
+            Label mensajeLabel = new Label(textoMensaje);
             mensajeLabel.setWrapText(true);
             mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
-
-            // Since this is the sender's message, align it to the right
-            hbox.setAlignment(Pos.CENTER_RIGHT);
             mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
 
             hbox.getChildren().add(mensajeLabel);
             vboxChats.getChildren().add(hbox);
+
             txtMensaje.clear();
         } else {
             System.out.println("Error enviando el mensaje: " + respuesta.getMensaje());
@@ -332,15 +331,17 @@ public class ChatsAppController extends Controller implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Llamar al servicio para eliminar el mensaje
             MensajesService mensajesService = new MensajesService();
             Respuesta respuesta = mensajesService.eliminarMensaje(mensaje.getSmsId());
 
             if (respuesta.getEstado()) {
                 Mensaje mensajeAlerta = new Mensaje();
                 mensajeAlerta.show(Alert.AlertType.INFORMATION, "Éxito", "El mensaje ha sido eliminado correctamente.");
-                currentChat.getMensajesList().remove(mensaje); // Eliminar mensaje de la lista
-                mostrarMensajesDelChat(currentChat.getMensajesList()); // Actualizar la vista
+                currentChat.setMensajesList(currentChat.getMensajesList().stream()
+                        .filter(m -> !m.equals(mensaje))
+                        .collect(Collectors.toList()));
+                mostrarMensajesDelChat(currentChat.getMensajesList());
+
             } else {
                 Mensaje mensajeAlerta = new Mensaje();
                 mensajeAlerta.show(Alert.AlertType.ERROR, "Error", "Ocurrió un error al eliminar el mensaje: " + respuesta.getMensaje());
