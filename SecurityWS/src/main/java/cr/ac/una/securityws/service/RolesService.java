@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import cr.ac.una.securityws.model.Roles;
 import cr.ac.una.securityws.model.RolesDto;
+import cr.ac.una.securityws.model.SistemasDto;
 import cr.ac.una.securityws.util.CodigoRespuesta;
 import cr.ac.una.securityws.util.Respuesta;
 import jakarta.ejb.LocalBean;
@@ -25,7 +26,7 @@ public class RolesService {
 
     public Respuesta saveRol(RolesDto rolesDto) {
         try {
-            Roles roles = new Roles(rolesDto);
+            Roles roles;
             if (rolesDto.getId() != null && rolesDto.getId() > 0) {
                 roles = em.find(Roles.class, rolesDto.getId());
                 if (roles == null) {
@@ -35,6 +36,7 @@ public class RolesService {
                 roles.actualizar(rolesDto);
                 roles = em.merge(roles);
             } else {
+                roles = new Roles(rolesDto);
                 em.persist(roles);
             }
             em.flush();
@@ -79,6 +81,7 @@ public class RolesService {
                 return new Respuesta(false, CodigoRespuesta.ERROR_CLIENTE, "Debe indicar el id del rol a eliminar.",
                         "deleteRol NoResultException");
             }
+            em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Rol", new RolesDto(roles));
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrio un error al eliminar el rol.", ex);

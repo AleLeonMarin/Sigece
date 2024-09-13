@@ -5,6 +5,7 @@
 package cr.ac.una.securityws.model;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,6 +18,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -33,10 +35,10 @@ import java.util.List;
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = "Roles.findAll", query = "SELECT s FROM Roles s"),
+        
+// @NamedQuery(name = "Roles.findById", query = "SELECT s FROM Roles s WHERE
+// s.id = :id"),
 /*
- * @NamedQuery(name = "SisRoles.findByRolId", query =
- * "SELECT s FROM SisRoles s WHERE s.rolId = :rolId"),
- * 
  * @NamedQuery(name = "SisRoles.findByRolNombre", query =
  * "SELECT s FROM SisRoles s WHERE s.rolNombre = :rolNombre"),
  * 
@@ -46,8 +48,7 @@ import java.util.List;
 public class Roles implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?) @Min(value=?)//if you know range of your decimal fields
-    // consider using these annotations to enforce field validation
+    // @Max(value=?) @Min(value=?)//if you know range of your decimal fieldss
     @Id
     @Basic(optional = false)
     @SequenceGenerator(name = "GENERATOR_ROLES_SEQUENCE", sequenceName = "SIS_ROLES_SEQ01", allocationSize = 1)
@@ -64,12 +65,12 @@ public class Roles implements Serializable {
     private Long version;
 
     @JoinColumn(name = "ROL_SIS_ID", referencedColumnName = "SIS_ID")
-    @ManyToOne(optional = false , fetch = FetchType.LAZY)
+    @ManyToOne( fetch = FetchType.LAZY)
     private Sistemas sistema;
 
     @JoinTable(name = "SIS_SISTEMAS_ROLES_USUARIOS", joinColumns = {
-        @JoinColumn(name = "SRS_ROL_ID", referencedColumnName = "ROL_ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "SRS_USU_ID", referencedColumnName = "USU_ID")})
+            @JoinColumn(name = "SRS_ROL_ID", referencedColumnName = "ROL_ID") }, inverseJoinColumns = {
+                    @JoinColumn(name = "SRS_USU_ID", referencedColumnName = "USU_ID") })
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Usuarios> usuarios;
 

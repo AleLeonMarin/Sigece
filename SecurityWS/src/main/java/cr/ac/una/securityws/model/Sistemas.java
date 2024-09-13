@@ -62,7 +62,7 @@ public class Sistemas implements Serializable {
     @Column(name = "SIS_VERSION")
     private Long version;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sistema", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sistema", fetch = FetchType.LAZY)
     private List<Roles> roles;
 
     public Sistemas() {
