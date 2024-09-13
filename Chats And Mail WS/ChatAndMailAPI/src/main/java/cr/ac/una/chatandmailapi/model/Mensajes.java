@@ -71,39 +71,37 @@ public class Mensajes implements Serializable {
     @ManyToOne(optional = false)
     private Usuarios smsUsuIdEmisor;
 
-    // Constructor vacío
+
     public Mensajes() {
     }
 
-    // Constructor que recibe el DTO
+
     public Mensajes(MensajesDTO mensajesDto) {
         this.smsId = mensajesDto.getSmsId();
         actualizar(mensajesDto);
     }
 
-    // Método actualizar basado en el DTO
   public void actualizar(MensajesDTO mensajesDto) {
     this.smsTexto = mensajesDto.getSmsTexto();
     this.smsTiempo = mensajesDto.getSmsTiempo();
     this.smsVersion = mensajesDto.getSmsVersion();
 
-    // Asignar `smsChatId` creando un objeto `Chats` con el ID del chat
+
     if (mensajesDto.getChatId() != null) {
         Chats chat = new Chats();
-        chat.setChtId(mensajesDto.getChatId().getChtId());  // Asigna solo el ID del chat
+        chat.setChtId(mensajesDto.getChatId().getChtId()); 
         this.smsChatId = chat;
     }
 
-    // Asignar `smsUsuIdEmisor` creando un objeto `Usuarios` con el ID del emisor
+
     if (mensajesDto.getEmisorId() != null) {
         Usuarios emisor = new Usuarios();
-        emisor.setUsuId(mensajesDto.getEmisorId().getUsuId());  // Asigna solo el ID del emisor
+        emisor.setUsuId(mensajesDto.getEmisorId().getUsuId()); 
         this.smsUsuIdEmisor = emisor;
          }
     }
 
 
-    // Getters y Setters
 
     public Long getSmsId() {
         return smsId;

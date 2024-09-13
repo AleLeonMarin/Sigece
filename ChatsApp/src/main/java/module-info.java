@@ -1,4 +1,4 @@
-module cr.ac.una.mailapp {
+module cr.ac.una.chatsapp {
     requires javafx.controls;
     requires javafx.fxml;
     requires MaterialFX;
@@ -13,11 +13,11 @@ module cr.ac.una.mailapp {
     requires jersey.common;
     requires transitive javafx.graphics;
 
-    //opens cr.ac.una.mailapp.model;
 
-    opens cr.ac.una.mailapp to javafx.fxml;
-    exports cr.ac.una.mailapp;
+    opens cr.ac.una.chatsapp.model;
 
-    opens cr.ac.una.mailapp.controller to javafx.fxml, MaterialFX, javafx.graphics, javafx.controls;
+    opens cr.ac.una.chatsapp to javafx.fxml;
+    exports cr.ac.una.chatsapp;
 
+    opens cr.ac.una.chatsapp.controller to javafx.fxml, MaterialFX, javafx.graphics, javafx.controls;
 }

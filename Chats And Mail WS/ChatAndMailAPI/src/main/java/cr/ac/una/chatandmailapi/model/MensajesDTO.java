@@ -15,17 +15,15 @@ public class MensajesDTO implements Serializable {
     private Chats chatId;
     private Usuarios emisorId;
 
-    // Constructor vacío
     public MensajesDTO() {}
 
-    // Constructor que recibe la entidad Mensajes
     public MensajesDTO(Mensajes mensaje) {
         this.smsId = mensaje.getSmsId();
         this.smsTexto = mensaje.getSmsTexto();
         this.smsTiempo = mensaje.getSmsTiempo();
         this.smsVersion = mensaje.getSmsVersion();
-        this.chatId = mensaje.getSmsChatId();  // Asignación del ID del chat
-        this.emisorId = mensaje.getSmsUsuIdEmisor();  // Asignación del ID del emisor
+        this.chatId = mensaje.getSmsChatId(); 
+        this.emisorId = mensaje.getSmsUsuIdEmisor(); 
     }
 
     // Getters y Setters
