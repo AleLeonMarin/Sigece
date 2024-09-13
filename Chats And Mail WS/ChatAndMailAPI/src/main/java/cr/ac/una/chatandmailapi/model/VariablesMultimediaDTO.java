@@ -1,16 +1,28 @@
 package cr.ac.una.chatandmailapi.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
+
 import java.io.Serializable;
 
 /**
  * DTO para la entidad VariablesMultimedia.
  */
+@JsonbPropertyOrder({
+        "mediaId", "mediaUrl", "mediaTipo", "mediaVersion", "mediaVarId"
+})
+@Schema(description = "Esta clase contiene la información de las variables multimedia")
 public class VariablesMultimediaDTO implements Serializable {
 
+    @Schema(description = "Identificador de la variable multimedia", example = "1")
     private long mediaId;
+    @Schema(description = "URL de la variable multimedia", example = "https://www.google/img32.com")
     private Serializable mediaUrl;
+    @Schema(description = "Tipo de la variable multimedia", example = "imagen")
     private String mediaTipo;
+    @Schema(description = "Versión de la variable multimedia", example = "1")
     private long mediaVersion;
+    @Schema(description = "Variable de la variable multimedia")
     private VariablesDTO mediaVarId;
 
     public VariablesMultimediaDTO() {}

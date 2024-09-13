@@ -1,16 +1,28 @@
 package cr.ac.una.chatandmailapi.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
+
 import java.io.Serializable;
 
 /**
  * DTO para la entidad VariablesCondicionales.
  */
+@JsonbPropertyOrder({
+        "vconId", "vcondValor", "vcondResultado", "vconVersion", "vconVarId"
+})
+@Schema(description = "Esta clase contiene la información de las variables condicionales")
 public class VariablesCondicionalesDTO implements Serializable {
 
+    @Schema(description = "Identificador de la variable condicional", example = "1")
     private long vconId;
+    @Schema(description = "Valor de la variable condicional", example = "1")
     private String vcondValor;
+    @Schema(description = "Resultado de la variable condicional", example = "Aceptado")
     private String vcondResultado;
+    @Schema(description = "Versión de la variable condicional", example = "1")
     private long vconVersion;
+    @Schema(description = "Variable de la variable condicional")
     private VariablesDTO vconVarId;
 
     public VariablesCondicionalesDTO() {}

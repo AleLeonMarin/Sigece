@@ -3,12 +3,15 @@ package cr.ac.una.chatandmailapi.model;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -31,6 +34,8 @@ public class VariablesMultimedia implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_variables_multimedia_seq")
+    @SequenceGenerator(name = "sis_variables_multimedia_seq", sequenceName = "SIS_VARIABLES_MULTIMEDIA_SEQ01", allocationSize = 1)
     @Column(name = "MEDIA_ID")
     private long mediaId;
 

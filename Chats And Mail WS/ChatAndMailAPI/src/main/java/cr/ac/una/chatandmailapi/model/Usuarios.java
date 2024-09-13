@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -45,7 +46,8 @@ public class Usuarios implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "USU_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_usuarios_seq")
+    @SequenceGenerator(name = "sis_usuarios_seq", sequenceName = "SIS_USUARIOS_SEQ01", allocationSize = 1)
     private Long usuId;
     
     @Basic(optional = false)

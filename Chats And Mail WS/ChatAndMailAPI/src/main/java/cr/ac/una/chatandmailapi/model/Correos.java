@@ -41,7 +41,7 @@ public class Correos implements Serializable {
     @Basic(optional = false)
     @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_correos_seq")
-    @SequenceGenerator(name = "sis_chats_seq", sequenceName = "SIS_CORREOS_SEQ01", allocationSize = 1)
+    @SequenceGenerator(name = "sis_correos_seq", sequenceName = "SIS_CORREOS_SEQ01", allocationSize = 1)
     @Column(name = "COR_ID")
     private Long corId;
     

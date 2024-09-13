@@ -1,5 +1,9 @@
 package cr.ac.una.chatandmailapi.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.json.bind.annotation.JsonbAnnotation;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +11,11 @@ import java.util.List;
 /**
  * DTO para la entidad Notificación.
  */
+@JsonbPropertyOrder({
+        "notId", "notNombre", "notPlantilla", "notVersion", "sisVariablesList", "sisCorreosList"
+})
+
+@Schema(description = "Esta clase contiene la información de una notificación")
 public class NotificacionDTO implements Serializable {
 
     private Long notId;

@@ -1,19 +1,36 @@
 package cr.ac.una.chatandmailapi.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
+
 import java.io.Serializable;
 
 /**
  * DTO para la entidad Parametros.
  */
+
+@JsonbPropertyOrder({
+        "parId", "parCorreo", "parClave", "parPuerto", "parServer",
+        "parProtocolo", "parTimeout", "parVersion"
+})
+@Schema(description = "Esta clase contiene la información de los parámetros")
 public class ParametrosDTO implements Serializable {
 
+    @Schema(description = "Identificador de los parámetros", example = "1")
     private long parId;
+    @Schema(description = "Correo de los parámetros", example = "sigece@gmail.com"  )
     private String parCorreo;
+    @Schema(description = "Clave de los parámetros", example = "123456")
     private String parClave;
+    @Schema(description = "Puerto de los parámetros", example = "587")
     private long parPuerto;
+    @Schema(description = "Servidor de los parámetros", example = "smtp.gmail.com")
     private String parServer;
+    @Schema(description = "Protocolo de los parámetros", example = "smtp")
     private String parProtocolo;
+    @Schema(description = "Timeout de los parámetros", example = "10000")
     private long parTimeout;
+    @Schema(description = "Versión de los parámetros", example = "1")
     private long parVersion;
 
     public ParametrosDTO() {}

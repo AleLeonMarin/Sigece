@@ -1,17 +1,30 @@
 package cr.ac.una.chatandmailapi.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
+
 import java.io.Serializable;
 
 /**
  * DTO para la entidad Variables.
  */
+@JsonbPropertyOrder({
+        "varId", "varNombre", "tipo", "varValor", "varVersion", "varNotId"
+})
+@Schema(description = "Esta clase contiene la información de las variables")
 public class VariablesDTO implements Serializable {
 
+    @Schema(description = "Identificador de la variable", example = "1")
     private long varId;
+    @Schema(description = "Nombre de la variable", example = "nombre")
     private String varNombre;
+    @Schema(description = "Tipo de la variable", example = "String")
     private String tipo;
+    @Schema(description = "Valor de la variable", example = "valor")
     private String varValor;
+    @Schema(description = "Versión de la variable", example = "1")
     private long varVersion;
+    @Schema(description = "Notificación de la variable")
     private NotificacionDTO varNotId;
 
     public VariablesDTO() {}

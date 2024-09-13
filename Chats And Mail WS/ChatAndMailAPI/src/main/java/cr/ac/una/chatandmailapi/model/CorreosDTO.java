@@ -1,20 +1,38 @@
 package cr.ac.una.chatandmailapi.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * DTO para la entidad Correos.
  */
+
+@JsonbPropertyOrder({
+        "corId","corAsunto","corDestinatario","corResultado",
+        "corEstado","corFecha","corVersion","corNotId"
+})
+
+@Schema(description = "Esta clase contiene la información de un correo")
 public class CorreosDTO implements Serializable {
 
+    @Schema(description = "Identificador del correo", example = "1")
     private Long corId;
+    @Schema(description = "Asunto del correo", example = "Prueba")
     private String corAsunto;
+    @Schema(description = "Destinatario del correo", example = "Carlos")
     private String corDestinatario;
+    @Schema(description = "Resultado del correo", example = "Enviado")
     private String corResultado;
+    @Schema(description = "Estado del correo", example = "A", allowableValues = "A,I")
     private String corEstado;
+    @Schema(description = "Fecha del correo", example = "2021-09-01")
     private Date corFecha;
+    @Schema(description = "Versión del correo", example = "1")
     private Long corVersion;
+    @Schema(description = "Notificación del correo")
     private Notificacion corNotId;
 
     public CorreosDTO() {}
