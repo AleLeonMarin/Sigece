@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import cr.ac.una.securityws.model.Roles;
 import cr.ac.una.securityws.model.RolesDto;
 import cr.ac.una.securityws.model.SistemasDto;
+import cr.ac.una.securityws.model.Usuarios;
+import cr.ac.una.securityws.model.UsuariosDto;
 import cr.ac.una.securityws.util.CodigoRespuesta;
 import cr.ac.una.securityws.util.Respuesta;
 import jakarta.ejb.LocalBean;
@@ -34,6 +36,15 @@ public class RolesService {
                             "No se encontró el rol a modificar.", "saveRol NoResultException");
                 }
                 roles.actualizar(rolesDto);
+                if (!rolesDto.getUsuariosDto().isEmpty()) {
+                    for (UsuariosDto usuarioDto : rolesDto.getUsuariosDto()) {
+                        if (usuarioDto.getModificado()) {
+                            Usuarios usuario = em.find(Usuarios.class, usuarioDto.getId());
+                            usuario.getRoles().add(roles);
+                            roles.getUsuarios().add(usuario);
+                        }
+                    }
+                }
                 roles = em.merge(roles);
             } else {
                 roles = new Roles(rolesDto);

@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 
 import cr.ac.una.tarea.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

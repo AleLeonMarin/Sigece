@@ -24,6 +24,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ import java.util.List;
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = "Roles.findAll", query = "SELECT s FROM Roles s"),
-        
+
 // @NamedQuery(name = "Roles.findById", query = "SELECT s FROM Roles s WHERE
 // s.id = :id"),
 /*
@@ -65,14 +66,17 @@ public class Roles implements Serializable {
     private Long version;
 
     @JoinColumn(name = "ROL_SIS_ID", referencedColumnName = "SIS_ID")
+
     @ManyToOne( fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Sistemas sistema;
 
     @JoinTable(name = "SIS_SISTEMAS_ROLES_USUARIOS", joinColumns = {
             @JoinColumn(name = "SRS_ROL_ID", referencedColumnName = "ROL_ID") }, inverseJoinColumns = {
                     @JoinColumn(name = "SRS_USU_ID", referencedColumnName = "USU_ID") })
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<Usuarios> usuarios;
+    private List<Usuarios> usuarios = new ArrayList<>();
 
     public Roles() {
     }
