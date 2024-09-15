@@ -35,50 +35,18 @@ public class RolesService {
                             "No se encontró el rol a modificar.", "saveRol NoResultException");
                 }
                 roles.actualizar(rolesDto);
-
-                // Actualizar relaciones bidireccionales
-                if (roles.getUsuarios() != null) {
-                    // Eliminar relaciones existentes
-                    List<Usuarios> usuariosToRemove = new ArrayList<>(roles.getUsuarios());
-                    for (Usuarios usuario : usuariosToRemove) {
-                        usuario.getRoles().remove(roles);
-                        roles.getUsuarios().remove(usuario);
-                    }
-                }
-
-                // Agregar nuevas relaciones
                 if (!rolesDto.getUsuariosDto().isEmpty()) {
                     for (UsuariosDto usuarioDto : rolesDto.getUsuariosDto()) {
                         if (usuarioDto.getModificado()) {
                             Usuarios usuario = em.find(Usuarios.class, usuarioDto.getId());
-                            if (usuario != null) {
-                                // Asegurarse de que ambos lados de la relación estén sincronizados
-                                if (!roles.getUsuarios().contains(usuario)) {
-                                    roles.getUsuarios().add(usuario);
-                                }
-                                if (!usuario.getRoles().contains(roles)) {
-                                    usuario.getRoles().add(roles);
-                                }
-                            }
+                            usuario.getRoles().add(roles);
+                            roles.getUsuarios().add(usuario);
                         }
                     }
                 }
                 roles = em.merge(roles);
             } else {
                 roles = new Roles(rolesDto);
-                if (!rolesDto.getUsuariosDto().isEmpty()) {
-                    for (UsuariosDto usuarioDto : rolesDto.getUsuariosDto()) {
-                        if (usuarioDto.getModificado()) {
-                            Usuarios usuario = em.find(Usuarios.class, usuarioDto.getId());
-                            if (usuario != null) {
-                                if (!roles.getUsuarios().contains(usuario)) {
-                                    usuario.getRoles().add(roles);
-                                    roles.getUsuarios().add(usuario);
-                                }
-                            }
-                        }
-                    }
-                }
                 em.persist(roles);
             }
             em.flush();
