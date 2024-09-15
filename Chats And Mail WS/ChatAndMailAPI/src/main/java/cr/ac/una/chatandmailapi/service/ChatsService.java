@@ -27,7 +27,7 @@ public class ChatsService {
     @PersistenceContext(unitName = "SigeceUnaWsPU")
     private EntityManager em;
 
-    // Obtener un chat por ID
+
     public Respuesta getChat(Long id) {
         try {
             Query qryChat = em.createNamedQuery("Chats.findByChtId", Chats.class);

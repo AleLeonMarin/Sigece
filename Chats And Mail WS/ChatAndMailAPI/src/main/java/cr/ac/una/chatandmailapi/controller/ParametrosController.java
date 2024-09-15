@@ -63,7 +63,7 @@ public class ParametrosController {
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Error obteniendo los parámetros", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"Error obteniendo los parámetros: " + e.getMessage() + "\"}")
+                    .entity("\"Error eliminando el mensaje\"" + e.getMessage() + "\"}")
                     .build();
         }
     }

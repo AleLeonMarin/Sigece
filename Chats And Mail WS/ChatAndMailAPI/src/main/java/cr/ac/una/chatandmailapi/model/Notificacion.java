@@ -77,8 +77,7 @@ public class Notificacion implements Serializable {
     actualizar(notificacionDto);
 }
 
-
-    public void actualizar(NotificacionDTO notificacionDto) {
+public void actualizar(NotificacionDTO notificacionDto) {
     this.notNombre = notificacionDto.getNotNombre();
     this.notPlantilla = notificacionDto.getNotPlantilla();
     this.notVersion = notificacionDto.getNotVersion();
@@ -91,6 +90,7 @@ public class Notificacion implements Serializable {
         this.sisCorreosList = new ArrayList<>(notificacionDto.getSisCorreosList());
     }
 }
+
 
     public Long getNotId() {
         return notId;

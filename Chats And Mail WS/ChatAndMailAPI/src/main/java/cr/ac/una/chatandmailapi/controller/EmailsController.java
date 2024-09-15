@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -19,7 +20,7 @@ public class EmailsController {
 
     private static final Logger LOG = Logger.getLogger(EmailsController.class.getName());
 
-    @Inject
+    @EJB
     private EmailService emailService;
 
     @POST
@@ -71,33 +72,31 @@ public class EmailsController {
                     .build();
         }
     }
-    
-    
-   @POST
-@Path("/enviarConEspera")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@Operation(
-    summary = "Enviar un correo con tiempo de espera",
-    description = "Envía un correo electrónico aplicando un tiempo de espera basado en un parámetro almacenado en la base de datos. El tiempo de espera se especifica en segundos y se añade antes de que el correo sea enviado."
-)
-@ApiResponses({
-    @ApiResponse(responseCode = "200", description = "Correo enviado exitosamente."),
-    @ApiResponse(responseCode = "500", description = "Error al enviar el correo.")
-})
-public Response enviarCorreoConEspera(
-        @QueryParam("destinatario") String destinatario,
-        @QueryParam("asunto") String asunto,
-        @QueryParam("mensaje") String mensaje) {
-    try {
-        String resultado = emailService.enviarCorreoConEspera(destinatario, asunto, mensaje);
-        return Response.ok("{\"message\": \"" + resultado + "\"}").build();
-    } catch (Exception e) {
-        LOG.severe("Error al enviar el correo: " + e.getMessage());
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity("{\"error\": \"Error enviando el correo: " + e.getMessage() + "\"}")
-                .build();
-    }
-}
 
+    @POST
+    @Path("/enviarConEspera")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(
+            summary = "Enviar un correo con tiempo de espera",
+            description = "Envía un correo electrónico aplicando un tiempo de espera basado en un parámetro almacenado en la base de datos. El tiempo de espera se especifica en segundos y se añade antes de que el correo sea enviado."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Correo enviado exitosamente."),
+        @ApiResponse(responseCode = "500", description = "Error al enviar el correo.")
+    })
+    public Response enviarCorreoConEspera(
+            @QueryParam("destinatario") String destinatario,
+            @QueryParam("asunto") String asunto,
+            @QueryParam("mensaje") String mensaje) {
+        try {
+            String resultado = emailService.enviarCorreoConEspera(destinatario, asunto, mensaje);
+            return Response.ok("{\"message\": \"" + resultado + "\"}").build();
+        } catch (Exception e) {
+            LOG.severe("Error al enviar el correo: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Error enviando el correo: " + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
 }

@@ -43,7 +43,7 @@ public class VariablesMultimedia implements Serializable {
     @NotNull
     @Lob
     @Column(name = "MEDIA_URL")
-    private Serializable mediaUrl;
+    private String mediaUrl;
 
     @Basic(optional = false)
     @NotNull
@@ -73,7 +73,7 @@ public class VariablesMultimedia implements Serializable {
 
 
     public void actualizar(VariablesMultimediaDTO variablesMultimediaDto) {
-        this.mediaUrl = variablesMultimediaDto.getMediaUrl();
+        this.mediaUrl = (String) variablesMultimediaDto.getMediaUrl();
         this.mediaTipo = variablesMultimediaDto.getMediaTipo();
         this.mediaVersion = variablesMultimediaDto.getMediaVersion();
 
@@ -97,7 +97,7 @@ public class VariablesMultimedia implements Serializable {
         return mediaUrl;
     }
 
-    public void setMediaUrl(Serializable mediaUrl) {
+    public void setMediaUrl(String mediaUrl) {
         this.mediaUrl = mediaUrl;
     }
 

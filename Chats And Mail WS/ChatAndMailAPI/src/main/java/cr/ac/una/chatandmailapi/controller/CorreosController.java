@@ -7,7 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.inject.Inject;
+import jakarta.ejb.EJB;
+
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -20,10 +21,10 @@ public class CorreosController {
 
     private static final Logger LOG = Logger.getLogger(CorreosController.class.getName());
 
-    @Inject
+    @EJB
     private CorreosService correosService;
 
-    @POST
+     @POST
     @Path("/enviar")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -44,25 +45,25 @@ public class CorreosController {
         }
     }
 
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Obtener un correo por ID", description = "Obtiene un correo de la base de datos por su ID.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Correo obtenido exitosamente"),
-        @ApiResponse(responseCode = "404", description = "Correo no encontrado"),
-        @ApiResponse(responseCode = "500", description = "Error al obtener el correo")
-    })
-    public Response getCorreo(@PathParam("id") Long id) {
-        try {
-            Respuesta respuesta = correosService.getCorreo(id);
-            return Response.ok(respuesta).build();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Error obteniendo el correo", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"Error obteniendo el correo: " + e.getMessage() + "\"}")
-                    .build();
-        }
-    }
+//    @GET
+//    @Path("/{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Operation(summary = "Obtener un correo por ID", description = "Obtiene un correo de la base de datos por su ID.")
+//    @ApiResponses({
+//        @ApiResponse(responseCode = "200", description = "Correo obtenido exitosamente"),
+//        @ApiResponse(responseCode = "404", description = "Correo no encontrado"),
+//        @ApiResponse(responseCode = "500", description = "Error al obtener el correo")
+//    })
+//    public Response getCorreo(@PathParam("id") Long id) {
+//        try {
+//            Respuesta respuesta = correosService.getCorreo(id);
+//            return Response.ok(respuesta).build();
+//        } catch (Exception e) {
+//            LOG.log(Level.SEVERE, "Error obteniendo el correo", e);
+//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+//                    .entity("{\"error\": \"Error obteniendo el correo: " + e.getMessage() + "\"}")
+//                    .build();
+//        }
+//    }
 }
 

@@ -17,7 +17,7 @@ public class VariablesMultimediaDTO implements Serializable {
     @Schema(description = "Identificador de la variable multimedia", example = "1")
     private long mediaId;
     @Schema(description = "URL de la variable multimedia", example = "https://www.google/img32.com")
-    private Serializable mediaUrl;
+    private String mediaUrl;
     @Schema(description = "Tipo de la variable multimedia", example = "imagen")
     private String mediaTipo;
     @Schema(description = "Versión de la variable multimedia", example = "1")
@@ -29,7 +29,7 @@ public class VariablesMultimediaDTO implements Serializable {
 
     public VariablesMultimediaDTO(VariablesMultimedia variablesMultimedia) {
         this.mediaId = variablesMultimedia.getMediaId();
-        this.mediaUrl = variablesMultimedia.getMediaUrl();
+        this.mediaUrl = (String) variablesMultimedia.getMediaUrl();
         this.mediaTipo = variablesMultimedia.getMediaTipo();
         this.mediaVersion = variablesMultimedia.getMediaVersion();
         if (variablesMultimedia.getMediaVarId() != null) {
@@ -50,7 +50,7 @@ public class VariablesMultimediaDTO implements Serializable {
         return mediaUrl;
     }
 
-    public void setMediaUrl(Serializable mediaUrl) {
+    public void setMediaUrl(String mediaUrl) {
         this.mediaUrl = mediaUrl;
     }
 

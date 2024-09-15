@@ -1,6 +1,7 @@
 package cr.ac.una.chatandmailapi.model;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -81,7 +82,7 @@ public class Correos implements Serializable {
     private Long corVersion;
     
     @JoinColumn(name = "COR_NOT_ID", referencedColumnName = "NOT_ID")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
     private Notificacion corNotId;
 
     public Correos() {
