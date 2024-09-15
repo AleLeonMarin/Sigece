@@ -3,11 +3,8 @@ package cr.ac.una.chatsapp.controller;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.*;
-<<<<<<< HEAD
-=======
 import java.util.stream.Collectors;
 
->>>>>>> 9ea0288ee040a990af9465deb12f0189e19482ef
 import cr.ac.una.chatsapp.model.ChatsDTO;
 import cr.ac.una.chatsapp.model.MensajesDTO;
 import cr.ac.una.chatsapp.model.UsuariosDTO;

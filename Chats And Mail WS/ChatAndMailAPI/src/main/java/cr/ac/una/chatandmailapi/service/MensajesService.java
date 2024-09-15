@@ -25,7 +25,7 @@ public class MensajesService {
     @PersistenceContext(unitName = "SigeceUnaWsPU")
     private EntityManager em;
 
-    // Obtener un mensaje por ID
+
     public Respuesta getMensaje(Long id) {
         try {
             Mensajes mensaje = em.find(Mensajes.class, id);
@@ -39,7 +39,7 @@ public class MensajesService {
         }
     }
 
-    // Obtener todos los mensajes de un chat
+
     public Respuesta getMensajesByChat(Long chatId) {
         try {
             Query qryMensajes = em.createNamedQuery("Mensajes.findBySmsChatId", Mensajes.class);
@@ -60,7 +60,6 @@ public class MensajesService {
         }
     }
 
-    // Guardar o actualizar un mensaje
    public Respuesta guardarMensaje(MensajesDTO mensajeDto) {
     try {
         Mensajes mensaje;

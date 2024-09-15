@@ -49,7 +49,6 @@ public class ChatsService {
     }
     
   
-    // Obtener todos los chats
     public Respuesta getChats() {
         try {
             Query qryChats = em.createNamedQuery("Chats.findAll", Chats.class);
@@ -62,7 +61,7 @@ public class ChatsService {
             
             List<ChatsDTO> chatsDto = new ArrayList<>();
             for (Chats chat : chats) {
-                chatsDto.add(new ChatsDTO(chat)); // Usamos el constructor que convierte entidad a DTO
+                chatsDto.add(new ChatsDTO(chat));
             }
 
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chats", chatsDto);
@@ -77,19 +76,19 @@ public class ChatsService {
     try {
         Chats chat;
         if (chatDto.getChtId() != null && chatDto.getChtId() > 0) {
-            // Si el ID del chat ya existe, buscar el chat y actualizarlo
+ 
             chat = em.find(Chats.class, chatDto.getChtId());
             if (chat == null) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el chat a modificar.", "guardarChat NoResultException");
             }
-            chat.actualizar(chatDto);  // Actualizar los campos del chat
-            chat = em.merge(chat);  // Hacer merge en la entidad para actualizarla
+            chat.actualizar(chatDto); 
+            chat = em.merge(chat); 
         } else {
-            // Crear un nuevo chat
+          
             chat = new Chats(chatDto);
-            em.persist(chat);  // Persistir el nuevo chat en la base de datos
+            em.persist(chat);  
         }
-        em.flush();  // Asegurar que los cambios se guarden en la base de datos
+        em.flush();  
         return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chat", new ChatsDTO(chat));
     } catch (Exception ex) {
         Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Ocurrió un error al guardar el chat.", ex);
@@ -97,8 +96,6 @@ public class ChatsService {
     }
 }
 
-
-    // Eliminar un chat
     public Respuesta eliminarChat(Long id) {
     try {
         Chats chat = em.find(Chats.class, id);
@@ -114,8 +111,6 @@ public class ChatsService {
     }
 }
 
-
-    // Buscar chats por emisor o receptor
     public Respuesta getChatsByUsuario(Long usuarioId) {
         try {
             Query qryChat = em.createQuery("SELECT c FROM Chats c WHERE c.chtEmisorId.usuId = :usuarioId OR c.chtReceptorId.usuId = :usuarioId", Chats.class);
@@ -135,33 +130,30 @@ public class ChatsService {
     }
     
    
-    
     public Respuesta getChatsEntreUsuarios(Long idEmisor, Long idReceptor) {
     try {
-        // Consulta para obtener los chats entre los dos usuarios
+   
         Query qryChats = em.createQuery("SELECT c FROM Chats c WHERE (c.chtEmisorId.usuId = :idEmisor AND c.chtReceptorId.usuId = :idReceptor) "
                                       + "OR (c.chtEmisorId.usuId = :idReceptor AND c.chtReceptorId.usuId = :idEmisor)", Chats.class);
         qryChats.setParameter("idEmisor", idEmisor);
         qryChats.setParameter("idReceptor", idReceptor);
 
-        // Ejecutamos la consulta y obtenemos los resultados
         List<Chats> chats = qryChats.getResultList();
         
          for (Chats chat : chats) {
-            em.refresh(chat);  // Refrescar cada entidad si es necesario
+            em.refresh(chat);  
         }
 
-        // Convertimos las entidades a DTO
+       
         List<ChatsDTO> chatsDto = new ArrayList<>();
         for (Chats chat : chats) {
             chatsDto.add(new ChatsDTO(chat));
         }
 
-        // Devolvemos la respuesta con la lista de chats DTO
+      
         return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Chats", chatsDto);
 
     } catch (Exception ex) {
-        // Manejamos cualquier excepción y devolvemos un error
         LOG.log(Level.SEVERE, "Ocurrió un error al consultar los chats entre usuarios.", ex);
         return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los chats entre usuarios.", "getChatsEntreUsuarios " + ex.getMessage());
     }
