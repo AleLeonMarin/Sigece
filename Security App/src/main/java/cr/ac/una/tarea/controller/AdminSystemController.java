@@ -9,9 +9,11 @@ import java.util.ResourceBundle;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 
@@ -20,50 +22,113 @@ import javafx.scene.layout.StackPane;
  *
  * @author Kendall
  */
-public class AdminSystemController extends Controller implements Initializable  {
-
-    /**
-     * Initializes the controller class.
-     */
+public class AdminSystemController extends Controller implements Initializable {
 
     @FXML
-    private MFXButton btnAceptar;
+    private MFXButton btnAceptarRol;
 
     @FXML
-    private MFXButton btnDelete;
+    private MFXButton btnAceptarSistenas;
 
     @FXML
-    private MFXComboBox<?> choiceRol;
+    private MFXButton btnAdd;
+
+    @FXML
+    private MFXButton btnDeleteRol;
+
+    @FXML
+    private MFXButton btnDeleteSistemas;
+
+    @FXML
+    private MFXButton btnNuevoRol;
+
+    @FXML
+    private MFXButton btnNuevoSistema;
 
     @FXML
     private StackPane root;
 
     @FXML
-    private TableView<?> tblvSystems;
+    private TableView<?> tbvRoles;
+
+    @FXML
+    private TableView<?> tbvSistemas;
 
     @FXML
     private TableView<?> tbvUsers;
 
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
-    @Override
-    public void initialize(){}
-
-
+    @FXML
+    private Tab tptInclusion;
 
     @FXML
-    void onActionBtnAccept(ActionEvent event) {
+    private Tab tptRoles;
+
+    @FXML
+    private Tab tptSistemas;
+
+    @FXML
+    private MFXTextField txfID;
+
+    @FXML
+    private MFXTextField txfIdRol;
+
+    @FXML
+    private MFXTextField txfIdUser;
+
+    @FXML
+    private MFXTextField txfName;
+
+    @FXML
+    private MFXTextField txfNombreRol;
+
+    @FXML
+    private MFXTextField txfNombreUser;
+
+    @FXML
+    void onActionBtnAcceptRol(ActionEvent event) {
 
     }
 
     @FXML
-    void onActionBtnDelete(ActionEvent event) {
+    void onActionBtnAcceptSistema(ActionEvent event) {
 
     }
 
+    @FXML
+    void onActionBtnAddUser(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionBtnDeleteRol(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionBtnDeleteSistema(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionBtnNuevoRol(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionBtnNuevoSistema(ActionEvent event) {
+
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void initialize() {
+        // TODO Auto-generated method stub
+
+    }
 
 }

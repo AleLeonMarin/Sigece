@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import cr.ac.una.securityws.model.Roles;
 import cr.ac.una.securityws.model.RolesDto;
+import cr.ac.una.securityws.model.Usuarios;
+import cr.ac.una.securityws.model.UsuariosDto;
 import cr.ac.una.securityws.util.CodigoRespuesta;
 import cr.ac.una.securityws.util.Respuesta;
 import jakarta.ejb.LocalBean;
@@ -25,7 +27,7 @@ public class RolesService {
 
     public Respuesta saveRol(RolesDto rolesDto) {
         try {
-            Roles roles = new Roles(rolesDto);
+            Roles roles;
             if (rolesDto.getId() != null && rolesDto.getId() > 0) {
                 roles = em.find(Roles.class, rolesDto.getId());
                 if (roles == null) {
@@ -33,8 +35,50 @@ public class RolesService {
                             "No se encontró el rol a modificar.", "saveRol NoResultException");
                 }
                 roles.actualizar(rolesDto);
+
+                // Actualizar relaciones bidireccionales
+                if (roles.getUsuarios() != null) {
+                    // Eliminar relaciones existentes
+                    List<Usuarios> usuariosToRemove = new ArrayList<>(roles.getUsuarios());
+                    for (Usuarios usuario : usuariosToRemove) {
+                        usuario.getRoles().remove(roles);
+                        roles.getUsuarios().remove(usuario);
+                    }
+                }
+
+                // Agregar nuevas relaciones
+                if (!rolesDto.getUsuariosDto().isEmpty()) {
+                    for (UsuariosDto usuarioDto : rolesDto.getUsuariosDto()) {
+                        if (usuarioDto.getModificado()) {
+                            Usuarios usuario = em.find(Usuarios.class, usuarioDto.getId());
+                            if (usuario != null) {
+                                // Asegurarse de que ambos lados de la relación estén sincronizados
+                                if (!roles.getUsuarios().contains(usuario)) {
+                                    roles.getUsuarios().add(usuario);
+                                }
+                                if (!usuario.getRoles().contains(roles)) {
+                                    usuario.getRoles().add(roles);
+                                }
+                            }
+                        }
+                    }
+                }
                 roles = em.merge(roles);
             } else {
+                roles = new Roles(rolesDto);
+                if (!rolesDto.getUsuariosDto().isEmpty()) {
+                    for (UsuariosDto usuarioDto : rolesDto.getUsuariosDto()) {
+                        if (usuarioDto.getModificado()) {
+                            Usuarios usuario = em.find(Usuarios.class, usuarioDto.getId());
+                            if (usuario != null) {
+                                if (!roles.getUsuarios().contains(usuario)) {
+                                    usuario.getRoles().add(roles);
+                                    roles.getUsuarios().add(usuario);
+                                }
+                            }
+                        }
+                    }
+                }
                 em.persist(roles);
             }
             em.flush();
@@ -79,6 +123,7 @@ public class RolesService {
                 return new Respuesta(false, CodigoRespuesta.ERROR_CLIENTE, "Debe indicar el id del rol a eliminar.",
                         "deleteRol NoResultException");
             }
+            em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Rol", new RolesDto(roles));
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrio un error al eliminar el rol.", ex);

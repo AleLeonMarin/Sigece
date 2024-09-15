@@ -31,7 +31,6 @@
                                     </VBox.margin>
                                 </MFXButton>
                                 <MFXButton fx:id="btnAdminSystems" onAction="#onActionBtnAdminSystems" prefHeight="35.0" prefWidth="200.0" styleClass="button-Register" text="Administración de Sistemas" />
-                                <MFXButton fx:id="btnRolAdmin" onAction="#onActionBtnRolAdmin" prefHeight="35.0" prefWidth="200.0" styleClass="button-Register" text="Administración de Roles" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <MFXButton fx:id="btnLogOut" buttonType="RAISED" onAction="#onActionBtnLogOut" prefHeight="48.0" prefWidth="46.0" styleClass="image-LogOut-button" text="‎ ">
