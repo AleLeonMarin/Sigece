@@ -69,6 +69,8 @@ public class MailAppController extends Controller implements Initializable {
     @FXML
     void onActionBtnAdminProcess(ActionEvent event) {
 
+        FlowController.getInstance().goView("AdminNotificationView");
+
     }
 
     @FXML
