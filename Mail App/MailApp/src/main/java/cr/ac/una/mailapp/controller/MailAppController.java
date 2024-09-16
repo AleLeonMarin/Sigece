@@ -4,6 +4,7 @@
  */
 package cr.ac.una.mailapp.controller;
 
+import cr.ac.una.mailapp.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 
 /**
  * FXML Controller class
@@ -23,7 +25,7 @@ public class MailAppController extends Controller implements Initializable {
     /**
      * Initializes the controller class.
      */
-    
+
       @FXML
     private MFXButton btnAdminParameters;
 
@@ -43,19 +45,24 @@ public class MailAppController extends Controller implements Initializable {
     private ImageView imgViewUserPhotProf;
 
     @FXML
+    private StackPane stackPaneRoot;
+
+    @FXML
     private HBox root;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+
     @Override
     public void initialize(){
     }
-    
+
     @FXML
     void onActionBtnAdminParameters(ActionEvent event) {
+
+        FlowController.getInstance().goView("AdminParametersView", null);
 
     }
 
@@ -74,5 +81,6 @@ public class MailAppController extends Controller implements Initializable {
 
     }
 
-    
+
+
 }

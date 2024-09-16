@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
@@ -66,7 +67,7 @@ public class FlowController {
                     } catch (Exception ex) {
                         loader = null;
                         java.util.logging.Logger.getLogger(FlowController.class.getName()).log(Level.SEVERE,
-                                "Creando loader [" + name + "].", ex);
+                                "Error creando loader [" + name + "].", ex);
                     }
                 }
             }
@@ -82,10 +83,9 @@ public class FlowController {
             this.mainStage.show();
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(FlowController.class.getName()).log(Level.SEVERE,
-                    "Error inicializando la vista base.", ex);
+                    "Error inicializando la vista principal.", ex);
         }
     }
-
 
     public void goView(String viewName) {
         goView(viewName, "Center", null);
@@ -94,59 +94,33 @@ public class FlowController {
     public void goView(String viewName, String accion) {
         goView(viewName, "Center", accion);
     }
-
     public void goView(String viewName, String location, String accion) {
         FXMLLoader loader = getLoader(viewName);
         Controller controller = loader.getController();
         controller.setAccion(accion);
         controller.initialize();
-        Stage stage = this.mainStage;
-
-        if (stage.getScene() == null) {
-            System.out.println("La escena principal no está inicializada.");
-            return;
+        Stage stage = controller.getStage();
+        if (stage == null) {
+            stage = this.mainStage;
+            controller.setStage(stage);
         }
 
-        Parent root = loader.getRoot();
+        // Obtener el StackPane de la vista principal
+        StackPane stackPaneRoot = (StackPane) stage.getScene().lookup("#stackPaneRoot");
 
-        // Verifica si el root de la escena es un StackPane
-        if (stage.getScene().getRoot() instanceof StackPane) {
-            StackPane mainStackPane = (StackPane) stage.getScene().getRoot();
+        // Obtener el VBox dentro del StackPane donde se cargarán las vistas
+        VBox vBox = (VBox) stackPaneRoot.getChildren().get(0);  // Asegúrate de que es el primer hijo o ajusta según corresponda
 
-            // Verifica si el primer hijo es un StackPane
-            if (mainStackPane.getChildren().get(0) instanceof StackPane) {
-                StackPane innerStackPane = (StackPane) mainStackPane.getChildren().get(0);
+        // Limpiar el VBox antes de cargar la nueva vista
+        vBox.getChildren().clear();
 
-                // Verifica si el primer hijo de ese StackPane es un HBox
-                if (innerStackPane.getChildren().get(0) instanceof HBox) {
-                    HBox hbox = (HBox) innerStackPane.getChildren().get(0);
+        // Cargar la nueva vista (AnchorPane en este caso)
+        AnchorPane newView = (AnchorPane) loader.getRoot();
 
-                    // Verifica si el tercer hijo del HBox es un StackPane (después del VBox y Separator)
-                    if (hbox.getChildren().get(2) instanceof StackPane) {
-                        StackPane targetStackPane = (StackPane) hbox.getChildren().get(2);
-
-                        switch (location) {
-                            case "Center":
-                                targetStackPane.getChildren().clear();
-                                targetStackPane.getChildren().add(root);
-                                break;
-                            default:
-                                System.out.println("Invalid location specified: " + location);
-                                break;
-                        }
-                    } else {
-                        System.out.println("Third child of HBox is not a StackPane, it's a " + hbox.getChildren().get(2).getClass().getName());
-                    }
-                } else {
-                    System.out.println("First child of inner StackPane is not an HBox, it's a " + innerStackPane.getChildren().get(0).getClass().getName());
-                }
-            } else {
-                System.out.println("First child of main StackPane is not a StackPane, it's a " + mainStackPane.getChildren().get(0).getClass().getName());
-            }
-        } else {
-            System.out.println("Root of the scene is not a StackPane, it's a " + stage.getScene().getRoot().getClass().getName());
-        }
+        // Agregar la nueva vista al VBox
+        vBox.getChildren().add(newView);
     }
+
 
 
     public void goViewInStage(String viewName, Stage stage) {
@@ -155,7 +129,6 @@ public class FlowController {
         controller.setStage(stage);
         stage.getScene().setRoot(loader.getRoot());
         MFXThemeManager.addOn(stage.getScene(), Themes.DEFAULT, Themes.LEGACY);
-
     }
 
     public void goViewInWindow(String viewName) {
@@ -195,7 +168,6 @@ public class FlowController {
         stage.initOwner(parentStage);
         stage.centerOnScreen();
         stage.showAndWait();
-
     }
 
     public Controller getController(String viewName) {
@@ -217,6 +189,4 @@ public class FlowController {
     public void salir() {
         this.mainStage.close();
     }
-
-
 }

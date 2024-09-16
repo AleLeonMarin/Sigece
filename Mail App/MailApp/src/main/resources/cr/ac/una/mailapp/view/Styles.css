@@ -131,7 +131,7 @@
 }
 
 .image-LogOut-button {
-    -fx-background-image: url("../resources/logout-512.png");
+    -fx-background-image: url("../resources/logout.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
     -fx-background-position: center;
@@ -147,7 +147,7 @@
 }
 
 .image-LogOut-button:hover, .image-LogOut-button:pressed, .image-LogOut-button:armed, .image-LogOut-button:focused {
-    -fx-background-image: url("../resources/logout-512.png");
+    -fx-background-image: url("../resources/logout.png");
     -fx-background-color: rgba(28, 34, 73, 0.68);
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
@@ -157,4 +157,29 @@
     -fx-background-radius: 10;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+}
+
+.image-info-button {
+    -fx-background-image: url("../resources/info.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.image-info-button:pressed,
+.image-info-button:hover,
+.image-info-button:armed,
+.image-info-button:focused {
+    -fx-background-image: url("../resources/info.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
 }

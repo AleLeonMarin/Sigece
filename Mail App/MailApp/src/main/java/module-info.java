@@ -13,7 +13,7 @@ module cr.ac.una.mailapp {
     requires jersey.common;
     requires transitive javafx.graphics;
 
-    //opens cr.ac.una.mailapp.model;
+    opens cr.ac.una.mailapp.model;
 
     opens cr.ac.una.mailapp to javafx.fxml;
     exports cr.ac.una.mailapp;
