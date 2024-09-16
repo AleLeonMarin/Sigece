@@ -3,6 +3,7 @@ package cr.ac.una.mailapp.controller;
 import cr.ac.una.mailapp.model.NotificacionDTO;
 import cr.ac.una.mailapp.service.NotificacionService;
 import cr.ac.una.mailapp.util.Respuesta;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,6 +31,9 @@ public class AdminNotificationController extends Controller implements Initializ
     private WebView plantillaPreview;
 
     @FXML
+    private MFXTextField txtNombre;
+
+    @FXML
     private TableColumn<NotificacionDTO, Long> tbcId;
 
     @FXML
@@ -38,7 +42,11 @@ public class AdminNotificationController extends Controller implements Initializ
     @FXML
     private TableView<NotificacionDTO> tbvProcesosNotificacion;
 
+    @FXML
+    private WebView plantillaPreviewFinal;
+
     private NotificacionService notificacionService;
+
     private ObservableList<NotificacionDTO> notificaciones;
 
     @Override
@@ -66,15 +74,16 @@ public class AdminNotificationController extends Controller implements Initializ
 
     }
 
-    // Método para actualizar la vista previa en el WebView
     private void updatePreview() {
         String htmlCode = plantillaCode.getText();
         plantillaPreview.getEngine().loadContent(htmlCode); // Carga el HTML en la WebView
+        plantillaPreviewFinal.getEngine().loadContent(htmlCode); // Carga el HTML en la WebView
     }
 
     private void cargarPlantilla(NotificacionDTO notificacion) {
 
         plantillaCode.setText(notificacion.getNotPlantilla());
+        txtNombre.setText(notificacion.getNotNombre());
         updatePreview();
     }
 

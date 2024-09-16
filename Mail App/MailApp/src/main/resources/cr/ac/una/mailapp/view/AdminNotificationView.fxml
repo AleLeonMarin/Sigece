@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -34,6 +35,8 @@
                                           <TableColumn fx:id="tbcNombre" prefWidth="202.0" text="NOMBRE" />
                                        </columns>
                                     </TableView>
+                                    <MFXTextField fx:id="txtNombre" floatMode="BORDER" floatingText="Nombre del proceso de notificación" layoutX="328.0" layoutY="83.0" prefHeight="38.0" prefWidth="333.0" />
+                                    <WebView fx:id="plantillaPreviewFinal" layoutX="341.0" layoutY="146.0" prefHeight="200.0" prefWidth="306.0" />
                                  </children>
                               </AnchorPane>
                           </content>
