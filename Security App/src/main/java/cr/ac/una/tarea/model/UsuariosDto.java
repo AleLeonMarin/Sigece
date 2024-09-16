@@ -4,23 +4,27 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class UsuariosDto implements Serializable {
 
-    private Long id;
-    private String nombre;
-    private String apellidos;
-    private String cedula;
-    private String correo;
-    private String telefono;
-    private String celular;
-    private String idioma;
-    private byte[] foto;
-    private String usuario;
-    private String clave;
-    private String estado;
-    private String status;
-    private Long version;
-    private Boolean modificado;
+    public SimpleStringProperty id;
+    public SimpleStringProperty nombre;
+    public SimpleStringProperty apellidos;
+    public SimpleStringProperty cedula;
+    public SimpleStringProperty correo;
+    public SimpleStringProperty telefono;
+    public SimpleStringProperty celular;
+    public ObjectProperty<String> idioma;
+    public byte[] foto;
+    public SimpleStringProperty usuario;
+    public SimpleStringProperty clave;
+    public SimpleStringProperty estado;
+    public SimpleStringProperty status;
+    public Long version;
+    public Boolean modificado;
     List<RolesDto> rolesDto;
 
     public UsuariosDto() {
@@ -31,20 +35,20 @@ public class UsuariosDto implements Serializable {
     public UsuariosDto(cr.ac.una.securityws.controller.UsuariosDto usuarios) {
 
         this();
-        this.id = usuarios.getId();
-        this.nombre = usuarios.getNombre();
-        this.apellidos = usuarios.getApellidos();
-        this.cedula = usuarios.getCedula();
-        this.correo = usuarios.getCorreo();
-        this.telefono = usuarios.getTelefono();
-        this.celular = usuarios.getCelular();
-        this.idioma = usuarios.getIdioma();
-        this.foto = (byte[]) usuarios.getFoto();
-        this.usuario = usuarios.getUsuario();
-        this.clave = usuarios.getClave();
-        this.estado = usuarios.getEstado();
-        this.status = usuarios.getStatus();
-        this.version = usuarios.getVersion();
+        this.id = new SimpleStringProperty("");
+        this.nombre = new SimpleStringProperty("");
+        this.apellidos = new SimpleStringProperty("");
+        this.cedula = new SimpleStringProperty("");
+        this.correo = new SimpleStringProperty("");
+        this.telefono = new SimpleStringProperty("");
+        this.celular = new SimpleStringProperty("");
+        this.idioma = new SimpleObjectProperty<>("");
+        this.foto = new byte[0];
+        this.usuario = new SimpleStringProperty("");
+        this.clave = new SimpleStringProperty("");
+        this.estado = new SimpleStringProperty("");
+        this.status = new SimpleStringProperty("");
+        this.modificado = false;
         this.rolesDto = new ArrayList<>();
         if (usuarios.getRolesDto() != null) {
             for (cr.ac.una.securityws.controller.RolesDto rol : usuarios.getRolesDto()) {
@@ -54,35 +58,41 @@ public class UsuariosDto implements Serializable {
     }
 
     public Long getId() {
-        return id;
+
+        if (this.id.get() != null && !this.id.get().isEmpty()) {
+            return Long.valueOf(this.id.get());
+        } else {
+            return null;
+        }
+
     }
 
     public String getNombre() {
-        return nombre;
+        return nombre.get();
     }
 
     public String getApellidos() {
-        return apellidos;
+        return apellidos.get();
     }
 
     public String getCedula() {
-        return cedula;
+        return cedula.get();
     }
 
     public String getCorreo() {
-        return correo;
+        return correo.get();
     }
 
     public String getTelefono() {
-        return telefono;
+        return telefono.get();
     }
 
     public String getCelular() {
-        return celular;
+        return celular.get();
     }
 
     public String getIdioma() {
-        return idioma;
+        return idioma.get();
     }
 
     public byte[] getFoto() {
@@ -90,19 +100,19 @@ public class UsuariosDto implements Serializable {
     }
 
     public String getUsuario() {
-        return usuario;
+        return usuario.get();
     }
 
     public String getClave() {
-        return clave;
+        return clave.get();
     }
 
     public String getEstado() {
-        return estado;
+        return estado.get();
     }
 
     public String getStatus() {
-        return status;
+        return status.get();
     }
 
     public Long getVersion() {
@@ -118,35 +128,35 @@ public class UsuariosDto implements Serializable {
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.id.set(id.toString());
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre.set(nombre);
     }
 
     public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+        this.apellidos.set(apellidos);
     }
 
     public void setCedula(String cedula) {
-        this.cedula = cedula;
+        this.cedula.set(cedula);
     }
 
     public void setCorreo(String correo) {
-        this.correo = correo;
+        this.correo.set(correo);
     }
 
     public void setTelefono(String telefono) {
-        this.telefono = telefono;
+        this.telefono.set(telefono);
     }
 
     public void setCelular(String celular) {
-        this.celular = celular;
+        this.celular.set(celular);
     }
 
     public void setIdioma(String idioma) {
-        this.idioma = idioma;
+        this.idioma.set(idioma);
     }
 
     public void setFoto(byte[] foto) {
@@ -154,19 +164,19 @@ public class UsuariosDto implements Serializable {
     }
 
     public void setUsuario(String usuario) {
-        this.usuario = usuario;
+        this.usuario.set(usuario);
     }
 
     public void setClave(String clave) {
-        this.clave = clave;
+        this.clave.set(clave);
     }
 
     public void setEstado(String estado) {
-        this.estado = estado;
+        this.estado.set(estado);
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status.set(status);
     }
 
     public void setVersion(Long version) {

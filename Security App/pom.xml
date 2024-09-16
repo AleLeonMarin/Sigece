@@ -11,10 +11,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <jaxws.plugin.version>2.6</jaxws.plugin.version>
+        <jaxws.plugin.version>4.0.1</jaxws.plugin.version>
     </properties>
 
     <dependencies>
+        <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -30,34 +31,21 @@
             <artifactId>materialfx</artifactId>
             <version>11.16.1</version>
         </dependency>
+
         <dependency>
-            <groupId>org.glassfish.metro</groupId>
-            <artifactId>webservices-rt</artifactId>
-            <version>2.4.10</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>4.0.3</version>
-        </dependency>
-        <!--Extra-->
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>4.0.3</version>
-            <scope>runtime</scope>
+            <groupId>com.github.sarxos</groupId>
+            <artifactId>webcam-capture</artifactId>
+            <version>0.3.12</version>
         </dependency>
 
-
-        <!--Extra-->
-        <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
         <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>4.0.0</version>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>23-ea+3</version>
+            <type>jar</type>
         </dependency>
 
-        <!--Extra-->
+        <!-- JAX-WS dependencies -->
         <dependency>
             <groupId>jakarta.xml.ws</groupId>
             <artifactId>jakarta.xml.ws-api</artifactId>
@@ -67,6 +55,24 @@
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
             <version>4.0.1</version>
+        </dependency>
+
+        <!-- JAXB dependencies -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>4.0.3</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
@@ -89,7 +95,7 @@
             <plugin>
                 <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
-                <version>4.0.1</version>
+                <version>${jaxws.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -99,30 +105,14 @@
                             <wsdlFiles>
                                 <wsdlFile>localhost_8080/SecurityWS/SigeceSoapWS.wsdl</wsdlFile>
                             </wsdlFiles>
-                            <vmArgs>
-                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-                            </vmArgs>
                             <wsdlLocation>http://localhost:8080/SecurityWS/SigeceSoapWs?wsdl</wsdlLocation>
-                            <staleFile>${project.build.directory}/jaxws/stale/SecurityWS.stale</staleFile>
+                            <sourceDestDir>${project.build.directory}/generated-sources/jaxws-wsimport</sourceDestDir>
+                            <verbose>true</verbose>
+                            <extension>true</extension>
+                            <catalog>${basedir}/src/jax-ws-catalog.xml</catalog>
                         </configuration>
-                        <id>wsimport-generate-SigeceSoapWs</id>
-                        <phase>generate-sources</phase>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>jakarta.xml.bind</groupId>
-                        <artifactId>jakarta.xml.bind-api</artifactId>
-                        <version>4.0.1</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <sourceDestDir>${project.build.directory}/generated-sources/jaxws-wsimport</sourceDestDir>
-                    <xnocompile>true</xnocompile>
-                    <verbose>true</verbose>
-                    <extension>true</extension>
-                    <catalog>${basedir}/src/jax-ws-catalog.xml</catalog>
-                </configuration>
             </plugin>
 
             <plugin>
