@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -53,24 +54,25 @@ public class SecurityAppController extends Controller implements Initializable {
     @FXML
     private void onActionBtnAdminUsers(ActionEvent event) {
         // Usa el FlowController para cargar el StackPane en el HBox de la vista principal
-        FlowController.getInstance().goView("AdminUsersView", "Center", null);
+        FlowController.getInstance().goView("AdminUsersView");
     }
 
     @FXML
     void onActionBtnAdminSystems(ActionEvent event) {
 
-        FlowController.getInstance().goView("AdminSystemView", "Center", null);
+        FlowController.getInstance().goView("AdminSystemView");
 
     }
 
     @FXML
     void onActionBtnRolAdmin(ActionEvent event) {
-        FlowController.getInstance().goView("AdminRolView", "Center", null);
+        FlowController.getInstance().goView("AdminRolView");
     }
 
     @FXML
     void onActionBtnLogOut(ActionEvent event) {
         FlowController.getInstance().goViewInWindow("LoginView");
+       ((Stage)root.getScene().getWindow()).close();
     }
 
 

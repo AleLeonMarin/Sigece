@@ -6,13 +6,20 @@ package cr.ac.una.tarea.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import cr.ac.una.tarea.model.UsuariosDto;
+import cr.ac.una.tarea.service.UsuariosService;
 import cr.ac.una.tarea.util.FlowController;
+import cr.ac.una.tarea.util.Mensaje;
+import cr.ac.una.tarea.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  * FXML Controller class
@@ -33,7 +40,6 @@ public class LoginController extends Controller implements Initializable {
     public void initialize() {
         // TODO Auto-generated method stub
     }
-
 
     @FXML
     private MFXButton btnChangePass;
@@ -59,8 +65,37 @@ public class LoginController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnLogIn(ActionEvent event) {
+        try {
+            if (textMail.getText().isEmpty() || textPassword.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                        "Es necesario digitar un usuario para ingresar al sistema.");
+            } else if (textPassword.getText().isEmpty() || textPassword.getText().isBlank()) {
+                new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                        "Es necesario digitar una contraseña para ingresar al sistema.");
+            } else {
+                UsuariosService service = new UsuariosService();
+                Respuesta respuesta = service.logIn(textMail.getText(), textPassword.getText());
+                if (respuesta.getEstado()) {
 
-        FlowController.getInstance().goMain("SecurityAppView");
+                    UsuariosDto usuario = (UsuariosDto) respuesta.getResultado("Usuario");
+                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Admin"))) {
+                        FlowController.getInstance().goMain("SecurityAppView");
+                        getStage().close();
+                    } else {
+                        new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                                "Usuario no tiene permisos para ingresar al sistema.");
+                    }
+                } else {
+                    new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
+                            "Usuario o contraseña incorrecta.");
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, "Error al intentar ingresar al sistema",
+                    e);
+            new Mensaje().showModal(AlertType.ERROR, "LogIn", getStage(),
+                    "Error al intentar ingresar al sistema.");
+        }
 
     }
 

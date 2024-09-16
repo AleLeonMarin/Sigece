@@ -12,6 +12,7 @@ public class UsuariosService {
 
     SigeceSoapWS securityWs;
 
+    @SuppressWarnings("unlikely-arg-type")
     public Respuesta logIn(String user, String password) {
 
         try {
