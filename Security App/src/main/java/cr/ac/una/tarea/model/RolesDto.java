@@ -49,12 +49,12 @@ public class RolesDto implements Serializable {
         rol.setId(this.getId());
         rol.setNombre(this.getNombre());
         rol.setVersion(this.getVersion());
-    
+
         // Validación para evitar NullPointerException
         if (this.getSistema() != null) {
             rol.setSistema(this.getSistema().registers());
         }
-    
+
         return rol;
     }
 
