@@ -19,7 +19,6 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -132,7 +131,7 @@ public class Usuarios implements Serializable {
     private Long version;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "usuarios")
-    private List<Roles> roles = new ArrayList<>();
+    private List<Roles> roles;
 
     public Usuarios() {
     }

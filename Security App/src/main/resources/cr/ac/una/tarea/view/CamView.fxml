@@ -16,6 +16,7 @@
                   <MFXButton fx:id="btnActivate" onAction="#onActionBtnActivate" text="Activar" />
                   <MFXButton fx:id="btnTake" layoutX="280.0" layoutY="47.0" onAction="#onActionBtnTake" text="Tomar" />
                   <MFXButton fx:id="btnStop" layoutX="310.0" layoutY="47.0" onAction="#onActionBtnStop" text="Detener" />
+                  <MFXButton fx:id="btnExit" layoutX="365.0" layoutY="47.0" onAction="#onActionBtnExit" text="Salir" />
                </children>
             </HBox>
          </children>

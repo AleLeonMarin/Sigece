@@ -7,14 +7,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="700.0" prefWidth="900.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.AdminUsersController">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" onMouseMoved="#onActionRoot" prefHeight="700.0" prefWidth="900.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.tarea.controller.AdminUsersController">
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
          <children>
@@ -37,14 +36,10 @@
                                     <Insets left="120.0" right="120.0" />
                                  </VBox.margin>
                                  <children>
-                                    <ImageView fx:id="imgViewUser" fitHeight="115.0" fitWidth="135.0" onMouseClicked="#onActionImgvPhoto" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../resources/add-photo.jpg" />
-                                       </image>
-                                    </ImageView>
+                                    <ImageView fx:id="imgViewUser" fitHeight="115.0" fitWidth="135.0" onMouseClicked="#onActionImgvPhoto" pickOnBounds="true" preserveRatio="true" />
                                  </children>
                               </StackPane>
-                              <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="ID" prefHeight="41.0" prefWidth="137.0">
+                              <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxId" prefHeight="41.0" prefWidth="137.0">
                                  <styleClass>
                                     <String fx:value="jfx-txfs-security" />
                                     <String fx:value="jfx-txfs-security-container" />

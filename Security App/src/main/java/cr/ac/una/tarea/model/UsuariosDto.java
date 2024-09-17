@@ -1,14 +1,16 @@
 package cr.ac.una.tarea.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class UsuariosDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public SimpleStringProperty id;
     public SimpleStringProperty nombre;
@@ -18,23 +20,16 @@ public class UsuariosDto implements Serializable {
     public SimpleStringProperty telefono;
     public SimpleStringProperty celular;
     public ObjectProperty<String> idioma;
-    public byte[] foto;
+    public ObjectProperty<byte[]> foto;
     public SimpleStringProperty usuario;
     public SimpleStringProperty clave;
     public SimpleStringProperty estado;
     public SimpleStringProperty status;
     public Long version;
     public Boolean modificado;
-    List<RolesDto> rolesDto;
+    public ObservableList<RolesDto> rolesDto;
 
     public UsuariosDto() {
-        this.modificado = false;
-        rolesDto = new ArrayList<>();
-    }
-
-    public UsuariosDto(cr.ac.una.securityws.controller.UsuariosDto usuarios) {
-
-        this();
         this.id = new SimpleStringProperty("");
         this.nombre = new SimpleStringProperty("");
         this.apellidos = new SimpleStringProperty("");
@@ -43,28 +38,77 @@ public class UsuariosDto implements Serializable {
         this.telefono = new SimpleStringProperty("");
         this.celular = new SimpleStringProperty("");
         this.idioma = new SimpleObjectProperty<>("");
-        this.foto = new byte[0];
+        this.foto = new SimpleObjectProperty<>(new byte[0]);
         this.usuario = new SimpleStringProperty("");
         this.clave = new SimpleStringProperty("");
         this.estado = new SimpleStringProperty("");
         this.status = new SimpleStringProperty("");
         this.modificado = false;
-        this.rolesDto = new ArrayList<>();
-        if (usuarios.getRolesDto() != null) {
-            for (cr.ac.una.securityws.controller.RolesDto rol : usuarios.getRolesDto()) {
+        this.rolesDto = FXCollections.observableArrayList();
+    }
+
+    public UsuariosDto(cr.ac.una.securityws.controller.UsuariosDto usuarios) {
+        this();
+        this.id.set(usuarios.getId().toString());
+        this.nombre.set(usuarios.getNombre());
+        this.apellidos.set(usuarios.getApellidos());
+        this.cedula.set(usuarios.getCedula());
+        this.correo.set(usuarios.getCorreo());
+        this.telefono.set(usuarios.getTelefono());
+        this.celular.set(usuarios.getCelular());
+        this.idioma.set(usuarios.getIdioma());
+        this.foto.set(usuarios.getFoto());
+        this.usuario.set(usuarios.getUsuario());
+        this.clave.set(usuarios.getClave());
+        this.estado.set(usuarios.getEstado());
+        this.status.set(usuarios.getStatus());
+        this.version = usuarios.getVersion();
+        this.modificado = usuarios.isModificado();
+
+        if (!usuarios.getRolesDto().isEmpty()) {
+            List<cr.ac.una.securityws.controller.RolesDto> roles = usuarios.getRolesDto();
+            for (cr.ac.una.securityws.controller.RolesDto rol : roles) {
                 this.rolesDto.add(new RolesDto(rol));
             }
         }
     }
 
-    public Long getId() {
+    public cr.ac.una.securityws.controller.UsuariosDto registers() {
 
-        if (this.id.get() != null && !this.id.get().isEmpty()) {
-            return Long.valueOf(this.id.get());
+        cr.ac.una.securityws.controller.UsuariosDto usuarios = new cr.ac.una.securityws.controller.UsuariosDto();
+
+        usuarios.setId(this.getId());
+        usuarios.setNombre(this.getNombre());
+        usuarios.setApellidos(this.getApellidos());
+        usuarios.setCedula(this.getCedula());
+        usuarios.setCorreo(this.getCorreo());
+        usuarios.setTelefono(this.getTelefono());
+        usuarios.setCelular(this.getCelular());
+        usuarios.setIdioma(this.getIdioma());
+        usuarios.setFoto(this.getFoto());
+        usuarios.setUsuario(this.getUsuario());
+        usuarios.setClave(this.getClave());
+        usuarios.setEstado(this.getEstado());
+        usuarios.setStatus(this.getStatus());
+        usuarios.setVersion(this.getVersion());
+
+        if (!this.getRolesDto().isEmpty()) {
+            List<cr.ac.una.securityws.controller.RolesDto> roles = FXCollections.observableArrayList();
+            for (RolesDto rol : this.getRolesDto()) {
+                roles.add(rol.register());
+            }
+        }
+        return usuarios;
+    }
+
+    // Getters
+
+    public Long getId() {
+        if (id != null && id.get() != null && !id.get().isEmpty()) {
+            return Long.valueOf(id.get());
         } else {
             return null;
         }
-
     }
 
     public String getNombre() {
@@ -96,7 +140,7 @@ public class UsuariosDto implements Serializable {
     }
 
     public byte[] getFoto() {
-        return foto;
+        return foto.get();
     }
 
     public String getUsuario() {
@@ -123,9 +167,11 @@ public class UsuariosDto implements Serializable {
         return modificado;
     }
 
-    public List<RolesDto> getRolesDto() {
+    public ObservableList<RolesDto> getRolesDto() {
         return rolesDto;
     }
+
+    // Setters
 
     public void setId(Long id) {
         this.id.set(id.toString());
@@ -160,7 +206,7 @@ public class UsuariosDto implements Serializable {
     }
 
     public void setFoto(byte[] foto) {
-        this.foto = foto;
+        this.foto.set(foto);
     }
 
     public void setUsuario(String usuario) {
@@ -187,8 +233,9 @@ public class UsuariosDto implements Serializable {
         this.modificado = modificado;
     }
 
-    public void setRolesDto(List<RolesDto> rolesDto) {
+    public void setRolesDto(ObservableList<RolesDto> rolesDto) {
         this.rolesDto = rolesDto;
     }
 
+    
 }
