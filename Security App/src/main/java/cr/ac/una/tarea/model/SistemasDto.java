@@ -4,42 +4,73 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SistemasDto  implements Serializable {
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 
-    private Long id;
-    private String nombre;
-    private Long version;
-    private Boolean modificado;
+public class SistemasDto implements Serializable {
+
+    public SimpleStringProperty id;
+    public SimpleStringProperty nombre;
+    public Long version;
+    public Boolean modificado;
     List<RolesDto> rolesDto;
 
-
     public SistemasDto() {
+        this.id = new SimpleStringProperty("");
+        this.nombre = new SimpleStringProperty("");
         this.modificado = false;
         rolesDto = new ArrayList<>();
     }
 
-    public SistemasDto(cr.ac.una.securityws.controller.SistemasDto sistema){
-        this.id = sistema.getId();
-        this.nombre = sistema.getNombre();
+    public SistemasDto(cr.ac.una.securityws.controller.SistemasDto sistema) {
+        this();
+        this.id.set(sistema.getId().toString());
+        this.nombre.set(sistema.getNombre());
         this.version = sistema.getVersion();
-        for(cr.ac.una.securityws.controller.RolesDto rol : sistema.getRolesDto()){
-            this.rolesDto.add(new RolesDto(rol));
+        this.modificado = false;
+
+        if (!sistema.getRolesDto().isEmpty()) {
+            List<cr.ac.una.securityws.controller.RolesDto> roles = sistema.getRolesDto();
+            for (cr.ac.una.securityws.controller.RolesDto rol : roles) {
+                this.rolesDto.add(new RolesDto(rol));
+            }
         }
     }
 
+    public cr.ac.una.securityws.controller.SistemasDto registers() {
+
+        cr.ac.una.securityws.controller.SistemasDto sistema = new cr.ac.una.securityws.controller.SistemasDto();
+        sistema.setId(this.getId());
+        sistema.setNombre(this.getNombre());
+        sistema.setVersion(this.getVersion());
+
+        if (!this.rolesDto.isEmpty()) {
+            List<cr.ac.una.securityws.controller.RolesDto> roles = new ArrayList<>();
+            for (RolesDto rol : this.getRolesDto()) {
+                roles.add(rol.register());
+            }
+        }
+        return sistema;
+    }
+
     public Long getId() {
-        return id;
+
+        if (id != null && id.get() != null && !id.get().isEmpty()) {
+            return Long.valueOf(id.get());
+        } else {
+            return null;
+        }
     }
 
     public String getNombre() {
-        return nombre;
+        return nombre.get();
     }
 
     public Long getVersion() {
         return version;
     }
 
-    public Boolean getModificado() {
+    public Boolean isModificado() {
         return modificado;
     }
 
@@ -47,16 +78,16 @@ public class SistemasDto  implements Serializable {
         return rolesDto;
     }
 
-    public void setRolesDto(List<RolesDto> rolesDto) {
-        this.rolesDto = rolesDto;
-    }
-
     public void setId(Long id) {
-        this.id = id;
+        if (id != null) {
+            this.id.set(id.toString());
+        } else {
+            this.id.set("");
+        }
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre.set(nombre);
     }
 
     public void setVersion(Long version) {
@@ -67,5 +98,8 @@ public class SistemasDto  implements Serializable {
         this.modificado = modificado;
     }
 
-    
+    public void setRolesDto(List<RolesDto> rolesDto) {
+        this.rolesDto = rolesDto;
+    }
+
 }

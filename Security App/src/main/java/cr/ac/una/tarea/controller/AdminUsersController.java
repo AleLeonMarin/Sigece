@@ -5,17 +5,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.imageio.ImageIO;
-
-import cr.ac.una.tarea.App;
 import cr.ac.una.tarea.model.UsuariosDto;
 import cr.ac.una.tarea.service.UsuariosService;
 import cr.ac.una.tarea.util.AppContext;
@@ -131,18 +127,18 @@ public class AdminUsersController extends Controller implements Initializable {
 
     private void bindUser(boolean newUser) {
         if (!newUser) {
-            txfID.textProperty().bind(usuariosDto.id);
+            txfID.textProperty().bind(this.usuariosDto.id);
         }
-        txfNombre.textProperty().bindBidirectional(usuariosDto.nombre);
-        txfLasts.textProperty().bindBidirectional(usuariosDto.apellidos);
-        txfCed.textProperty().bindBidirectional(usuariosDto.cedula);
-        txfMail.textProperty().bindBidirectional(usuariosDto.correo);
-        txfTel.textProperty().bindBidirectional(usuariosDto.telefono);
-        txfCel.textProperty().bindBidirectional(usuariosDto.celular);
-        cmbLan.valueProperty().bindBidirectional(usuariosDto.idioma);
+        txfNombre.textProperty().bindBidirectional(this.usuariosDto.nombre);
+        txfLasts.textProperty().bindBidirectional(this.usuariosDto.apellidos);
+        txfCed.textProperty().bindBidirectional(this.usuariosDto.cedula);
+        txfMail.textProperty().bindBidirectional(this.usuariosDto.correo);
+        txfTel.textProperty().bindBidirectional(this.usuariosDto.telefono);
+        txfCel.textProperty().bindBidirectional(this.usuariosDto.celular);
+        cmbLan.valueProperty().bindBidirectional(this.usuariosDto.idioma);
         txfUser.textProperty().bindBidirectional(usuariosDto.usuario);
-        txfPassword.textProperty().bindBidirectional(usuariosDto.clave);
-        txfStatus.textProperty().bindBidirectional(usuariosDto.status);
+        txfPassword.textProperty().bindBidirectional(this.usuariosDto.clave);
+        txfStatus.textProperty().bindBidirectional(this.usuariosDto.status);
         if (this.usuariosDto.getFoto() != null) {
             imgViewUser.setImage(byteToImage(this.usuariosDto.getFoto()));
         }
@@ -151,16 +147,16 @@ public class AdminUsersController extends Controller implements Initializable {
     public void unbindUser() {
         // Unbind text fields
         txfID.textProperty().unbind();
-        txfNombre.textProperty().unbindBidirectional(usuariosDto.nombre);
-        txfLasts.textProperty().unbindBidirectional(usuariosDto.apellidos);
-        txfCed.textProperty().unbindBidirectional(usuariosDto.cedula);
-        txfMail.textProperty().unbindBidirectional(usuariosDto.correo);
-        txfTel.textProperty().unbindBidirectional(usuariosDto.telefono);
-        txfCel.textProperty().unbindBidirectional(usuariosDto.celular);
-        cmbLan.valueProperty().unbindBidirectional(usuariosDto.idioma);
-        txfUser.textProperty().unbindBidirectional(usuariosDto.usuario);
-        txfPassword.textProperty().unbindBidirectional(usuariosDto.clave);
-        txfStatus.textProperty().unbindBidirectional(usuariosDto.status);
+        txfNombre.textProperty().unbindBidirectional(this.usuariosDto.nombre);
+        txfLasts.textProperty().unbindBidirectional(this.usuariosDto.apellidos);
+        txfCed.textProperty().unbindBidirectional(this.usuariosDto.cedula);
+        txfMail.textProperty().unbindBidirectional(this.usuariosDto.correo);
+        txfTel.textProperty().unbindBidirectional(this.usuariosDto.telefono);
+        txfCel.textProperty().unbindBidirectional(this.usuariosDto.celular);
+        cmbLan.valueProperty().unbindBidirectional(this.usuariosDto.idioma);
+        txfUser.textProperty().unbindBidirectional(this.usuariosDto.usuario);
+        txfPassword.textProperty().unbindBidirectional(this.usuariosDto.clave);
+        txfStatus.textProperty().unbindBidirectional(this.usuariosDto.status);
 
         // Clear fields after unbinding
         txfID.clear();
@@ -224,13 +220,9 @@ public class AdminUsersController extends Controller implements Initializable {
     }
 
     private void newUser() {
-
-        if (this.usuariosDto == null) {
-            this.usuariosDto = new UsuariosDto();
-        }
+        this.usuariosDto = new UsuariosDto();
         unbindUser(); // Unbind after initializing the DTO
         bindUser(true); // Now bind with a new user object
-
         // Reset fields
         txfID.clear();
         txfID.requestFocus();
