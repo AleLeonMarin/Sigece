@@ -12,11 +12,13 @@ public class RolesDto implements Serializable {
     private SistemasDto sistema;
     private Boolean modificado;
     List<UsuariosDto> usuariosDto;
+    List<UsuariosDto> usuariosDtoEliminados;
 
 
     public RolesDto() {
         this.modificado = false;
         usuariosDto = new ArrayList<>();
+        usuariosDtoEliminados = new ArrayList<>();
     }
 
     public RolesDto(Roles rol){
@@ -48,6 +50,14 @@ public class RolesDto implements Serializable {
 
     public void setUsuariosDto(List<UsuariosDto> usuariosDto) {
         this.usuariosDto = usuariosDto;
+    }
+
+    public List<UsuariosDto> getUsuariosDtoEliminados() {
+        return usuariosDtoEliminados;
+    }
+
+    public void setUsuariosDtoEliminados(List<UsuariosDto> usuariosDtoEliminados) {
+        this.usuariosDtoEliminados = usuariosDtoEliminados;
     }
 
     public void setId(Long id) {

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import cr.ac.una.securityws.model.Roles;
 import cr.ac.una.securityws.model.RolesDto;
 import cr.ac.una.securityws.model.Sistemas;
@@ -32,7 +31,7 @@ public class SistemasService {
 
         try {
             Query query = em.createNamedQuery("Sistemas.findAll", Sistemas.class);
-            List<Sistemas> system = query.getResultList(); // No hacemos cast aquí
+            List<Sistemas> system = query.getResultList();
             List<SistemasDto> systemsDto = new ArrayList<>();
             for (Sistemas systems : system) {
                 SistemasDto systemDto = new SistemasDto(systems);
