@@ -1,5 +1,6 @@
 package cr.ac.una.mailapp;
 
+import cr.ac.una.mailapp.controller.MailAppController;
 import cr.ac.una.mailapp.util.FlowController;
 import javafx.application.Application;
 //import cr.ac.una.tarea.controller.LoginController;
@@ -19,7 +20,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FlowController.getInstance().InitializeFlow(stage, null);
-        FlowController.getInstance().goViewInWindow("MailAppView");
+        FlowController.getInstance().goMain("MailAppView");
        // loginController.initialize();
     }
 

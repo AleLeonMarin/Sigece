@@ -14,7 +14,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Path("/parametros")
+@Path("/ParametrosController")
 @Tag(name = "Parametros", description = "Operaciones sobre los parámetros de configuración de correos")
 public class ParametrosController {
 
@@ -45,7 +45,7 @@ public class ParametrosController {
     }
 
     @GET
-    @Path("/obtener/{id}")
+    @Path("/obtener")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Obtener parámetros", description = "Obtiene los parámetros de configuración de correos por su ID.")
     @ApiResponses({

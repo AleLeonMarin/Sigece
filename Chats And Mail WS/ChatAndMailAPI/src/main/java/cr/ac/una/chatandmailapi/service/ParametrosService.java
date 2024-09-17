@@ -25,6 +25,7 @@ public class ParametrosService {
             Parametros parametros = em.find(Parametros.class, parametrosDto.getParId());
             if (parametros == null) {
                 parametros = new Parametros(parametrosDto);
+                parametros.setParId(1);
                 em.persist(parametros);
             } else {
                 parametros.actualizar(parametrosDto);

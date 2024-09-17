@@ -11,9 +11,10 @@ module cr.ac.una.mailapp {
     requires jakarta.xml.bind;
     requires jakarta.json.bind;
     requires jersey.common;
+    requires javafx.web;
     requires transitive javafx.graphics;
 
-    //opens cr.ac.una.mailapp.model;
+    opens cr.ac.una.mailapp.model;
 
     opens cr.ac.una.mailapp to javafx.fxml;
     exports cr.ac.una.mailapp;

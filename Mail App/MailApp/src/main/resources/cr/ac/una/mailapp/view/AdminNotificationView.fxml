@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="695.0" prefWidth="746.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mailapp.controller.AdminNotificationController">
+   <children>
+      <HBox alignment="CENTER" prefHeight="695.0" prefWidth="730.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <StackPane prefHeight="675.0" prefWidth="719.0" styleClass="stack-personal-pane" stylesheets="@Styles.css">
+               <HBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </HBox.margin>
+               <children>
+                  <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="646.0" prefWidth="690.0" snapToPixel="false" styleClass="stack-personal-pane" tabClosingPolicy="ALL_TABS">
+                    <tabs>
+                        <Tab closable="false" text="Procesos de Notificacion Disponibles">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="tbvProcesosNotificacion" layoutX="14.0" layoutY="30.0" prefHeight="444.0" prefWidth="278.0">
+                                       <columns>
+                                          <TableColumn fx:id="tbcId" prefWidth="75.0" text="ID" />
+                                          <TableColumn fx:id="tbcNombre" prefWidth="202.0" text="NOMBRE" />
+                                       </columns>
+                                    </TableView>
+                                    <MFXTextField fx:id="txtNombre" floatMode="BORDER" floatingText="Nombre del proceso de notificación" layoutX="328.0" layoutY="83.0" prefHeight="38.0" prefWidth="333.0" />
+                                    <WebView fx:id="plantillaPreviewFinal" layoutX="341.0" layoutY="146.0" prefHeight="200.0" prefWidth="306.0" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                      <Tab closable="false" text="Vista Previa HTML">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <WebView fx:id="plantillaPreview" layoutX="21.0" layoutY="10.0" prefHeight="460.0" prefWidth="624.0" />
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                      <Tab closable="false" text="Configuracion Plantilla HTML">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="658.0">
+                                 <children>
+                                    <TextArea fx:id="plantillaCode" layoutX="39.0" layoutY="8.0" prefHeight="450.0" prefWidth="579.0">
+                                       <font>
+                                          <Font name="Leelawadee UI" size="18.0" />
+                                       </font>
+                                    </TextArea>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                        <Tab closable="false" text="Configuracion de Variables">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
+               </children>
+            </StackPane>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

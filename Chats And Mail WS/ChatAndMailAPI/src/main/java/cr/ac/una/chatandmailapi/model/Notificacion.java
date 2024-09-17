@@ -1,5 +1,6 @@
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -63,6 +64,8 @@ public class Notificacion implements Serializable {
     private List<Variables> sisVariablesList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "corNotId")
+    @XmlTransient
+    @JsonbTransient 
     private List<Correos> sisCorreosList;
 
     public Notificacion() {

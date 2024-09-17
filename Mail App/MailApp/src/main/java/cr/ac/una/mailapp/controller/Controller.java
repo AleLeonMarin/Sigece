@@ -15,6 +15,7 @@ public abstract class Controller {
 
     private Stage stage;
     private String accion;
+    private String nombreVista;
 
     public String getAccion() {
         return accion;
@@ -43,6 +44,14 @@ public abstract class Controller {
     public static void iconChanger(Stage stage, Image image) {
         stage.getIcons().clear();
         stage.getIcons().add(image);
+    }
+
+    public String getNombreVista() {
+        return nombreVista;
+    }
+
+    public void setNombreVista(String nombreVista) {
+        this.nombreVista = nombreVista;
     }
 
     public static void nameChanger(Stage stage, String name) {

@@ -70,7 +70,7 @@ public class CorreosService {
 
     public Respuesta enviarCorreo(CorreosDTO correosDto) {
         try {
-            String resultadoEnvio = emailService.enviarCorreo(correosDto.getCorDestinatario(), correosDto.getCorAsunto(), correosDto.getCorResultado());
+            String resultadoEnvio = emailService.enviarCorreoConEspera(correosDto.getCorDestinatario(), correosDto.getCorAsunto(), correosDto.getCorResultado());
 
             correosDto.setCorResultado(resultadoEnvio);
             correosDto.setCorFecha(new Date());
