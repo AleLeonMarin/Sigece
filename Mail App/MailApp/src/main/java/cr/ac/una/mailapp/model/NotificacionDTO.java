@@ -12,7 +12,14 @@ public class NotificacionDTO implements Serializable {
     private List<VariablesDTO> sisVariablesList;
     private List<CorreosDTO> sisCorreosList;
 
-    public NotificacionDTO() {}
+    public NotificacionDTO() {
+        this.notId = 0L;
+        this.notNombre = "";
+        this.notPlantilla = "";
+        this.notVersion = 0L;
+        this.sisVariablesList = new ArrayList<>();
+        this.sisCorreosList = new ArrayList<>();
+    }
 
     public NotificacionDTO(Long notId, String notNombre, String notPlantilla, Long notVersion) {
         this.notId = notId;
@@ -25,7 +32,11 @@ public class NotificacionDTO implements Serializable {
 
     // Getters y Setters
     public Long getNotId() {
-        return notId;
+        if (this.notId!=null&& !this.notId.equals(0L)) {
+            return notId;
+        }else{
+                return null;
+            }
     }
 
     public void setNotId(Long notId) {

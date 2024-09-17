@@ -2,6 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -36,7 +37,10 @@
                                        </columns>
                                     </TableView>
                                     <MFXTextField fx:id="txtNombre" floatMode="BORDER" floatingText="Nombre del proceso de notificación" layoutX="328.0" layoutY="83.0" prefHeight="38.0" prefWidth="333.0" />
-                                    <WebView fx:id="plantillaPreviewFinal" layoutX="341.0" layoutY="146.0" prefHeight="200.0" prefWidth="306.0" />
+                                    <WebView fx:id="plantillaPreviewFinal" layoutX="322.0" layoutY="145.0" prefHeight="200.0" prefWidth="345.0" />
+                                    <Button fx:id="btnDelete" layoutX="94.0" layoutY="484.0" mnemonicParsing="false" onAction="#onActionBtnDelete" prefHeight="40.0" prefWidth="120.0" styleClass="image-delete-button" />
+                                    <Button fx:id="btnNuevo" layoutX="343.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnNuevo" prefHeight="40.0" prefWidth="120.0" styleClass="image-add-button" />
+                                    <Button fx:id="btnSave" layoutX="494.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnSave" prefHeight="40.0" prefWidth="120.0" styleClass="image-save-button" />
                                  </children>
                               </AnchorPane>
                           </content>
