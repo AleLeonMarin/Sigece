@@ -5,6 +5,8 @@ import java.util.ResourceBundle;
 
 import com.github.sarxos.webcam.Webcam;
 
+import cr.ac.una.tarea.util.AppContext;
+import cr.ac.una.tarea.util.Mensaje;
 import cr.ac.una.tarea.util.WebCam;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
@@ -22,6 +24,9 @@ public class CamController extends Controller implements Initializable {
 
     @FXML
     private MFXButton btnTake;
+
+    @FXML
+    private MFXButton btnExit;
 
     @FXML
     private ImageView imgvCam;
@@ -49,6 +54,17 @@ public class CamController extends Controller implements Initializable {
 
         webCam.takePhoto();
 
+        AppContext.getInstance().set("Taken", true);
+
+    }
+
+    @FXML
+    void onActionBtnExit(ActionEvent event) {
+
+        if (new Mensaje().showConfirmation("Salir", getStage(), "¿Desea salir de la cámara?")) {
+            webCam.stop();
+            this.getStage().close();
+        }
     }
 
     @Override

@@ -44,6 +44,12 @@
             <version>23-ea+3</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>24-ea+5</version>
+            <type>jar</type>
+        </dependency>
 
         <!-- JAX-WS dependencies -->
         <dependency>

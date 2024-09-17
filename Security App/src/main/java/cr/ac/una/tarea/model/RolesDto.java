@@ -25,6 +25,14 @@ public class RolesDto implements Serializable {
         this.version = rol.getVersion();
     }
 
+    public cr.ac.una.securityws.controller.RolesDto register(){
+        cr.ac.una.securityws.controller.RolesDto rol = new cr.ac.una.securityws.controller.RolesDto();
+        rol.setId(this.id);
+        rol.setNombre(this.nombre);
+        rol.setVersion(this.version);
+        return rol;
+    }
+
     public Long getId() {
         return id;
     }
