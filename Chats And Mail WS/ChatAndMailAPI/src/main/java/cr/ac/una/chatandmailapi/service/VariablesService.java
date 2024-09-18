@@ -49,17 +49,16 @@ public class VariablesService {
     public Respuesta guardarVariable(VariablesDTO variablesDto) {
         try {
             Variables variable;
-            if (variablesDto.getVarId() != 0) {
-                // Buscar la variable existente
+            if (variablesDto.getVarId() != null && variablesDto.getVarId() > 0) {
+             
                 variable = em.find(Variables.class, variablesDto.getVarId());
                 if (variable == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la variable a modificar.", "guardarVariable NoResultException");
                 }
-                // Actualizar la variable existente
                 variable.actualizar(variablesDto);
                 variable = em.merge(variable);
             } else {
-                // Crear una nueva variable
+          
                 variable = new Variables(variablesDto);
                 em.persist(variable);
             }
@@ -71,9 +70,6 @@ public class VariablesService {
         }
     }
 
-    /**
-     * Método para obtener todas las variables asociadas a una notificación específica.
-     */
     public Respuesta obtenerVariablesPorNotificacion(Long notId) {
         try {
             Query qryVariables = em.createQuery("SELECT v FROM Variables v WHERE v.varNotId.notId = :notId", Variables.class);

@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class VariablesDTO implements Serializable {
 
     @Schema(description = "Identificador de la variable", example = "1")
-    private long varId;
+    private Long varId;
     @Schema(description = "Nombre de la variable", example = "nombre")
     private String varNombre;
     @Schema(description = "Tipo de la variable", example = "String")
@@ -41,7 +41,7 @@ public class VariablesDTO implements Serializable {
     }
 
     // Getters y Setters
-    public long getVarId() {
+    public Long getVarId() {
         return varId;
     }
 

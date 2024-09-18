@@ -2,6 +2,7 @@ package cr.ac.una.chatandmailapi.service;
 
 import cr.ac.una.chatandmailapi.model.Notificacion;
 import cr.ac.una.chatandmailapi.model.NotificacionDTO;
+import cr.ac.una.chatandmailapi.model.Variables;
 import cr.ac.una.chatandmailapi.util.CodigoRespuesta;
 import cr.ac.una.chatandmailapi.util.Respuesta;
 import jakarta.ejb.LocalBean;
@@ -45,27 +46,34 @@ public class NotificacionService {
         }
     }
 
-    public Respuesta guardarNotificacion(NotificacionDTO notificacionDto) {
-        try {
-            Notificacion notificacion;
-            if (notificacionDto.getNotId() != null && notificacionDto.getNotId() > 0) {
-                notificacion = em.find(Notificacion.class, notificacionDto.getNotId());
-                if (notificacion == null) {
-                    return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la notificación a modificar.", "guardarNotificacion NoResultException");
-                }
-                notificacion.actualizar(notificacionDto);
-                notificacion = em.merge(notificacion);
-            } else {
-                notificacion = new Notificacion(notificacionDto);
-                em.persist(notificacion);
+public Respuesta guardarNotificacion(NotificacionDTO notificacionDto) {
+    try {
+        Notificacion notificacion;
+        if (notificacionDto.getNotId() != null && notificacionDto.getNotId() > 0) {
+            notificacion = em.find(Notificacion.class, notificacionDto.getNotId());
+            if (notificacion == null) {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la notificación a modificar.", "guardarNotificacion NoResultException");
             }
-            em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Notificacion", new NotificacionDTO(notificacion));
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Ocurrió un error al guardar la notificación.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar la notificación.", "guardarNotificacion " + ex.getMessage());
+            notificacion.actualizar(notificacionDto);
+            for (Variables var : notificacion.getSisVariablesList()) {
+                var.setVarNotId(notificacion); // Establecer la relación bidireccional
+            }
+            notificacion = em.merge(notificacion);
+        } else {
+            notificacion = new Notificacion(notificacionDto);
+            for (Variables var : notificacion.getSisVariablesList()) {
+                var.setVarNotId(notificacion);
+            }
+            em.persist(notificacion);
         }
+        em.flush();
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Notificacion", new NotificacionDTO(notificacion));
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al guardar la notificación.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar la notificación.", "guardarNotificacion " + ex.getMessage());
     }
+}
+
 
     // Método para eliminar Notificación, siguiendo la misma estructura
     public Respuesta eliminarNotificacion(Long notId) {
