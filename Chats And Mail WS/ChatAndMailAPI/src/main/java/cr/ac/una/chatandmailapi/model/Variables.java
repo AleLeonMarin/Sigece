@@ -1,5 +1,6 @@
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -67,6 +68,7 @@ public class Variables implements Serializable {
     
     @JoinColumn(name = "VAR_NOT_ID", referencedColumnName = "NOT_ID")
     @ManyToOne(optional = false)
+    @JsonbTransient
     private Notificacion varNotId;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vconVarId")
