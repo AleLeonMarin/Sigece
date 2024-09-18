@@ -33,6 +33,8 @@ public class CamController extends Controller implements Initializable {
 
     WebCam webCam;
 
+    Boolean taken = false;
+
     @FXML
     void onActionBtnActivate(ActionEvent event) {
         webCam = new WebCam(imgvCam);
@@ -53,8 +55,11 @@ public class CamController extends Controller implements Initializable {
     void onActionBtnTake(ActionEvent event) {
 
         webCam.takePhoto();
+        taken = true;
 
-        AppContext.getInstance().set("Taken", true);
+        
+
+        AppContext.getInstance().set("Taken", taken);
 
     }
 

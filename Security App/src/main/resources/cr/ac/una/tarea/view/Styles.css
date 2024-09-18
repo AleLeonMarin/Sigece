@@ -279,3 +279,13 @@
     -fx-background-color: #0A1B42;
     -fx-text-fill: white;
 }
+
+.jfx-tbvUser-btnDelete{
+
+    -fx-opacity: 0,8;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #da372c;
+    -fx-background-image: url("../resources/delete.png");
+}
