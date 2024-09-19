@@ -60,7 +60,7 @@ public class Notificacion implements Serializable {
     @Column(name = "NOT_VERSION")
     private Long notVersion;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "varNotId")
+    @OneToMany(mappedBy = "varNotId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Variables> sisVariablesList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "corNotId")
@@ -85,13 +85,7 @@ public void actualizar(NotificacionDTO notificacionDto) {
     this.notPlantilla = notificacionDto.getNotPlantilla();
     this.notVersion = notificacionDto.getNotVersion();
     
-    if (notificacionDto.getSisVariablesList() != null) {
-        this.sisVariablesList = new ArrayList<>(notificacionDto.getSisVariablesList());
-    }
-
-    if (notificacionDto.getSisCorreosList() != null) {
-        this.sisCorreosList = new ArrayList<>(notificacionDto.getSisCorreosList());
-    }
+  
 }
 
 

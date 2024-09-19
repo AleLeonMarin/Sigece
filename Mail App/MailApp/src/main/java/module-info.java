@@ -13,6 +13,8 @@ module cr.ac.una.mailapp {
     requires jersey.common;
     requires javafx.web;
     requires transitive javafx.graphics;
+    requires org.apache.poi.poi;
+    requires org.apache.poi.ooxml;
 
     opens cr.ac.una.mailapp.model;
 

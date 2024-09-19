@@ -1,16 +1,26 @@
 package cr.ac.una.mailapp.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
+
 import java.io.Serializable;
 
 public class VariablesDTO implements Serializable {
-    private long varId;
+    private Long varId;
     private String varNombre;
     private String tipo;
     private String varValor;
     private long varVersion;
+    @JsonbTransient
     private NotificacionDTO varNotId;
 
-    public VariablesDTO() {}
+    public VariablesDTO() {
+        this.varId = 0L;
+        this.varNombre = "";
+        this.tipo = "";
+        this.varValor = "";
+
+    }
+
 
     public VariablesDTO(long varId, String varNombre, String tipo, String varValor, long varVersion, NotificacionDTO varNotId) {
         this.varId = varId;
@@ -22,8 +32,12 @@ public class VariablesDTO implements Serializable {
     }
 
     // Getters y Setters
-    public long getVarId() {
-        return varId;
+    public Long getVarId() {
+        if (this.varId != null && !this.varId.equals(0L)) {
+            return varId;
+        } else {
+            return null;
+        }
     }
 
     public void setVarId(long varId) {

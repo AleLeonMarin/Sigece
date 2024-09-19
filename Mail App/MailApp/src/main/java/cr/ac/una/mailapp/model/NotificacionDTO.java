@@ -21,14 +21,6 @@ public class NotificacionDTO implements Serializable {
         this.sisCorreosList = new ArrayList<>();
     }
 
-    public NotificacionDTO(Long notId, String notNombre, String notPlantilla, Long notVersion) {
-        this.notId = notId;
-        this.notNombre = notNombre;
-        this.notPlantilla = notPlantilla;
-        this.notVersion = notVersion;
-        this.sisVariablesList = new ArrayList<>();
-        this.sisCorreosList = new ArrayList<>();
-    }
 
     // Getters y Setters
     public Long getNotId() {

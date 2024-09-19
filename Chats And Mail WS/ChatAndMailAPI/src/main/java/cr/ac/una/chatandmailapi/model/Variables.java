@@ -1,5 +1,6 @@
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,7 +43,7 @@ public class Variables implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sis_variables_seq")
     @SequenceGenerator(name = "sis_variables_seq", sequenceName = "SIS_VARIABLES_SEQ01", allocationSize = 1)
     @Column(name = "VAR_ID")
-    private long varId;
+    private Long varId;
     
     @Basic(optional = false)
     @NotNull
@@ -67,18 +68,19 @@ public class Variables implements Serializable {
     
     @JoinColumn(name = "VAR_NOT_ID", referencedColumnName = "NOT_ID")
     @ManyToOne(optional = false)
+    @JsonbTransient
     private Notificacion varNotId;
-    
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vconVarId")
     private List<VariablesCondicionales> sisVariablesCondicionalesList;
-    
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mediaVarId")
     private List<VariablesMultimedia> sisVariablesMultimediaList;
 
     public Variables() {
     }
 
-    public Variables(long varId) {
+    public Variables(Long varId) {
         this.varId = varId;
     }       
     
@@ -102,7 +104,7 @@ public class Variables implements Serializable {
 }
 
 
-    public long getVarId() {
+    public Long getVarId() {
         return varId;
     }
 
