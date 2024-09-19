@@ -243,12 +243,20 @@ public class AdminNotificationController extends Controller implements Initializ
             return;
         }
 
+        ObservableList<VariablesDTO> variablesList = tbvVariables.getItems();
+        String htmlContent = plantillaCode.getText();
+
+        for (VariablesDTO variable : variablesList) {
+            String variableName = variable.getVarNombre();
+            if (!htmlContent.contains(variableName)) {
+                mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable '" + variable.getVarNombre() + "' no está implementada en la plantilla HTML.");
+                return;
+            }
+        }
+
         NotificacionDTO notificacion = notificacionSeleccionada != null ? notificacionSeleccionada : new NotificacionDTO();
         notificacion.setNotNombre(txtNombre.getText());
-        notificacion.setNotPlantilla(plantillaCode.getText());
-
-
-        ObservableList<VariablesDTO> variablesList = tbvVariables.getItems();
+        notificacion.setNotPlantilla(htmlContent);
         notificacion.setSisVariablesList(new ArrayList<>(variablesList));
 
         Respuesta respuesta = notificacionService.guardarNotificacion(notificacion);
@@ -261,6 +269,7 @@ public class AdminNotificationController extends Controller implements Initializ
             mensaje.show(Alert.AlertType.ERROR, "Error", "Error al guardar la notificación: " + respuesta.getMensaje());
         }
     }
+
     @FXML
     void onActionBtnSaveVar(ActionEvent event) {
         if (txtVarNombre.getText().isEmpty() || txtVarTipo.getValue() == null || txtVarTipo.getValue().isEmpty()) {
@@ -366,7 +375,7 @@ public class AdminNotificationController extends Controller implements Initializ
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
                     VariablesDTO selectedVariable = row.getItem();
-                    insertarVariableEnHTML(selectedVariable.getVarNombre());  // Inserta la variable en el HTML
+                    insertarVariableEnHTML(selectedVariable.getVarNombre());
                 }
             });
             return row;
@@ -376,10 +385,15 @@ public class AdminNotificationController extends Controller implements Initializ
 
     private void insertarVariableEnHTML(String variable) {
         String currentHTML = plantillaCode.getText();
-        String updatedHTML = currentHTML + variable;
+        int cursorPosition = plantillaCode.getCaretPosition(); // Obtener la posición actual del cursor
+
+        String updatedHTML = currentHTML.substring(0, cursorPosition) + variable + currentHTML.substring(cursorPosition);
+
         plantillaCode.setText(updatedHTML);
+        plantillaCode.positionCaret(cursorPosition + variable.length());
         updatePreview();
     }
+
 
     @FXML
     void onActionBtnMax(ActionEvent event) {

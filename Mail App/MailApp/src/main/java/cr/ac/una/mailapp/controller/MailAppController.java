@@ -76,6 +76,8 @@ public class MailAppController extends Controller implements Initializable {
     @FXML
     void onActionBtnMassiveMails(ActionEvent event) {
 
+        FlowController.getInstance().goView("MassiveMailSenderView");
+
     }
 
     @FXML

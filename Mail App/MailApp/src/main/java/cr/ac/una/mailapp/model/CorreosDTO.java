@@ -8,11 +8,21 @@ public class CorreosDTO implements Serializable {
     private String corDestinatario;
     private String corAsunto;
     private String corResultado;
+    private String corEstado;
     private Date corFecha;
     private NotificacionDTO corNotId;
     private Long corVersion;
 
-    public CorreosDTO() {}
+    public CorreosDTO() {
+        this.corId = 0L;
+        this.corDestinatario = "";
+        this.corAsunto = "";
+        this.corResultado = "";
+        this.corEstado = "P";
+        this.corFecha = new Date();
+        this.corNotId = new NotificacionDTO();
+        this.corVersion = 0L;
+    }
 
     public CorreosDTO(Long corId, String corDestinatario, String corAsunto, String corResultado, Date corFecha, NotificacionDTO corNotId, Long corVersion) {
         this.corId = corId;
@@ -55,6 +65,14 @@ public class CorreosDTO implements Serializable {
 
     public void setCorResultado(String corResultado) {
         this.corResultado = corResultado;
+    }
+
+    public String getCorEstado() {
+        return corEstado;
+    }
+
+    public void setCorEstado(String corEstado) {
+        this.corEstado = corEstado;
     }
 
     public Date getCorFecha() {
