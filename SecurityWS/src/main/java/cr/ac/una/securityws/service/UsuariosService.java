@@ -85,6 +85,22 @@ public class UsuariosService {
                 }
 
                 usuarios.actualizar(usuariosDto);
+
+                for (RolesDto rolDto : usuariosDto.getRolesEliminados()) {
+                    Roles rol = em.find(Roles.class, rolDto.getId());
+                    if (rol != null) {
+                        usuarios.getRoles().remove(rol);
+                    }
+                }
+
+                for (RolesDto rolDto : usuariosDto.getRolesDto()) {
+                    if (rolDto.getModificado()) {
+                        Roles rol = em.find(Roles.class, rolDto.getId());
+                        if (rol != null) {
+                            usuarios.getRoles().add(rol);
+                        }
+                    }
+                }
                 usuarios = em.merge(usuarios);
             } else {
                 usuarios = new Usuarios(usuariosDto);

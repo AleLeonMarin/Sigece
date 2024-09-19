@@ -18,7 +18,6 @@ import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
-
 @Stateless
 @LocalBean
 public class SistemasService {
@@ -52,7 +51,7 @@ public class SistemasService {
         }
     }
 
-    public Respuesta deleteSystem (Long id){
+    public Respuesta deleteSystem(Long id) {
         try {
             Sistemas sistema;
             if (id != null && id > 0) {
@@ -79,34 +78,56 @@ public class SistemasService {
     public Respuesta saveSystem(SistemasDto sistemasDto) {
         try {
             Sistemas systems;
+
+            // Modificar sistema existente
             if (sistemasDto.getId() != null && sistemasDto.getId() > 0) {
                 systems = em.find(Sistemas.class, sistemasDto.getId());
                 if (systems == null) {
-                    return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario a modificar.", "saveUser NoResultException");
+                    return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                            "No se encontró el sistema a modificar.", "saveSystem NoResultException");
                 }
+
+                // Actualiza el sistema con los datos del DTO
                 systems.actualizar(sistemasDto);
-                for (RolesDto rol : sistemasDto.getElminados()) {
-                    systems.getRoles().remove(new Roles(rol.getId()));
-                }
-                if (!sistemasDto.getRolesDto().isEmpty()) {
-                    for (RolesDto rol : sistemasDto.getRolesDto()) {
-                        if (rol.getModificado()) {
-                            Roles roles = em.find(Roles.class, rol.getId());
-                            roles.getSistema();
-                            systems.getRoles().add(roles);
-                        }
+
+                // Remover roles eliminados
+                for (RolesDto rolDto : sistemasDto.getElminados()) {
+                    Roles rol = em.find(Roles.class, rolDto.getId()); // Busca el rol a eliminar
+                    if (rol != null) {
+                        systems.getRoles().remove(rol); // Remover el rol de la colección del sistema
                     }
                 }
-                systems = em.merge(systems);
-            } else {
-                systems = new Sistemas(sistemasDto);
-                em.persist(systems);
+
+                // Agregar o modificar roles asociados
+                for (RolesDto rolDto : sistemasDto.getRolesDto()) {
+                    if (rolDto.getModificado()) {
+                        Roles rol = em.find(Roles.class, rolDto.getId());
+                        if (rol != null) {
+                            // Si el rol existe, asegúrate de agregarlo correctamente
+                            systems.getRoles().add(rol);
+                        }
+                    } else if (rolDto.getId() == null) {
+                        Roles nuevoRol = new Roles(rolDto);
+                        em.persist(nuevoRol);
+                        systems.getRoles().add(nuevoRol);
+                    }
+                }
+
+                systems = em.merge(systems); // Merge para actualizar el sistema
             }
-            em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "TipoPlanilla", new SistemasDto(systems));
+            // Crear un nuevo sistema
+            else {
+                systems = new Sistemas(sistemasDto);
+                em.persist(systems); // Persistir el nuevo sistema
+            }
+
+            em.flush(); // Asegura que los cambios se escriban a la base de datos
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Sistema", new SistemasDto(systems));
+
         } catch (Exception ex) {
-            //LOG.log(Level.SEVERE, "Ocurrio un error al guardar el tipo de planilla.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al guardar el tipo de planilla.", "guardarTipoPlanilla " + ex.getMessage());
+            LOG.log(Level.SEVERE, "Ocurrió un error al guardar el sistema.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar el sistema.",
+                    "saveSystem " + ex.getMessage());
         }
     }
 
@@ -121,7 +142,7 @@ public class SistemasService {
                 sistemasDto.getRolesDto().add(new RolesDto(rol));
             }
 
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Sistemas", sistemasDto);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Sistema", sistemasDto);
         } catch (NoResultException ex) {
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "", "getSystem NoResultException", ex);
         } catch (NonUniqueResultException ex) {
@@ -134,8 +155,5 @@ public class SistemasService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "", "getSystem NonUniqueResultException");
         }
     }
-
-
-
 
 }

@@ -3,11 +3,8 @@ package cr.ac.una.securityws.controller;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import cr.ac.una.securityws.model.RolesDto;
 import cr.ac.una.securityws.model.SistemasDto;
 import cr.ac.una.securityws.model.UsuariosDto;
-import cr.ac.una.securityws.service.RolesService;
 import cr.ac.una.securityws.service.SistemasService;
 import cr.ac.una.securityws.service.UsuariosService;
 import cr.ac.una.securityws.util.Respuesta;
@@ -33,8 +30,6 @@ public class SigeceSoapWS {
     @EJB
     SistemasService sistemasService;
 
-    @EJB
-    RolesService rolesService;
 
     @WebMethod(operationName = "logIn")
     public UsuariosDto logIn(@WebParam(name = "usuario") String usuario, @WebParam(name = "clave") String clave) {
@@ -195,65 +190,6 @@ public class SigeceSoapWS {
 
             SistemasDto sistemas = (SistemasDto) res.getResultado("Sistema");
             return sistemas;
-        } catch (Exception e) {
-            Logger.getLogger(SigeceSoapWS.class.getName());
-            return null;
-        }
-    }
-
-    /*
-     * 
-     * 
-     * Controller methods from the ws Soap for roles
-     * 
-     * 
-     */
-
-    @WebMethod(operationName = "saveRole")
-    public RolesDto saveRole(RolesDto rolesDto) {
-        try {
-            Respuesta res = rolesService.saveRol(rolesDto);
-
-            if (!res.getEstado()) {
-                return (RolesDto) res.getResultado("Rol");
-            }
-
-            RolesDto rol = (RolesDto) res.getResultado("Rol");
-            return rol;
-        } catch (Exception e) {
-            Logger.getLogger(SigeceSoapWS.class.getName());
-            return null;
-        }
-    }
-
-    @WebMethod(operationName = "deleteRole")
-    public RolesDto deleteRole(@WebParam(name = "rol") Long id) {
-        try {
-            Respuesta res = rolesService.deleteRol(id);
-
-            if (!res.getEstado()) {
-                return (RolesDto) res.getResultado("Rol");
-            }
-
-            RolesDto rol = (RolesDto) res.getResultado("Rol");
-            return rol;
-        } catch (Exception e) {
-            Logger.getLogger(SigeceSoapWS.class.getName());
-            return null;
-        }
-    }
-
-    @WebMethod(operationName = "getAllRoles")
-    public List<RolesDto> getAllRoles() {
-        try {
-            Respuesta res = rolesService.getRoles();
-
-            if (!res.getEstado()) {
-                return (List<RolesDto>) res.getResultado("Roles");
-            }
-
-            List<RolesDto> rolesDto = (List<RolesDto>) res.getResultado("Roles");
-            return rolesDto;
         } catch (Exception e) {
             Logger.getLogger(SigeceSoapWS.class.getName());
             return null;

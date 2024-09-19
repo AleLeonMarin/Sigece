@@ -383,7 +383,8 @@ public class AdminUsersController extends Controller implements Initializable {
             SistemasDto sistema = cd.getValue();
             String selectedRoleName = cmbRoles.getSelectionModel().getSelectedItem();
 
-            // Verifica si el rol seleccionado está en la lista de roles del sistema
+            System.out.println("Selected Role: " + selectedRoleName); // Imprimir el rol seleccionado
+
             if (sistema.getRolesDto() != null && !sistema.getRolesDto().isEmpty()) {
                 // Busca el rol en la lista de roles del sistema
                 RolesDto rol = sistema.getRolesDto().stream()
@@ -392,8 +393,14 @@ public class AdminUsersController extends Controller implements Initializable {
                         .orElse(null);
 
                 if (rol != null) {
+                    System.out.println("Found Role: " + rol.getNombre()); // Imprimir el rol encontrado
                     return new SimpleStringProperty(rol.getNombre());
+                } else {
+                    System.out.println("No matching role found for: " + selectedRoleName); // Imprimir si no se
+                                                                                           // encuentra el rol
                 }
+            } else {
+                System.out.println("RolesDto is null or empty"); // Imprimir si la lista de roles está vacía
             }
             return new SimpleStringProperty("Sin rol");
         });

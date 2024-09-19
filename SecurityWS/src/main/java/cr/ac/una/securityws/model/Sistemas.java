@@ -27,14 +27,12 @@ import java.util.List;
  * @author aleon
  */
 @Entity
-@Table(name = "SIS_SISTEMAS" , schema = "SigeceUNA")
+@Table(name = "SIS_SISTEMAS", schema = "SigeceUNA")
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = "Sistemas.findAll", query = "SELECT s FROM Sistemas s"),
+        @NamedQuery(name = "Sistemas.findById", query = "SELECT s FROM Sistemas s WHERE s.id = :id"),
 /*
- * @NamedQuery(name = "SisSistemas.findBySisId", query =
- * "SELECT s FROM SisSistemas s WHERE s.sisId = :sisId"),
- * 
  * @NamedQuery(name = "SisSistemas.findBySisNombre", query =
  * "SELECT s FROM SisSistemas s WHERE s.sisNombre = :sisNombre"),
  * 
