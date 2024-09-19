@@ -40,20 +40,12 @@
                                     <WebView fx:id="plantillaPreviewFinal" layoutX="322.0" layoutY="145.0" prefHeight="200.0" prefWidth="345.0" />
                                     <Button fx:id="btnDelete" layoutX="94.0" layoutY="484.0" mnemonicParsing="false" onAction="#onActionBtnDelete" prefHeight="40.0" prefWidth="111.0" styleClass="image-delete-button" />
                                     <Button fx:id="btnNuevo" layoutX="343.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnNuevo" prefHeight="40.0" prefWidth="120.0" styleClass="image-add-button" />
-                                    <Button fx:id="btnSave" layoutX="494.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnSave" prefHeight="40.0" prefWidth="120.0" styleClass="image-save-button" />
+                                    <Button fx:id="btnSave" layoutX="481.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnSave" prefHeight="40.0" prefWidth="120.0" styleClass="image-save-button" />
+                                    <Button fx:id="btnMaximazeView" layoutX="615.0" layoutY="367.0" mnemonicParsing="false" onAction="#onActionBtnMax" prefHeight="41.0" prefWidth="46.0" styleClass="image-max-button" />
                                  </children>
                               </AnchorPane>
                           </content>
                         </Tab>
-                      <Tab closable="false" text="Vista Previa HTML">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                 <children>
-                                    <WebView fx:id="plantillaPreview" layoutX="21.0" layoutY="10.0" prefHeight="460.0" prefWidth="624.0" />
-                                 </children>
-                              </AnchorPane>
-                        </content>
-                      </Tab>
                       <Tab closable="false" text="Configuracion Plantilla HTML">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="658.0">
@@ -63,6 +55,12 @@
                                           <Font name="Leelawadee UI" size="18.0" />
                                        </font>
                                     </TextArea>
+                                    <TableView fx:id="tbvVariables2" layoutX="512.0" layoutY="48.0" prefHeight="326.0" prefWidth="159.0">
+                                      <columns>
+                                        <TableColumn fx:id="tbcVariables2" prefWidth="75.0" text="VARIABLE" />
+                                          <TableColumn fx:id="tbcVariablesTipo2" prefWidth="83.0" text="TIPO" />
+                                      </columns>
+                                    </TableView>
                                  </children>
                               </AnchorPane>
                         </content>
@@ -80,7 +78,7 @@
                                     </TableView>
                                     <MFXTextField fx:id="txtVarNombre" floatMode="BORDER" floatingText="Identificador" layoutX="31.0" layoutY="389.0" prefHeight="40.0" prefWidth="270.0" />
                                     <MFXTextField fx:id="txtVarValor" floatMode="BORDER" floatingText="Contenido " layoutX="31.0" layoutY="448.0" prefHeight="40.0" prefWidth="270.0" />
-                                    <MFXComboBox fx:id="txtVarTipo" layoutX="31.0" layoutY="499.0" prefHeight="40.0" prefWidth="78.0" />
+                                    <MFXComboBox fx:id="txtVarTipo" layoutX="31.0" layoutY="499.0" prefHeight="40.0" prefWidth="78.0" promptText="Tipo" />
                                     <Button fx:id="btnNewVar" layoutX="494.0" layoutY="54.0" mnemonicParsing="false" onAction="#onActionBtnNewVar" prefHeight="45.0" prefWidth="95.0" styleClass="image-add-button" />
                                     <Button fx:id="btnDeleteVar" layoutX="494.0" layoutY="99.0" mnemonicParsing="false" onAction="#onActionBtnDeleteVar" prefHeight="45.0" prefWidth="95.0" styleClass="image-delete-button" />
                                     <Button fx:id="btnSaveBar" layoutX="188.0" layoutY="497.0" mnemonicParsing="false" onAction="#onActionBtnSaveVar" prefHeight="45.0" prefWidth="95.0" styleClass="image-save-button" />

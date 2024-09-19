@@ -4,6 +4,8 @@ import cr.ac.una.mailapp.model.NotificacionDTO;
 import cr.ac.una.mailapp.model.VariablesDTO;
 import cr.ac.una.mailapp.service.NotificacionService;
 import cr.ac.una.mailapp.service.VariablesService;
+import cr.ac.una.mailapp.util.AppContext;
+import cr.ac.una.mailapp.util.FlowController;
 import cr.ac.una.mailapp.util.Mensaje;
 import cr.ac.una.mailapp.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
@@ -15,10 +17,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -76,6 +82,15 @@ public class AdminNotificationController extends Controller implements Initializ
     private TableColumn<VariablesDTO, String> tbcType;
 
     @FXML
+    private TableView<VariablesDTO> tbvVariables2;
+
+    @FXML
+    private TableColumn<VariablesDTO, String> tbcVariables2;
+
+    @FXML
+    private TableColumn<VariablesDTO, String> tbcVariablesTipo2;
+
+    @FXML
     private Button btnSaveBar;
 
     @FXML
@@ -83,6 +98,9 @@ public class AdminNotificationController extends Controller implements Initializ
 
     @FXML
     private Button btnDeleteVar;
+
+    @FXML
+    private Button btnMaximazeView;
 
     @FXML
     private WebView plantillaPreviewFinal;
@@ -106,6 +124,11 @@ public class AdminNotificationController extends Controller implements Initializ
         tbcContent.setCellValueFactory(new PropertyValueFactory<>("varValor"));
         tbcType.setCellValueFactory(new PropertyValueFactory<>("tipo"));
 
+        tbcVariables2.setCellValueFactory(new PropertyValueFactory<>("varNombre"));
+        tbcVariablesTipo2.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+
+        setupDoubleClickForVariables();
+
         cargarNotificaciones();
 
         tbvProcesosNotificacion.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -123,6 +146,13 @@ public class AdminNotificationController extends Controller implements Initializ
             }
         });
 
+        tbvVariables2.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && newValue instanceof VariablesDTO) {
+                VariablesDTO variableSeleccionada = (VariablesDTO) newValue;
+                insertarVariableEnHTML(variableSeleccionada.getVarNombre());
+            }
+        });
+
         ObservableList<String> opciones = FXCollections.observableArrayList("D", "C");
         txtVarTipo.setItems(opciones);
 
@@ -136,7 +166,6 @@ public class AdminNotificationController extends Controller implements Initializ
 
     private void updatePreview() {
         String htmlCode = plantillaCode.getText();
-        plantillaPreview.getEngine().loadContent(htmlCode);
         plantillaPreviewFinal.getEngine().loadContent(htmlCode);
     }
 
@@ -154,6 +183,7 @@ public class AdminNotificationController extends Controller implements Initializ
                 List<VariablesDTO> variablesList = (List<VariablesDTO>) respuesta.getResultado("Variables");
                 ObservableList<VariablesDTO> variablesObservableList = FXCollections.observableArrayList(variablesList);
                 tbvVariables.setItems(variablesObservableList);
+                tbvVariables2.setItems(variablesObservableList);
             } else {
                 mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar las variables: " + respuesta.getMensaje());
             }
@@ -175,7 +205,7 @@ public class AdminNotificationController extends Controller implements Initializ
             List<NotificacionDTO> notificaciones = (List<NotificacionDTO>) respuesta.getResultado("Notificaciones");
             tbvProcesosNotificacion.getItems().clear();
             tbvProcesosNotificacion.getItems().addAll(notificaciones);
-            tbvVariables.getItems().clear();
+            tbvVariables.getItems().clear(); // Limpiar la tabla de variables
         } else {
             mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar las notificaciones: " + respuesta.getMensaje());
         }
@@ -216,8 +246,10 @@ public class AdminNotificationController extends Controller implements Initializ
         NotificacionDTO notificacion = notificacionSeleccionada != null ? notificacionSeleccionada : new NotificacionDTO();
         notificacion.setNotNombre(txtNombre.getText());
         notificacion.setNotPlantilla(plantillaCode.getText());
-        
-        //todo
+
+
+        ObservableList<VariablesDTO> variablesList = tbvVariables.getItems();
+        notificacion.setSisVariablesList(new ArrayList<>(variablesList));
 
         Respuesta respuesta = notificacionService.guardarNotificacion(notificacion);
 
@@ -229,15 +261,21 @@ public class AdminNotificationController extends Controller implements Initializ
             mensaje.show(Alert.AlertType.ERROR, "Error", "Error al guardar la notificación: " + respuesta.getMensaje());
         }
     }
-
     @FXML
     void onActionBtnSaveVar(ActionEvent event) {
-        if (txtVarNombre.getText().isEmpty() || txtVarTipo.getValue().isEmpty()) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe completar los campos de la variable.");
+        if (txtVarNombre.getText().isEmpty() || txtVarTipo.getValue() == null || txtVarTipo.getValue().isEmpty()) {
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe completar los campos de nombre y tipo de la variable.");
+            return;
+        }
+
+        // Validación para variables condicionales que no deben tener valor
+        if (txtVarTipo.getValue().equals("C") && !txtVarValor.getText().isEmpty()) {
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Las variables condicionales no deben tener contenido en el campo de valor.");
             return;
         }
 
         VariablesDTO variableAEditar;
+
 
         if (variableSeleccionada != null) {
             variableAEditar = variableSeleccionada;
@@ -245,35 +283,39 @@ public class AdminNotificationController extends Controller implements Initializ
             variableAEditar = new VariablesDTO();
         }
 
+
         variableAEditar.setVarNombre(txtVarNombre.getText());
-        variableAEditar.setVarValor(txtVarValor.getText());
         variableAEditar.setTipo(txtVarTipo.getValue());
 
+        if (!txtVarTipo.getValue().equals("C")) {
+            variableAEditar.setVarValor(txtVarValor.getText());
+        } else {
+            variableAEditar.setVarValor("");
+        }
 
         if (notificacionSeleccionada != null) {
-            variableAEditar.setVarNotId(notificacionSeleccionada);  // Asignar notificación seleccionada
+            variableAEditar.setVarNotId(notificacionSeleccionada);  // Relacionar con la notificación seleccionada
         } else {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación válida.");
             return;
         }
 
-        // Intentar guardar la variable
-        Respuesta respuesta = variablesService.guardarVariable(variableAEditar);
-
-        if (respuesta.getEstado()) {
-            mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Variable guardada correctamente.");
-
-            if (variableSeleccionada != null) {
-                tbvVariables.refresh();  // Refrescar la tabla si se está editando
-            } else {
-                tbvVariables.getItems().add(variableAEditar);  // Añadir la nueva variable si es nueva
+        if (variableSeleccionada == null) {
+            if (!tbvVariables.getItems().contains(variableAEditar)) {
+                tbvVariables.getItems().add(variableAEditar);
             }
 
-            limpiarFormularioVar();
+            if (!tbvVariables2.getItems().contains(variableAEditar)) {
+                tbvVariables2.getItems().add(variableAEditar);
+            }
         } else {
-            mensaje.show(Alert.AlertType.ERROR, "Error", "Error al guardar la variable: " + respuesta.getMensaje());
+            tbvVariables.refresh();
+            tbvVariables2.refresh();
         }
+
+        limpiarFormularioVar();
     }
+
 
 
 
@@ -299,6 +341,7 @@ public class AdminNotificationController extends Controller implements Initializ
 
     @FXML
     void onActionBtnNewVar(ActionEvent event) {
+        txtVarNombre.requestFocus();
         limpiarFormularioVar();
     }
 
@@ -315,4 +358,34 @@ public class AdminNotificationController extends Controller implements Initializ
         txtVarTipo.clear();
         variableSeleccionada = null;
     }
+
+    private void setupDoubleClickForVariables() {
+        // Hacer que las filas de tbvVariables2 respondan al doble clic
+        tbvVariables2.setRowFactory(tv -> {
+            TableRow<VariablesDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    VariablesDTO selectedVariable = row.getItem();
+                    insertarVariableEnHTML(selectedVariable.getVarNombre());  // Inserta la variable en el HTML
+                }
+            });
+            return row;
+        });
+    }
+
+
+    private void insertarVariableEnHTML(String variable) {
+        String currentHTML = plantillaCode.getText();
+        String updatedHTML = currentHTML + variable;
+        plantillaCode.setText(updatedHTML);
+        updatePreview();
+    }
+
+    @FXML
+    void onActionBtnMax(ActionEvent event) {
+        String htmlContent = plantillaCode.getText();
+        AppContext.getInstance().set("htmlContent", htmlContent);
+        FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
+    }
+
 }

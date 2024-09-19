@@ -85,13 +85,7 @@ public void actualizar(NotificacionDTO notificacionDto) {
     this.notPlantilla = notificacionDto.getNotPlantilla();
     this.notVersion = notificacionDto.getNotVersion();
     
-    if (notificacionDto.getSisVariablesList() != null) {
-        this.sisVariablesList = new ArrayList<>(notificacionDto.getSisVariablesList());
-    }
-
-    if (notificacionDto.getSisCorreosList() != null) {
-        this.sisCorreosList = new ArrayList<>(notificacionDto.getSisCorreosList());
-    }
+  
 }
 
 

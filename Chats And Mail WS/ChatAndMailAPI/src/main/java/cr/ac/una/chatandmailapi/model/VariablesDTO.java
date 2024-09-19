@@ -2,6 +2,7 @@ package cr.ac.una.chatandmailapi.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 import java.io.Serializable;
 
@@ -25,6 +26,7 @@ public class VariablesDTO implements Serializable {
     @Schema(description = "Versión de la variable", example = "1")
     private long varVersion;
     @Schema(description = "Notificación de la variable")
+    @JsonbTransient
     private NotificacionDTO varNotId;
 
     public VariablesDTO() {}
@@ -35,9 +37,7 @@ public class VariablesDTO implements Serializable {
         this.tipo = variables.getTipo();
         this.varValor = variables.getVarValor();
         this.varVersion = variables.getVarVersion();
-        if (variables.getVarNotId() != null) {
-            this.varNotId = new NotificacionDTO(variables.getVarNotId());
-        }
+      
     }
 
     // Getters y Setters

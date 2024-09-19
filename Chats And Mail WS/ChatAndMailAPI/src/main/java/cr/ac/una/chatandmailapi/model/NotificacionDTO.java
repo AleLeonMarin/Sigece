@@ -22,27 +22,25 @@ public class NotificacionDTO implements Serializable {
     private String notNombre;
     private String notPlantilla;
     private Long notVersion;
-    private List<Variables> sisVariablesList;
-    private List<Correos> sisCorreosList;
+    private List<VariablesDTO> sisVariablesList;
+    private List<CorreosDTO> sisCorreosList;
 
     public NotificacionDTO() {}
 
     public NotificacionDTO(Notificacion notificacion) {
-        this.notId = notificacion.getNotId();
-        this.notNombre = notificacion.getNotNombre();
-        this.notPlantilla = notificacion.getNotPlantilla();
-        this.notVersion = notificacion.getNotVersion();
-        
-        if (notificacion.getSisVariablesList() != null) {
-            this.sisVariablesList = new ArrayList<>(notificacion.getSisVariablesList());
-        }
-        
-        if (notificacion.getSisCorreosList() != null) {
-            this.sisCorreosList = new ArrayList<>(notificacion.getSisCorreosList());
+    this.notId = notificacion.getNotId();
+    this.notNombre = notificacion.getNotNombre();
+    this.notPlantilla = notificacion.getNotPlantilla();
+    this.notVersion = notificacion.getNotVersion();
+
+    if (notificacion.getSisVariablesList() != null) {
+        this.sisVariablesList = new ArrayList<>();
+        for (Variables var : notificacion.getSisVariablesList()) {
+            this.sisVariablesList.add(new VariablesDTO(var));
         }
     }
+}
 
-    // Getters y Setters
     public Long getNotId() {
         return notId;
     }
@@ -75,19 +73,19 @@ public class NotificacionDTO implements Serializable {
         this.notVersion = notVersion;
     }
 
-    public List<Variables> getSisVariablesList() {
+    public List<VariablesDTO> getSisVariablesList() {
         return sisVariablesList;
     }
 
-    public void setSisVariablesList(List<Variables> sisVariablesList) {
+    public void setSisVariablesList(List<VariablesDTO> sisVariablesList) {
         this.sisVariablesList = sisVariablesList;
     }
 
-    public List<Correos> getSisCorreosList() {
+    public List<CorreosDTO> getSisCorreosList() {
         return sisCorreosList;
     }
 
-    public void setSisCorreosList(List<Correos> sisCorreosList) {
+    public void setSisCorreosList(List<CorreosDTO> sisCorreosList) {
         this.sisCorreosList = sisCorreosList;
     }
 

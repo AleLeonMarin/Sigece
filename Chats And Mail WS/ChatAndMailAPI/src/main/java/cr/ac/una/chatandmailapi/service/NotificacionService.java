@@ -3,6 +3,7 @@ package cr.ac.una.chatandmailapi.service;
 import cr.ac.una.chatandmailapi.model.Notificacion;
 import cr.ac.una.chatandmailapi.model.NotificacionDTO;
 import cr.ac.una.chatandmailapi.model.Variables;
+import cr.ac.una.chatandmailapi.model.VariablesDTO;
 import cr.ac.una.chatandmailapi.util.CodigoRespuesta;
 import cr.ac.una.chatandmailapi.util.Respuesta;
 import jakarta.ejb.LocalBean;
@@ -13,6 +14,7 @@ import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.validation.ConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,29 +52,57 @@ public Respuesta guardarNotificacion(NotificacionDTO notificacionDto) {
     try {
         Notificacion notificacion;
         if (notificacionDto.getNotId() != null && notificacionDto.getNotId() > 0) {
+            // Encontrar la notificación en la base de datos
             notificacion = em.find(Notificacion.class, notificacionDto.getNotId());
             if (notificacion == null) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la notificación a modificar.", "guardarNotificacion NoResultException");
             }
+            // Actualizar la notificación existente con los valores del DTO
             notificacion.actualizar(notificacionDto);
-            for (Variables var : notificacion.getSisVariablesList()) {
-                var.setVarNotId(notificacion); // Establecer la relación bidireccional
+
+            // Convertir VariablesDTO a Variables y asignar la relación bidireccional
+            List<Variables> listaVariables = new ArrayList<>();
+            for (VariablesDTO varDto : notificacionDto.getSisVariablesList()) {
+                Variables variable = new Variables(varDto);  // Conversión DTO a entidad
+                variable.setVarNotId(notificacion);  // Establecer la relación con la notificación
+                listaVariables.add(variable);
+
+                if (variable.getVarId() == null) {
+                    em.persist(variable);  // Persistir nueva variable
+                } else {
+                    em.merge(variable);  // Actualizar variable existente
+                }
             }
-            notificacion = em.merge(notificacion);
+            notificacion.setSisVariablesList(listaVariables);  // Asignar lista de entidades a la notificación
+            notificacion = em.merge(notificacion);  // Actualizar la notificación
         } else {
+            // Crear nueva notificación
             notificacion = new Notificacion(notificacionDto);
-            for (Variables var : notificacion.getSisVariablesList()) {
-                var.setVarNotId(notificacion);
+
+            // Persistir las variables asociadas a la nueva notificación
+            List<Variables> listaVariables = new ArrayList<>();
+            for (VariablesDTO varDto : notificacionDto.getSisVariablesList()) {
+                Variables variable = new Variables(varDto);  // Conversión DTO a entidad
+                variable.setVarNotId(notificacion);  // Establecer relación con la notificación
+                listaVariables.add(variable);
+                em.persist(variable);  // Persistir la variable
             }
-            em.persist(notificacion);
+            notificacion.setSisVariablesList(listaVariables);  // Asignar lista de variables a la notificación
+            em.persist(notificacion);  // Persistir la notificación
         }
-        em.flush();
-        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Notificacion", new NotificacionDTO(notificacion));
+        em.flush();  // Asegurarse de que todo está guardado
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Notificacion", new NotificacionDTO(notificacion));  // Retornar DTO
     } catch (Exception ex) {
         LOG.log(Level.SEVERE, "Ocurrió un error al guardar la notificación.", ex);
         return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al guardar la notificación.", "guardarNotificacion " + ex.getMessage());
     }
 }
+
+
+
+
+
+
 
 
     // Método para eliminar Notificación, siguiendo la misma estructura
