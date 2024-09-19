@@ -4,20 +4,24 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class SistemasDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public SimpleStringProperty id;
     public SimpleStringProperty nombre;
     public Long version;
     public Boolean modificado;
-    List<RolesDto> rolesDto;
+    public ObservableList<RolesDto> rolesDto;
 
     public SistemasDto() {
-        this.id = new SimpleStringProperty("");
-        this.nombre = new SimpleStringProperty("");
+        this.id = new SimpleStringProperty();
+        this.nombre = new SimpleStringProperty();
         this.modificado = false;
-        rolesDto = new ArrayList<>();
+        rolesDto = FXCollections.observableArrayList();
     }
 
     public SistemasDto(cr.ac.una.securityws.controller.SistemasDto sistema) {
@@ -25,7 +29,7 @@ public class SistemasDto implements Serializable {
         this.id.set(sistema.getId().toString());
         this.nombre.set(sistema.getNombre());
         this.version = sistema.getVersion();
-        this.modificado = false;
+        this.modificado = sistema.isModificado();
 
         if (!sistema.getRolesDto().isEmpty()) {
             List<cr.ac.una.securityws.controller.RolesDto> roles = sistema.getRolesDto();
@@ -33,6 +37,7 @@ public class SistemasDto implements Serializable {
                 this.rolesDto.add(new RolesDto(rol));
             }
         }
+
     }
 
     public cr.ac.una.securityws.controller.SistemasDto registers() {
@@ -52,7 +57,6 @@ public class SistemasDto implements Serializable {
     }
 
     public Long getId() {
-
         if (id != null && id.get() != null && !id.get().isEmpty()) {
             return Long.valueOf(id.get());
         } else {
@@ -72,16 +76,12 @@ public class SistemasDto implements Serializable {
         return modificado;
     }
 
-    public List<RolesDto> getRolesDto() {
+    public ObservableList<RolesDto> getRolesDto() {
         return rolesDto;
     }
 
     public void setId(Long id) {
-        if (id != null) {
-            this.id.set(id.toString());
-        } else {
-            this.id.set("");
-        }
+        this.id.set(id.toString());
     }
 
     public void setNombre(String nombre) {
@@ -96,8 +96,8 @@ public class SistemasDto implements Serializable {
         this.modificado = modificado;
     }
 
-    public void setRolesDto(List<RolesDto> rolesDto) {
-        this.rolesDto = rolesDto;
+    public void setRolesDto(ObservableList<RolesDto> rolesDto) {
+        this.rolesDto = FXCollections.observableArrayList(rolesDto);
     }
 
 }

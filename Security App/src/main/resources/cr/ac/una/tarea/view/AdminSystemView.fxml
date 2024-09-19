@@ -8,7 +8,6 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -46,7 +45,7 @@
                                                 <Font name="Segoe UI" size="20.0" />
                                              </font>
                                           </Text>
-                                          <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="ID">
+                                          <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxfIdSystema">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
@@ -91,7 +90,7 @@
                                                 <Font name="Segoe UI" size="20.0" />
                                              </font>
                                           </Text>
-                                          <MFXTextField fx:id="txfIdRol" floatMode="BORDER" floatingText="ID">
+                                          <MFXTextField fx:id="txfIdRol" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxfIdRol">
                                              <styleClass>
                                                 <String fx:value="jfx-txfs-security" />
                                                 <String fx:value="jfx-txfs-security-container" />
@@ -109,40 +108,6 @@
                               </StackPane>
                            </children>
                         </HBox>
-                     </content>
-                  </Tab>
-                  <Tab fx:id="tptInclusion" text="Agregacion de Usuarios">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <VBox prefHeight="596.0" prefWidth="846.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                                       <children>
-                                          <MFXTextField fx:id="txfIdUser" floatMode="BORDER" floatingText="ID">
-                                             <styleClass>
-                                                <String fx:value="jfx-txfs-security" />
-                                                <String fx:value="jfx-txfs-security-container" />
-                                             </styleClass>
-                                          </MFXTextField>
-                                          <MFXTextField fx:id="txfNombreUser" floatMode="BORDER" floatingText="Usuario" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="350.0">
-                                             <styleClass>
-                                                <String fx:value="jfx-txfs-security" />
-                                                <String fx:value="jfx-txfs-security-container" />
-                                             </styleClass>
-                                          </MFXTextField>
-                                          <MFXButton fx:id="btnAdd" ellipsisString="" minHeight="-Infinity" minWidth="-Infinity" onAction="#onActionBtnAddUser" prefHeight="40.0" prefWidth="40.0" styleClass="jfx-btn-add" textAlignment="CENTER">
-                                             <graphic>
-                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                                             </graphic>
-                                          </MFXButton>
-                                       </children>
-                                    </HBox>
-                                    <TableView fx:id="tbvUsers" prefHeight="400.0" prefWidth="750.0" />
-                                 </children>
-                              </VBox>
-                           </children>
-                        </AnchorPane>
                      </content>
                   </Tab>
                </tabs>

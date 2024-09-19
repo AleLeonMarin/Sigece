@@ -11,8 +11,14 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import javax.imageio.ImageIO;
+
+import cr.ac.una.tarea.model.RolesDto;
+import cr.ac.una.tarea.model.SistemasDto;
 import cr.ac.una.tarea.model.UsuariosDto;
+import cr.ac.una.tarea.service.SistemasService;
 import cr.ac.una.tarea.service.UsuariosService;
 import cr.ac.una.tarea.util.AppContext;
 import cr.ac.una.tarea.util.FlowController;
@@ -23,13 +29,18 @@ import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -62,10 +73,34 @@ public class AdminUsersController extends Controller implements Initializable {
     private MFXComboBox<String> cmbLan;
 
     @FXML
+    private MFXComboBox<String> cmbRoles;
+
+    @FXML
     private ImageView imgViewUser;
 
     @FXML
     private StackPane root;
+
+    @FXML
+    private TableColumn<RolesDto, String> tbcIdRol;
+
+    @FXML
+    private TableColumn<RolesDto, String> tbcRolNombre;
+
+    @FXML
+    private TableColumn<SistemasDto, String> tbcSistemaNombre;
+
+    @FXML
+    private TableView<RolesDto> tbvRoles;
+
+    @FXML
+    private TableView<SistemasDto> tbvUsers;
+
+    @FXML
+    private Tab tptMantenimiento;
+
+    @FXML
+    private Tab tptRoles;
 
     @FXML
     private MFXTextField txfCed;
@@ -77,6 +112,9 @@ public class AdminUsersController extends Controller implements Initializable {
     private MFXTextField txfID;
 
     @FXML
+    private MFXTextField txfIdSistema;
+
+    @FXML
     private MFXTextField txfLasts;
 
     @FXML
@@ -84,6 +122,9 @@ public class AdminUsersController extends Controller implements Initializable {
 
     @FXML
     private MFXTextField txfNombre;
+
+    @FXML
+    private MFXTextField txfNombreSistema;
 
     @FXML
     private MFXTextField txfPassword;
@@ -97,19 +138,30 @@ public class AdminUsersController extends Controller implements Initializable {
     @FXML
     private MFXTextField txfUser;
 
-    @FXML
-    private TableView<UsuariosDto> tbvUsers;
-
     UsuariosDto usuariosDto;
+
+    SistemasDto systems;
 
     List<Node> requeridos = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        tbcIdRol.setCellValueFactory(cd -> cd.getValue().id);
+        tbcRolNombre.setCellValueFactory(cd -> cd.getValue().nombre);
         this.usuariosDto = new UsuariosDto();
+        this.systems = new SistemasDto();
         newUser();
         indicateRequiredFields();
+
+        tbvUsers.getSelectionModel().selectedItemProperty()
+                .addListener((ObservableValue<? extends SistemasDto> observable, SistemasDto oldValue,
+                        SistemasDto newValue) -> {
+                    if (newValue != null) {
+                        this.systems = newValue;
+                        bindSystems(false);
+                    }
+                });
 
     }
 
@@ -158,22 +210,30 @@ public class AdminUsersController extends Controller implements Initializable {
         txfPassword.textProperty().unbindBidirectional(this.usuariosDto.clave);
         txfStatus.textProperty().unbindBidirectional(this.usuariosDto.status);
 
-        // Clear fields after unbinding
-        txfID.clear();
-        txfNombre.clear();
-        txfLasts.clear();
-        txfCed.clear();
-        txfMail.clear();
-        txfTel.clear();
-        txfCel.clear();
-        txfUser.clear();
-        txfPassword.clear();
-        txfStatus.clear();
-        cmbLan.getSelectionModel().clearSelection();
-
         // Set the default image
         File file = new File("src/main/resources/cr/ac/una/tarea/resources/add-photo.jpg");
         chargeGenericImage(imgViewUser, file);
+    }
+
+    private void bindSystems(boolean newSystem) {
+        if (!newSystem) {
+            txfIdSistema.textProperty().bind(this.systems.id);
+        }
+        txfNombreSistema.textProperty().bindBidirectional(this.systems.nombre);
+
+        // Limpiar los items anteriores si es necesario
+        cmbRoles.getItems().clear();
+
+        // Agregar los nombres de los roles al ComboBox
+        for (RolesDto rol : this.systems.getRolesDto()) {
+            cmbRoles.getItems().add(rol.getNombre()); // Usar add() en lugar de addAll()
+        }
+    }
+
+    private void unbindSystems() {
+        txfIdSistema.textProperty().unbind();
+        txfNombreSistema.textProperty().unbindBidirectional(this.systems.nombre);
+        cmbRoles.getItems().clear();
     }
 
     public String validarRequeridos() {
@@ -232,6 +292,15 @@ public class AdminUsersController extends Controller implements Initializable {
 
     }
 
+    private void newSystem() {
+        unbindSystems();
+        this.systems = new SistemasDto();
+        bindSystems(true);
+        txfIdSistema.clear();
+        txfIdSistema.requestFocus();
+        cmbRoles.getItems().clear();
+    }
+
     private void indicateRequiredFields() {
         requeridos.clear();
         requeridos.addAll(Arrays.asList(txfNombre, txfLasts, txfCed, txfMail, txfTel, txfCel, cmbLan, txfUser,
@@ -261,6 +330,8 @@ public class AdminUsersController extends Controller implements Initializable {
                 unbindUser();
                 this.usuariosDto = (UsuariosDto) respuesta.getResultado("Usuario");
                 bindUser(false);
+                validarRequeridos();
+                chargeRoles();
             } else {
                 new Mensaje().showModal(AlertType.INFORMATION, "Buscar Usuario", getStage(), respuesta.getMensaje());
             }
@@ -268,6 +339,65 @@ public class AdminUsersController extends Controller implements Initializable {
             Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, "Error buscando el usuario ", e);
             new Mensaje().showModal(AlertType.ERROR, "Buscar Usuario", getStage(), "Error buscando el usuario.");
         }
+
+    }
+
+    public void chargeRoles() {
+
+        tbvRoles.getItems().clear();
+        tbvRoles.setItems(this.usuariosDto.getRolesDto());
+        tbvRoles.refresh();
+    }
+
+    private void chargeSistem(Long id) {
+
+        try {
+            SistemasService service = new SistemasService();
+            Respuesta res = service.getSystem(id);
+
+            if (!res.getEstado()) {
+                new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), res.getMensaje());
+            } else {
+                unbindSystems();
+                this.systems = (SistemasDto) res.getResultado("Sistema");
+                bindSystems(false);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, "Error cargando sistema", e);
+            new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), "Error cargando el Sistema.");
+        }
+    }
+
+    private void columnsTable() {
+
+        TableColumn<SistemasDto, String> tbcIdRol = new TableColumn<>("ID");
+        tbcIdRol.setCellValueFactory(cd -> cd.getValue().id);
+        tbvUsers.getColumns().add(tbcIdRol);
+
+        TableColumn<SistemasDto, String> tbcRolNombre = new TableColumn<>("Nombre");
+        tbcRolNombre.setCellValueFactory(cd -> cd.getValue().nombre);
+        tbvUsers.getColumns().add(tbcRolNombre);
+
+        TableColumn<SistemasDto, String> tbcRol = new TableColumn<>("Rol");
+        tbcRol.setCellValueFactory(cd -> {
+            SistemasDto sistema = cd.getValue();
+            String selectedRoleName = cmbRoles.getSelectionModel().getSelectedItem();
+
+            // Verifica si el rol seleccionado está en la lista de roles del sistema
+            if (sistema.getRolesDto() != null && !sistema.getRolesDto().isEmpty()) {
+                // Busca el rol en la lista de roles del sistema
+                RolesDto rol = sistema.getRolesDto().stream()
+                        .filter(r -> r.getNombre().equals(selectedRoleName))
+                        .findFirst()
+                        .orElse(null);
+
+                if (rol != null) {
+                    return new SimpleStringProperty(rol.getNombre());
+                }
+            }
+            return new SimpleStringProperty("Sin rol");
+        });
+        tbvUsers.getColumns().add(tbcRol);
 
     }
 
@@ -281,6 +411,50 @@ public class AdminUsersController extends Controller implements Initializable {
             chargeUser(Long.valueOf(txfID.getText()));
         }
 
+    }
+
+    @FXML
+    void onKeyPressedTxfIdSistema(KeyEvent event) {
+
+        if (event.getCode() == KeyCode.ENTER && !txfID.getText().isBlank()) {
+            chargeSistem(Long.valueOf(txfID.getText()));
+        }
+
+    }
+
+    @FXML
+    void selectionChangeTabUsuarios(Event event) {
+
+        if (tptRoles.isSelected()) {
+            if (this.usuariosDto.getId() == null) {
+                new Mensaje().showModal(AlertType.INFORMATION, "Roles de Usuario", getStage(),
+                        "Debe seleccionar un usuario.");
+                tptMantenimiento.getTabPane().getSelectionModel().select(tptMantenimiento);
+            }
+
+            columnsTable();
+        }
+
+    }
+
+    @FXML
+    void onActionBtnAddUser(ActionEvent event) {
+
+        if (this.systems.getId() == null || this.systems.getNombre() == null || this.systems.getNombre().isEmpty()
+                || cmbRoles.getSelectedItem() == null) {
+
+            new Mensaje().showModal(AlertType.ERROR, "Agregar Rol", getStage(),
+                    "Es necesario cargar un sistema y seleccionar un rol.");
+        } else if (tbvUsers.getItems() == null
+                || !tbvUsers.getItems().stream().anyMatch(s -> s.equals(this.systems))) {
+
+            this.usuariosDto.setModificado(true);
+            tbvUsers.getItems().add(this.systems);
+            tbvUsers.refresh();
+        }
+
+        // Limpia o reinicia los valores del sistema (si es necesario)
+        newSystem();
     }
 
     @FXML
@@ -311,9 +485,15 @@ public class AdminUsersController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnNew(ActionEvent event) {
-        if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(),
-                "¿Esta seguro que desea limpiar el registro?")) {
-            newUser();
+
+        if (tptRoles.isSelected()) {
+            newSystem();
+        } else if (tptMantenimiento.isSelected()) {
+            if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(),
+                    "¿Esta seguro que desea limpiar el registro?")) {
+                newUser();
+                tbvRoles.getItems().clear();
+            }
         }
 
     }

@@ -9,26 +9,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import cr.ac.una.tarea.model.RolesDto;
 import cr.ac.una.tarea.model.SistemasDto;
-import cr.ac.una.tarea.model.UsuariosDto;
+import cr.ac.una.tarea.service.SistemasService;
+import cr.ac.una.tarea.util.Mensaje;
+import cr.ac.una.tarea.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -40,9 +43,6 @@ public class AdminSystemController extends Controller implements Initializable {
 
     @FXML
     private MFXButton btnAccept;
-
-    @FXML
-    private MFXButton btnAdd;
 
     @FXML
     private MFXButton btnDelete;
@@ -60,12 +60,6 @@ public class AdminSystemController extends Controller implements Initializable {
     private TableView<SistemasDto> tbvSistemas;
 
     @FXML
-    private TableView<UsuariosDto> tbvUsers;
-
-    @FXML
-    private Tab tptInclusion;
-
-    @FXML
     private Tab tptRoles;
 
     @FXML
@@ -78,20 +72,12 @@ public class AdminSystemController extends Controller implements Initializable {
     private MFXTextField txfIdRol;
 
     @FXML
-    private MFXTextField txfIdUser;
-
-    @FXML
     private MFXTextField txfName;
 
     @FXML
     private MFXTextField txfNombreRol;
 
-    @FXML
-    private MFXTextField txfNombreUser;
-
     RolesDto rol;
-
-    UsuariosDto users;
 
     SistemasDto systems;
 
@@ -100,46 +86,91 @@ public class AdminSystemController extends Controller implements Initializable {
     @FXML
     void onActionBtnAccept(ActionEvent event) {
 
-    }
+        try {
+            String valid = validarRequeridos();
+            if (!valid.isEmpty()) {
+                new Mensaje().showModal(AlertType.WARNING, "Guardar", getStage(), valid);
+            } else {
 
-    @FXML
-    void onActionBtnAddUser(ActionEvent event) {
+                SistemasService service = new SistemasService();
+                Respuesta res = service.saveSystem(systems.registers());
+
+                if (!res.getEstado()) {
+                    new Mensaje().showModal(AlertType.ERROR, "Guardar Sistema", getStage(), res.getMensaje());
+                } else {
+                    unbindSystems();
+                    this.systems = (SistemasDto) res.getResultado("Sistema");
+                    bindSystems(false);
+                    chargeSistems();
+                    new Mensaje().showModal(AlertType.INFORMATION, "Guardar Sistema", getStage(),
+                            "Sistema guardado correctamente.");
+
+                }
+
+            }
+        } catch (Exception e) {
+            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, "Error guardando sistema", e);
+            new Mensaje().showModal(AlertType.ERROR, "Guardar Sistema", getStage(), "Error guardando el Sistema.");
+        }
 
     }
 
     @FXML
     void onActionBtnDelete(ActionEvent event) {
 
+        try {
+            if (this.systems.getId() == null) {
+                new Mensaje().showModal(AlertType.WARNING, "Eliminar Sistema", getStage(),
+                        "Debe seleccionar un sistema.");
+            } else {
+
+                SistemasService service = new SistemasService();
+                Respuesta res = service.deleteSystem(this.systems.getId());
+                if (!res.getEstado()) {
+                    new Mensaje().showModal(AlertType.ERROR, "Eliminar Sistema", getStage(), res.getMensaje());
+                } else {
+                    new Mensaje().showModal(AlertType.INFORMATION, "Eliminar Sistema", getStage(),
+                            "Sistema eliminado correctamente.");
+                    chargeSistems();
+                    newSystem();
+                }
+            }
+        } catch (Exception e) {
+            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, "Error eliminando sistema", e);
+            new Mensaje().showModal(AlertType.ERROR, "Eliminar Sistema", getStage(), "Error eliminando el Sistema.");
+        }
+
     }
 
     @FXML
     void onActionBtnNew(ActionEvent event) {
 
+        if (tptSistemas.isSelected()) {
+            if (new Mensaje().showConfirmation("Limpiar Sistema", getStage(),
+                    "¿Esta seguro que desea limpiar el registro?")) {
+                newSystem();
+            }
+        }
+        if (tptRoles.isSelected()) {
+            if (new Mensaje().showConfirmation("Limpiar Rol", getStage(),
+                    "¿Esta seguro que desea limpiar el registro?")) {
+                newRol();
+            }
+        }
+
     }
 
-    private void createColumnsUsers() {
+     @FXML
+    void onKeyPressedTxfIdRol(KeyEvent event) {
 
-        TableColumn<UsuariosDto, String> colID = new TableColumn<>("ID");
-        colID.setCellValueFactory(cd -> cd.getValue().id);
-        tbvUsers.getColumns().add(colID);
+    }
 
-        TableColumn<UsuariosDto, String> colName = new TableColumn<>("Nombre");
-        colName.setCellValueFactory(cd -> cd.getValue().nombre);
-        tbvUsers.getColumns().add(colName);
+    @FXML
+    void onKeyPressedTxfIdSystema(KeyEvent event) {
 
-        TableColumn<UsuariosDto, Boolean> colRol = new TableColumn<>("Rol");
-        colRol.setCellValueFactory((TableColumn.CellDataFeatures<UsuariosDto, Boolean> p) -> new SimpleBooleanProperty(
-                p.getValue() != null));
-
-        colRol.setCellFactory((TableColumn<UsuariosDto, Boolean> p) -> new ComboBoxCell());
-        tbvUsers.getColumns().add(colRol);
-
-        TableColumn<UsuariosDto, Boolean> colDelete = new TableColumn<>("Eliminar");
-        colDelete.setCellValueFactory(
-                (TableColumn.CellDataFeatures<UsuariosDto, Boolean> p) -> new SimpleBooleanProperty(
-                        p.getValue() != null));
-        colDelete.setCellFactory((TableColumn<UsuariosDto, Boolean> p) -> new ButtonCell());
-        tbvUsers.getColumns().add(colDelete);
+        if (event.getCode() == KeyCode.ENTER && !txfID.getText().isBlank()) {
+            chargeSistem(Long.valueOf(txfID.getText()));
+        }
 
     }
 
@@ -210,7 +241,7 @@ public class AdminSystemController extends Controller implements Initializable {
 
     private void indicateRequiredFields() {
         requeridos.clear();
-        requeridos.addAll(Arrays.asList(txfID, txfName, txfIdRol, txfNombreRol));
+        requeridos.addAll(Arrays.asList(txfName));
     }
 
     // New methods
@@ -235,24 +266,14 @@ public class AdminSystemController extends Controller implements Initializable {
 
     }
 
-    private void newUser() {
-
-        this.users = new UsuariosDto();
-        unbindUsers();
-        bindUsers(true);
-        txfIdUser.clear();
-        txfIdUser.requestFocus();
-
-    }
-
     // Bind methods
 
     private void bindSystems(Boolean isNew) {
 
         if (!isNew) {
-            txfID.textProperty().bind(this.systems.id);
+            txfID.textProperty().bind(systems.id);
         }
-        txfName.textProperty().bindBidirectional(this.systems.nombre);
+        txfName.textProperty().bindBidirectional(systems.nombre);
 
     }
 
@@ -262,15 +283,6 @@ public class AdminSystemController extends Controller implements Initializable {
             txfIdRol.textProperty().bind(this.rol.id);
         }
         txfNombreRol.textProperty().bindBidirectional(this.rol.nombre);
-
-    }
-
-    private void bindUsers(Boolean isNew) {
-
-        if (!isNew) {
-            txfIdUser.textProperty().bind(this.users.id);
-        }
-        txfNombreUser.textProperty().bindBidirectional(this.users.nombre);
 
     }
 
@@ -290,11 +302,37 @@ public class AdminSystemController extends Controller implements Initializable {
 
     }
 
-    private void unbindUsers() {
+    private void chargeSistems() {
 
-        txfIdUser.textProperty().unbind();
-        txfNombreUser.textProperty().unbindBidirectional(this.users.nombre);
+        SistemasService service = new SistemasService();
+        Respuesta res = service.getAll();
 
+        if (!res.getEstado()) {
+            new Mensaje().showModal(AlertType.ERROR, "Cargar Sistemas", getStage(), res.getMensaje());
+        } else {
+            tbvSistemas.getItems().clear();
+            tbvSistemas.getItems().addAll((List<SistemasDto>) res.getResultado("Sistemas"));
+        }
+
+    }
+
+    private void chargeSistem(Long id){
+
+        try{
+            SistemasService service = new SistemasService();
+            Respuesta res = service.getSystem(id);
+
+            if (!res.getEstado()) {
+                new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), res.getMensaje());
+            } else {
+                unbindSystems();
+                this.systems = (SistemasDto) res.getResultado("Sistema");
+                bindSystems(false);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(AdminSystemController.class.getName()).log(Level.SEVERE, "Error cargando sistema", e);
+            new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), "Error cargando el Sistema.");
+        }
     }
 
     @Override
@@ -302,96 +340,25 @@ public class AdminSystemController extends Controller implements Initializable {
         // Columns creation
         createColumnsSystems();
         createColumnsRoles();
-        createColumnsUsers();
 
         // Ititialize the dto's
 
         this.rol = new RolesDto();
-        this.users = new UsuariosDto();
         this.systems = new SistemasDto();
 
         // New methods
-
         newSystem();
         newRol();
-        newUser();
 
         // Requiere fields
-
         indicateRequiredFields();
-
 
     }
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
+        chargeSistems();
 
-    }
-
-    private class ButtonCell extends TableCell<UsuariosDto, Boolean> {
-
-        final Button cellButton = new Button();
-
-        ButtonCell() {
-
-            cellButton.setPrefWidth(500);
-            cellButton.getStyleClass().add("jfx-tbvUser-btnDelete");
-
-            cellButton.setOnAction((ActionEvent t) -> {
-                UsuariosDto user = (UsuariosDto) ButtonCell.this.getTableView().getItems()
-                        .get(ButtonCell.this.getIndex());
-                rol.getUsuariosDto().remove(user);
-                tbvUsers.getItems().remove(user);
-                tbvUsers.refresh();
-            });
-        }
-
-        @Override
-        protected void updateItem(Boolean t, boolean empty) {
-            super.updateItem(t, empty);
-            if (!empty) {
-                setGraphic(cellButton);
-            }
-        }
-    }
-
-    private class ComboBoxCell extends TableCell<UsuariosDto, Boolean> {
-
-        final ComboBox<String> cellComboBox = new ComboBox<>();
-
-        ComboBoxCell() {
-            // Aquí puedes agregar los elementos que quieres que el ComboBox contenga
-            cellComboBox.getItems().addAll("Option 1", "Option 2", "Option 3");
-
-            cellComboBox.setOnAction((ActionEvent event) -> {
-                UsuariosDto user = (UsuariosDto) ComboBoxCell.this.getTableView().getItems()
-                        .get(ComboBoxCell.this.getIndex());
-                String selectedOption = cellComboBox.getValue();
-
-                // Aquí puedes definir qué hacer cuando se selecciona una opción
-                if ("Option 1".equals(selectedOption)) {
-                    // Acción para la opción 1
-                    rol.getUsuariosDto().remove(user);
-                    tbvUsers.getItems().remove(user);
-                } else if ("Option 2".equals(selectedOption)) {
-                    // Acción para la opción 2
-                    // Otro comportamiento
-                }
-
-                tbvUsers.refresh();
-            });
-        }
-
-        @Override
-        protected void updateItem(Boolean t, boolean empty) {
-            super.updateItem(t, empty);
-            if (!empty) {
-                setGraphic(cellComboBox);
-            } else {
-                setGraphic(null);
-            }
-        }
     }
 
 }

@@ -13,6 +13,7 @@ module cr.ac.una.tarea {
     requires webcam.capture;
     requires javafx.base;
     
+    opens cr.ac.una.tarea.model;
 
     opens cr.ac.una.tarea to javafx.fxml;
     exports cr.ac.una.tarea;

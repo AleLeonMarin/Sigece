@@ -234,7 +234,7 @@ public class UsuariosDto implements Serializable {
     }
 
     public void setRolesDto(ObservableList<RolesDto> rolesDto) {
-        this.rolesDto = rolesDto;
+        this.rolesDto = FXCollections.observableArrayList(rolesDto);
     }
 
     

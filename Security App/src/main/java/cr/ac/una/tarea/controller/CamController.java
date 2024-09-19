@@ -2,9 +2,6 @@ package cr.ac.una.tarea.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import com.github.sarxos.webcam.Webcam;
-
 import cr.ac.una.tarea.util.AppContext;
 import cr.ac.una.tarea.util.Mensaje;
 import cr.ac.una.tarea.util.WebCam;

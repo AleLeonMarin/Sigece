@@ -19,9 +19,6 @@ public class UsuariosService {
             securityWs = service.getSigeceSoapWSPort();
             securityWs.logIn(user, password);
 
-            if (securityWs.logIn(user, password).equals(false)) {
-                return new Respuesta(false, "Usuario o contraseña incorrecta", "Usuario o contraseña incorrecta");
-            }
             UsuariosDto usuario = new UsuariosDto(
                     (cr.ac.una.securityws.controller.UsuariosDto) securityWs.logIn(user, password));
             return new Respuesta(true, "", "", "Usuario", usuario);
@@ -38,9 +35,6 @@ public class UsuariosService {
             SigeceSoapWS_Service service = new SigeceSoapWS_Service();
             securityWs = service.getSigeceSoapWSPort();
 
-            if (false) {
-                return new Respuesta(false, "", "");
-            }
             UsuariosDto usuarioDto = new UsuariosDto(
                     (cr.ac.una.securityws.controller.UsuariosDto) securityWs.saveUser(usuariosDto));
             return new Respuesta(true, "", "", "Usuario", usuarioDto);

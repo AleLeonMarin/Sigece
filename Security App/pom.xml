@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cr.ac.una</groupId>
@@ -14,7 +15,7 @@
         <jaxws.plugin.version>4.0.1</jaxws.plugin.version>
     </properties>
 
-    <dependencies>
+   <dependencies>
         <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -98,6 +99,7 @@
         </resources>
 
         <plugins>
+            <!-- Plugin for JAX-WS -->
             <plugin>
                 <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
@@ -111,7 +113,7 @@
                             <wsdlFiles>
                                 <wsdlFile>localhost_8080/SecurityWS/SigeceSoapWS.wsdl</wsdlFile>
                             </wsdlFiles>
-                            <wsdlLocation>http://localhost:8080/SecurityWS/SigeceSoapWs?wsdl</wsdlLocation>
+                            <wsdlLocation>http://localhost:8080/SecurityWS/SigeceSoapWS?wsdl</wsdlLocation>
                             <sourceDestDir>${project.build.directory}/generated-sources/jaxws-wsimport</sourceDestDir>
                             <verbose>true</verbose>
                             <extension>true</extension>
@@ -121,6 +123,7 @@
                 </executions>
             </plugin>
 
+            <!-- Java Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -130,6 +133,7 @@
                 </configuration>
             </plugin>
 
+            <!-- JavaFX Maven Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -144,38 +148,9 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>debug</id>
-                        <configuration>
-                            <options>
-                                <option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:8000</option>
-                            </options>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>ide-debug</id>
-                        <configuration>
-                            <options>
-                                <option>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</option>
-                            </options>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>ide-profile</id>
-                        <configuration>
-                            <options>
-                                <option>${profiler.jvmargs.arg1}</option>
-                                <option>${profiler.jvmargs.arg2}</option>
-                                <option>${profiler.jvmargs.arg3}</option>
-                                <option>${profiler.jvmargs.arg4}</option>
-                                <option>${profiler.jvmargs.arg5}</option>
-                            </options>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
-
-    <name>SecurityApp</name>
 </project>
