@@ -186,15 +186,65 @@ public class MassiveMailSenderController extends Controller implements Initializ
     }
 
     private String generarContenidoConVariables(Row row) {
-        // Generar contenido del correo reemplazando las variables en la plantilla HTML
         String plantillaHTML = notificacionSeleccionada.getNotPlantilla();
-        for (int i = 1; i < row.getLastCellNum(); i++) {
-            String variable = "${var" + i + "}";
-            String valor = row.getCell(i) != null ? row.getCell(i).toString() : "Valor por defecto";
-            plantillaHTML = plantillaHTML.replace(variable, valor);
+
+        // Obtener la primera fila, que corresponde a los nombres de las columnas
+        Sheet sheet = row.getSheet();
+        Row headerRow = sheet.getRow(0); // Suponemos que la primera fila tiene los nombres de las columnas
+
+        // Lista de variables predeterminadas de la notificación
+        List<VariablesDTO> variables = notificacionSeleccionada.getSisVariablesList();
+
+        // Reemplazar variables en la plantilla HTML con base en el nombre de la columna
+        for (int i = 0; i < row.getLastCellNum(); i++) {
+            Cell headerCell = headerRow.getCell(i);
+            if (headerCell != null) {
+                String columnName = headerCell.getStringCellValue(); // Obtener el nombre de la columna
+                String variable = "{" + columnName + "}"; // Formato de la variable en el HTML
+
+                // Obtener el valor de la celda en la fila correspondiente
+                Cell cell = row.getCell(i);
+                String valor = "";
+                if (cell != null) {
+                    switch (cell.getCellType()) {
+                        case STRING:
+                            valor = cell.getStringCellValue();
+                            break;
+                        case NUMERIC:
+                            valor = String.valueOf(cell.getNumericCellValue());
+                            break;
+                        case BOOLEAN:
+                            valor = String.valueOf(cell.getBooleanCellValue());
+                            break;
+                        default:
+                            valor = "Valor no reconocido";
+                    }
+                }
+
+                // Si la celda está vacía, buscar el valor por defecto en la lista de VariablesDTO
+                if (valor == null || valor.trim().isEmpty()) {
+                    valor = buscarValorPorDefecto(columnName, variables);
+                }
+
+                // Reemplazar la variable en el HTML con el valor o el valor por defecto
+                plantillaHTML = plantillaHTML.replace(variable, valor);
+            }
         }
+
         return plantillaHTML;
     }
+
+    private String buscarValorPorDefecto(String nombreVariable, List<VariablesDTO> variables) {
+        for (VariablesDTO variable : variables) {
+            if (variable.getVarNombre().equals(nombreVariable)) {
+                return variable.getVarValor(); // Retornar el valor por defecto
+            }
+        }
+        return "Valor por defecto"; // Si no se encuentra la variable, retornar un valor por defecto genérico
+    }
+
+
+
 
     @FXML
     void onActionBtnDowload(ActionEvent event) {
@@ -269,4 +319,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
             tbvCorreoGenerados.refresh(); // Actualizar la tabla para reflejar cambios
         }
     }
+
+
+
 }
