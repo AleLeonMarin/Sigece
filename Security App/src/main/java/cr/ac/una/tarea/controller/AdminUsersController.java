@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -31,6 +32,8 @@ import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -47,6 +50,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.util.StringConverter;
+
 import java.awt.image.BufferedImage;;
 
 /**
@@ -73,7 +78,7 @@ public class AdminUsersController extends Controller implements Initializable {
     private MFXComboBox<String> cmbLan;
 
     @FXML
-    private MFXComboBox<String> cmbRoles;
+    private MFXComboBox<RolesDto> cmbRoles;
 
     @FXML
     private ImageView imgViewUser;
@@ -137,6 +142,8 @@ public class AdminUsersController extends Controller implements Initializable {
 
     @FXML
     private MFXTextField txfUser;
+
+    TableColumn<SistemasDto, String> tbcRol;
 
     UsuariosDto usuariosDto;
 
@@ -220,20 +227,28 @@ public class AdminUsersController extends Controller implements Initializable {
             txfIdSistema.textProperty().bind(this.systems.id);
         }
         txfNombreSistema.textProperty().bindBidirectional(this.systems.nombre);
+        cmbRoles.setConverter(new StringConverter<RolesDto>() {
+            @Override
+            public String toString(RolesDto rolesDto) {
+                return rolesDto != null ? rolesDto.getNombre() : "";
+            }
 
-        // Limpiar los items anteriores si es necesario
-        cmbRoles.getItems().clear();
+            @Override
+            public RolesDto fromString(String string) {
+                // Este método no se utiliza, pero es obligatorio implementarlo.
+                return null;
+            }
+        });
 
-        // Agregar los nombres de los roles al ComboBox
-        for (RolesDto rol : this.systems.getRolesDto()) {
-            cmbRoles.getItems().add(rol.getNombre()); // Usar add() en lugar de addAll()
+        if (this.systems.getRolesDto() != null) {
+            cmbRoles.setItems(FXCollections.observableArrayList(this.systems.getRolesDto()));
         }
+
     }
 
     private void unbindSystems() {
         txfIdSistema.textProperty().unbind();
         txfNombreSistema.textProperty().unbindBidirectional(this.systems.nombre);
-        cmbRoles.getItems().clear();
     }
 
     public String validarRequeridos() {
@@ -359,6 +374,7 @@ public class AdminUsersController extends Controller implements Initializable {
                 new Mensaje().showModal(AlertType.ERROR, "Cargar Sistema", getStage(), res.getMensaje());
             } else {
                 unbindSystems();
+                cmbRoles.getItems().clear();
                 this.systems = (SistemasDto) res.getResultado("Sistema");
                 bindSystems(false);
             }
@@ -378,31 +394,16 @@ public class AdminUsersController extends Controller implements Initializable {
         tbcRolNombre.setCellValueFactory(cd -> cd.getValue().nombre);
         tbvUsers.getColumns().add(tbcRolNombre);
 
-        TableColumn<SistemasDto, String> tbcRol = new TableColumn<>("Rol");
+        tbcRol = new TableColumn<>("Rol");
+
         tbcRol.setCellValueFactory(cd -> {
-            SistemasDto sistema = cd.getValue();
-            String selectedRoleName = cmbRoles.getSelectionModel().getSelectedItem();
 
-            System.out.println("Selected Role: " + selectedRoleName); // Imprimir el rol seleccionado
-
-            if (sistema.getRolesDto() != null && !sistema.getRolesDto().isEmpty()) {
-                // Busca el rol en la lista de roles del sistema
-                RolesDto rol = sistema.getRolesDto().stream()
-                        .filter(r -> r.getNombre().equals(selectedRoleName))
-                        .findFirst()
-                        .orElse(null);
-
-                if (rol != null) {
-                    System.out.println("Found Role: " + rol.getNombre()); // Imprimir el rol encontrado
-                    return new SimpleStringProperty(rol.getNombre());
-                } else {
-                    System.out.println("No matching role found for: " + selectedRoleName); // Imprimir si no se
-                                                                                           // encuentra el rol
-                }
-            } else {
-                System.out.println("RolesDto is null or empty"); // Imprimir si la lista de roles está vacía
-            }
-            return new SimpleStringProperty("Sin rol");
+            RolesDto rol = cmbRoles.getSelectedItem();
+            RolesDto rolSeleccionado = rol; // Asumimos que getRolesDto() te devuelve el rol asociado
+            return new SimpleStringProperty(rolSeleccionado != null ? rolSeleccionado.getNombre() : ""); // Asegúrate de
+                                                                                                         // que
+                                                                                                         // getNombre()
+                                                                                                         // sea correcto
         });
         tbvUsers.getColumns().add(tbcRol);
 
@@ -461,7 +462,7 @@ public class AdminUsersController extends Controller implements Initializable {
         }
 
         // Limpia o reinicia los valores del sistema (si es necesario)
-        newSystem();
+        // newSystem();
     }
 
     @FXML
@@ -514,6 +515,14 @@ public class AdminUsersController extends Controller implements Initializable {
                 new Mensaje().showModal(AlertType.WARNING, "Guardar Usuario", getStage(), validacion);
             } else {
                 this.usuariosDto.setEstado("I");
+                ObservableList<RolesDto> listaRoles = tbvUsers.getItems().stream()
+                        .map(sistemasDto -> sistemasDto.getRolesDto()) // Obtener la lista de RolesDto de cada fila
+                        .flatMap(Collection::stream) // Aplanar las listas de roles en un solo stream
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList)); // Convertir de nuevo en
+                                                                                               // un ObservableList
+
+                // Asignar la lista de roles a usuariosDto
+                this.usuariosDto.setRolesDto(listaRoles);
                 UsuariosService service = new UsuariosService();
                 Respuesta respuesta = service.saveUser(usuariosDto.registers());
 
