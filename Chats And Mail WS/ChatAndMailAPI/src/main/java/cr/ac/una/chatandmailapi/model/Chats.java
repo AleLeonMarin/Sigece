@@ -23,9 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Entidad Chats para manejar la tabla de chats en la base de datos.
- */
 @Entity
 @Table(name = "SIS_CHATS")
 @NamedQueries({

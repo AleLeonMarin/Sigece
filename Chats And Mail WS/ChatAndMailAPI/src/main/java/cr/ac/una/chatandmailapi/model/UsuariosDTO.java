@@ -6,10 +6,6 @@ import java.io.Serializable;
 import java.util.Base64;
 import java.util.Objects;
 
-/**
- * DTO para la entidad Usuarios, contiene la información de los usuarios.
- */
-
 @JsonbPropertyOrder({
     "usuId", "usuNombre", "usuApellidos", "usuCedula", "usuCorreo", "usuTelefono",
     "usuCelular", "usuIdioma", "usuUsuario", "usuClave", "usuEstado", "usuStatus", 
@@ -61,11 +57,9 @@ public class UsuariosDTO implements Serializable {
     @Schema(description = "Versión del registro", example = "1")
     private Long usuVersion;
 
-    // Constructor vacío
     public UsuariosDTO() {}
 
 
-    // Constructor que recibe una entidad Usuarios
     public UsuariosDTO(Usuarios usuario) {
         this();
         this.usuId = usuario.getUsuId();

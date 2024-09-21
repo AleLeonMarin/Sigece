@@ -33,14 +33,11 @@ public class CorreosService {
     private EmailService emailService;
     private ParametrosService parametroService;
 
-    /**
-     * Guarda o actualiza un correo en la base de datos.
-     */
+    
     public Respuesta guardarCorreo(CorreosDTO correosDto) {
         try {
             Correos correo;
 
-            // Verifica si se trata de una actualización o una inserción nueva
             if (correosDto.getCorId() != null && correosDto.getCorId() > 0) {
                 correo = em.find(Correos.class, correosDto.getCorId());
                 if (correo == null) {
@@ -49,10 +46,8 @@ public class CorreosService {
                 correo.actualizar(correosDto);
                 correo = em.merge(correo);
             } else {
-                // Si no existe, crea uno nuevo
                 correo = new Correos(correosDto);
                 
-                // Relaciona la notificación si está presente en el DTO
                 if (correosDto.getCorNotId() != null && correosDto.getCorNotId().getNotId() != null) {
                     Notificacion notificacion = em.find(Notificacion.class, correosDto.getCorNotId().getNotId());
                     if (notificacion != null) {
@@ -61,11 +56,9 @@ public class CorreosService {
                 }
                 em.persist(correo);
             }
-            em.flush(); // Asegura que la transacción se complete en la base de datos
-
+            em.flush(); 
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Correo", new CorreosDTO(correo));
         } catch (ConstraintViolationException ex) {
-            // Logea los errores de validación
             ex.getConstraintViolations().forEach(violation -> 
                 LOG.severe("Error de validación: " + violation.getPropertyPath() + " " + violation.getMessage()));
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al guardar el correo. Detalles: " + ex.getMessage(), "guardarCorreo " + ex.getMessage());
@@ -75,18 +68,12 @@ public class CorreosService {
         }
     }
     
-    /**
-     * Envía un correo electrónico y luego lo guarda en la base de datos.
-     */
     public Respuesta enviarCorreo(CorreosDTO correosDto) {
         try {
-            // Llama al servicio de envío de correos
             String resultadoEnvio = emailService.enviarCorreoConEspera(correosDto.getCorDestinatario(), correosDto.getCorAsunto(), correosDto.getCorResultado());
 
             correosDto.setCorResultado(resultadoEnvio);
-            correosDto.setCorFecha(new Date()); // Actualiza la fecha de envío
-
-            // Guarda el correo en la base de datos después de enviarlo
+            correosDto.setCorFecha(new Date());
             return guardarCorreo(correosDto);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al enviar el correo.", ex);
@@ -94,9 +81,6 @@ public class CorreosService {
         }
     }
 
-    /**
-     * Busca un correo en la base de datos por su ID.
-     */
     public Respuesta getCorreo(Long id) {
         try {
             Correos correo = em.find(Correos.class, id);
@@ -110,9 +94,7 @@ public class CorreosService {
         }
     }
 
-    /**
-     * Obtiene todos los correos almacenados en la base de datos.
-     */
+
     public Respuesta obtenerTodosLosCorreos() {
         try {
             List<Correos> correos = em.createQuery("SELECT c FROM Correos c", Correos.class).getResultList();
@@ -140,57 +122,45 @@ public class CorreosService {
         }
     }
 
-    // Método para revisar y enviar correos pendientes (con estado "P")
-    // Método para revisar y enviar un correo pendiente (con estado "P")
-      
-
-      
-    @Schedule(hour = "*", minute = "*/0.5", persistent = false)  // Ejecuta el método cada minuto
+    @Schedule(hour = "*", minute = "*/0.5", persistent = false) 
 public void enviarUnCorreoPendiente() {
     try {
-        // Obtener el parámetro de correos por hora desde la base de datos
         Respuesta parametros = parametroService.getParametros(); 
         if (!parametros.getEstado()) {
             LOG.log(Level.SEVERE, "Error obteniendo parámetros de configuración.");
-            return;  // Terminar si hay un error al obtener los parámetros
+            return; 
         }
         
         ParametrosDTO parametroDTO = (ParametrosDTO) parametros.getResultado("Parametros");
-        int correosPorHora = (int) parametroDTO.getParTimeout();  // Obtener el valor de PAR_TIMEOUT
+        int correosPorHora = (int) parametroDTO.getParTimeout();
 
         if (correosPorHora <= 0) {
             LOG.log(Level.SEVERE, "El valor de correos por hora no es válido.");
             return;
         }
-
-        // Calcular cuántos minutos deben pasar entre cada correo
-        int intervaloEntreCorreos = 60 / correosPorHora;  // Minutos entre correos
+        
+        int intervaloEntreCorreos = 60 / correosPorHora;
         LOG.log(Level.INFO, "Se enviará 1 correo cada {0} minutos.", intervaloEntreCorreos);
 
-        // Seleccionar el primer correo pendiente (uno solo)
         Correos correoPendiente = em.createQuery("SELECT c FROM Correos c WHERE c.corEstado = 'P'", Correos.class)
-                                    .setMaxResults(1)  // Limitar la consulta a 1 resultado
+                                    .setMaxResults(1) 
                                     .getSingleResult();
 
         if (correoPendiente != null) {
-            // Usar la plantilla HTML del correo pendiente
             String contenidoHtml = correoPendiente.getCorResultado();
             String destinatario = correoPendiente.getCorDestinatario();
             String asunto = correoPendiente.getCorAsunto();
 
-            // Enviar el correo
             String resultadoEnvio = emailService.enviarCorreo(destinatario, asunto, contenidoHtml);
 
-            // Si se envía correctamente, actualizar el estado
             if (resultadoEnvio.contains("exitosamente")) {
-                correoPendiente.setCorEstado("E");  // Cambiar estado a "Enviado"
-                em.merge(correoPendiente);  // Actualizar en la base de datos
-                em.flush();  // Confirmar los cambios
+                correoPendiente.setCorEstado("E"); 
+                em.merge(correoPendiente);  
+                em.flush();
             }
         }
-
     } catch (NoResultException ex) {
-        // No hay correos pendientes
+
         LOG.log(Level.INFO, "No hay correos pendientes por enviar.");
     } catch (Exception ex) {
         LOG.log(Level.SEVERE, "Error enviando el correo pendiente.", ex);

@@ -23,9 +23,6 @@ public class VariablesController {
     @EJB
     private VariablesService variablesService;
 
-    /**
-     * Obtener una variable por ID
-     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,9 +47,7 @@ public class VariablesController {
         }
     }
 
-    /**
-     * Guardar una variable
-     */
+
     @POST
     @Path("/guardar")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -74,9 +69,7 @@ public class VariablesController {
         }
     }
 
-    /**
-     * Obtener todas las variables asociadas a una notificación por ID de notificación
-     */
+
     @GET
     @Path("/notificacion/{notId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -100,9 +93,6 @@ public class VariablesController {
         }
     }
 
-    /**
-     * Eliminar una variable por ID
-     */
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)

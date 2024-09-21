@@ -6,9 +6,6 @@ import jakarta.json.bind.annotation.JsonbTransient;
 
 import java.io.Serializable;
 
-/**
- * DTO para la entidad Variables.
- */
 @JsonbPropertyOrder({
         "varId", "varNombre", "tipo", "varValor", "varVersion", "varNotId"
 })
@@ -40,7 +37,6 @@ public class VariablesDTO implements Serializable {
       
     }
 
-    // Getters y Setters
     public Long getVarId() {
         return varId;
     }

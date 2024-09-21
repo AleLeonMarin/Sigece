@@ -23,12 +23,7 @@ public class CorreosController {
     @EJB
     private CorreosService correosService;
 
-    /**
-     * Endpoint para guardar un correo en la base de datos sin enviarlo (estado "P").
-     * 
-     * @param correosDto Objeto con la información del correo a guardar.
-     * @return Respuesta con el estado de la operación.
-     */
+
     @POST
     @Path("/guardar")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -53,12 +48,6 @@ public class CorreosController {
         }
     }
 
-    /**
-     * Endpoint para obtener un correo por su ID.
-     * 
-     * @param id ID del correo.
-     * @return Respuesta con el correo encontrado o error.
-     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -83,12 +72,7 @@ public class CorreosController {
         }
     }
 
-    /**
-     * Endpoint para revisar y enviar correos pendientes en base a la parametrización.
-     * Este método será invocado periódicamente por un servicio del lado del servidor.
-     * 
-     * @return Respuesta con el estado de los correos enviados.
-     */
+
     @POST
     @Path("/enviarPendientes")
     @Produces(MediaType.APPLICATION_JSON)

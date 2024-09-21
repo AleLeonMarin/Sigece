@@ -119,16 +119,13 @@ public Response eliminarChat(@PathParam("id") Long id) {
         Respuesta respuesta = chatsService.eliminarChat(id);
         
         if (respuesta.getEstado()) {
-            // Si el chat fue eliminado correctamente, devolvemos el código 200
             return Response.ok().build();
         } else {
-            // Si el chat no fue encontrado o ocurrió un error
             return Response.status(respuesta.getCodigoRespuesta().getValue())
                            .entity(respuesta.getMensaje())
                            .build();
         }
     } catch (Exception ex) {
-        // Capturamos cualquier excepción inesperada
         LOG.log(Level.SEVERE, "Error eliminando el chat", ex);
         return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue())
                        .entity("Error eliminando el chat: " + ex.getMessage())

@@ -44,7 +44,7 @@ public class EmailService {
 
             // Crear la sesión de correo
             Session session = Session.getInstance(props);
-            session.setDebug(true);  // modo debug para obtener más detalles en los logs
+            session.setDebug(true);
 
             // Crear el mensaje de correo
             MimeMessage mensaje = new MimeMessage(session);
@@ -76,7 +76,7 @@ public class EmailService {
        
             Parametros parametros = obtenerParametrosCorreo();
 
-            // Tiempo de espera configurado en la base de datos (en milisegundos)
+   
             long tiempoDeEspera = parametros.getParTimeout(); 
 
             // Esperar el tiempo configurado antes de enviar el correo
@@ -127,16 +127,16 @@ public class EmailService {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
-        // Configuraciones de tiempo de espera (opcional)
-        props.put("mail.smtp.connectiontimeout", "10000"); // Tiempo de espera de conexión (10 segundos)
-        props.put("mail.smtp.timeout", "10000"); // Tiempo de espera para el envío de datos (10 segundos)
+
+        props.put("mail.smtp.connectiontimeout", "10000"); 
+        props.put("mail.smtp.timeout", "10000"); 
 
         String correoRemitente = parametros.getParCorreo();
         String passwordRemitente = parametros.getParClave();
 
         Session session = Session.getInstance(props);
-        session.setDebug(true); // Habilitar logs para debug
-        // Enviar cada correo en la lista
+        session.setDebug(true); 
+
         for (CorreosDTO correoDto : correosList) {
             try {
                 MimeMessage mensaje = new MimeMessage(session);
@@ -145,17 +145,16 @@ public class EmailService {
                 mensaje.setSubject(correoDto.getCorAsunto());
                 mensaje.setText(correoDto.getCorResultado(), "UTF-8", "html");
                 
-                // Conectar y enviar el correo
+  
                 Transport transport = session.getTransport("smtp");
                 transport.connect(correoRemitente, passwordRemitente);
                 transport.sendMessage(mensaje, mensaje.getAllRecipients());
                 transport.close();
                 
-                // Marcar el correo como enviado si es necesario
-                correoDto.setCorEstado("E"); // Estado enviado
+                correoDto.setCorEstado("E");
             } catch (MessagingException e) {
                 LOG.severe("Error al enviar el correo a: " + correoDto.getCorDestinatario() + " - " + e.getMessage());
-                correoDto.setCorEstado("F"); // Estado de fallo en el envío
+                correoDto.setCorEstado("F"); 
             }
         }
         return "Todos los correos fueron procesados. Resultados:\n" +

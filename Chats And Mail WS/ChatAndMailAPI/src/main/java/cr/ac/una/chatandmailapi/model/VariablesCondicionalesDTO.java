@@ -5,9 +5,6 @@ import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
 import java.io.Serializable;
 
-/**
- * DTO para la entidad VariablesCondicionales.
- */
 @JsonbPropertyOrder({
         "vconId", "vcondValor", "vcondResultado", "vconVersion", "vconVarId"
 })

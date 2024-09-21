@@ -5,11 +5,9 @@
 package cr.ac.una.chatandmailapi.controller;
 
 import cr.ac.una.chatandmailapi.model.MensajesDTO;
-import cr.ac.una.chatandmailapi.service.ChatsService;
 import cr.ac.una.chatandmailapi.service.MensajesService;
 import cr.ac.una.chatandmailapi.util.CodigoRespuesta;
 import cr.ac.una.chatandmailapi.util.Respuesta;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;

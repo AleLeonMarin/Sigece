@@ -87,11 +87,7 @@ public class MensajesService {
     }
 }
 
-
    
-    
-
-    // Enviar mensajes a un chat
     public Respuesta enviarMensajes(List<MensajesDTO> mensajesDtoList) {
         try {
             List<Mensajes> mensajes = new ArrayList<>();

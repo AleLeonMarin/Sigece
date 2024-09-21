@@ -3,9 +3,7 @@ package cr.ac.una.chatandmailapi.model;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * DTO para la entidad Mensajes.
- */
+
 public class MensajesDTO implements Serializable {
 
     private Long smsId;
@@ -26,7 +24,6 @@ public class MensajesDTO implements Serializable {
         this.emisorId = mensaje.getSmsUsuIdEmisor(); 
     }
 
-    // Getters y Setters
     public Long getSmsId() {
         return smsId;
     }
@@ -75,7 +72,6 @@ public class MensajesDTO implements Serializable {
         this.emisorId = emisorId;
     }
 
-    // hashCode, equals, toString
 
     @Override
     public int hashCode() {

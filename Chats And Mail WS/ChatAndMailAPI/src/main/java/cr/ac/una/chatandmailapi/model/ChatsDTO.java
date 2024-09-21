@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * DTO para la entidad Chats.
- */
+
 public class ChatsDTO implements Serializable {
 
     private Long chtId;
