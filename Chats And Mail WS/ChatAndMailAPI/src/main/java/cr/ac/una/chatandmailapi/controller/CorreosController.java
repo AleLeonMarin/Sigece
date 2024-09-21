@@ -96,4 +96,86 @@ public class CorreosController {
         return null;
     }
     
+  
+      @GET
+    @Path("/obtenerTodos")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Obtener todos los correos", description = "Obtiene todos los correos de la base de datos.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Correos obtenidos exitosamente"),
+        @ApiResponse(responseCode = "500", description = "Error al obtener los correos")
+    })
+    public Response obtenerTodosLosCorreos() {
+        try {
+            Respuesta respuesta = correosService.obtenerTodosLosCorreos();
+            if (!respuesta.getEstado()) {
+                return Response.status(respuesta.getCodigoRespuesta().getValue())
+                        .entity(respuesta.getMensaje())
+                        .build();
+            }
+            return Response.ok(respuesta.getResultado("Correos")).build();
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Error obteniendo los correos", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Error obteniendo los correos: " + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+    
+    
+        @DELETE
+    @Path("/eliminar/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Eliminar un correo", description = "Elimina un correo por su ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Correo eliminado exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Correo no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error al eliminar el correo")
+    })
+    public Response eliminarCorreo(@PathParam("id") Long id) {
+        try {
+            Respuesta respuesta = correosService.eliminarCorreo(id);
+            if (!respuesta.getEstado()) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(respuesta.getMensaje())
+                        .build();
+            }
+            return Response.ok("{\"mensaje\": \"Correo eliminado correctamente.\"}").build();
+        } catch (Exception e) {
+            Logger.getLogger(CorreosController.class.getName()).log(Level.SEVERE, "Error eliminando el correo", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Error eliminando el correo: " + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+    
+    @POST
+@Path("/enviarAhora")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+@Operation(summary = "Enviar un correo de inmediato", description = "Envía un correo inmediatamente sin el timeout.")
+@ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Correo enviado exitosamente"),
+    @ApiResponse(responseCode = "500", description = "Error al enviar el correo")
+})
+    
+public Response enviarCorreoAhora(CorreosDTO correoDto) {
+    try {
+        Respuesta respuesta = correosService.enviarCorreoAhora(correoDto);
+
+        if (!respuesta.getEstado()) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(respuesta.getMensaje())
+                    .build();
+        }
+
+        return Response.ok().build(); // Envío exitoso
+    } catch (Exception e) {
+        Logger.getLogger(CorreosController.class.getName()).log(Level.SEVERE, "Error enviando el correo de inmediato", e);
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("{\"error\": \"Error enviando el correo de inmediato: " + e.getMessage() + "\"}")
+                .build();
+    }
+}
+    
 }

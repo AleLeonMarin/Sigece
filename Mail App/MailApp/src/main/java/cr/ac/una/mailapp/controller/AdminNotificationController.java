@@ -205,7 +205,7 @@ public class AdminNotificationController extends Controller implements Initializ
             List<NotificacionDTO> notificaciones = (List<NotificacionDTO>) respuesta.getResultado("Notificaciones");
             tbvProcesosNotificacion.getItems().clear();
             tbvProcesosNotificacion.getItems().addAll(notificaciones);
-            tbvVariables.getItems().clear(); // Limpiar la tabla de variables
+            tbvVariables.getItems().clear();
         } else {
             mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar las notificaciones: " + respuesta.getMensaje());
         }
@@ -325,8 +325,6 @@ public class AdminNotificationController extends Controller implements Initializ
     }
 
 
-
-
     @FXML
     void onActionBtnDeleteVar(ActionEvent event) {
         if (variableSeleccionada != null) {
@@ -381,10 +379,9 @@ public class AdminNotificationController extends Controller implements Initializ
         });
     }
 
-
     private void insertarVariableEnHTML(String variable) {
         String currentHTML = plantillaCode.getText();
-        int cursorPosition = plantillaCode.getCaretPosition(); // Obtener la posición actual del cursor
+        int cursorPosition = plantillaCode.getCaretPosition(); // Obtener la posicion actual del cursor
 
         String updatedHTML = currentHTML.substring(0, cursorPosition) + variable + currentHTML.substring(cursorPosition);
 

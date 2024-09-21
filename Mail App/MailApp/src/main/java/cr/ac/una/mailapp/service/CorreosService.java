@@ -68,4 +68,58 @@ public class CorreosService {
             return new Respuesta(false, "Error enviando correos pendientes.", "enviarCorreosPendientes " + ex.getMessage());
         }
     }
+
+    public Respuesta obtenerTodosLosCorreos() {
+        try {
+            Request request = new Request("correos/obtenerTodos");
+            request.get();
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            List<CorreosDTO> correos = (List<CorreosDTO>) request.readEntity(new GenericType<List<CorreosDTO>>() {});
+            return new Respuesta(true, "", "", "Correos", correos);
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error obteniendo todos los correos.", ex);
+            return new Respuesta(false, "Error obteniendo todos los correos.", "obtenerTodosLosCorreos " + ex.getMessage());
+        }
+    }
+
+    public Respuesta eliminarCorreo(Long id) {
+        try {
+            Request request = new Request("correos/eliminar/" + id);
+            request.delete();
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            return new Respuesta(true, "Correo eliminado correctamente.", "");
+
+        } catch (Exception ex) {
+            Logger.getLogger(CorreosService.class.getName()).log(Level.SEVERE, "Error eliminando el correo.", ex);
+            return new Respuesta(false, "Error eliminando el correo.", "eliminarCorreo " + ex.getMessage());
+        }
+    }
+
+
+    public Respuesta enviarCorreoAhora(CorreosDTO correoDto) {
+        try {
+            Request request = new Request("correos/enviarAhora");
+            request.post(correoDto);
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            return new Respuesta(true, "", "");
+        } catch (Exception ex) {
+            Logger.getLogger(CorreosService.class.getName()).log(Level.SEVERE, "Error enviando el correo inmediatamente.", ex);
+            return new Respuesta(false, "Error enviando el correo inmediatamente.", "enviarCorreoAhora " + ex.getMessage());
+        }
+    }
+
+
 }

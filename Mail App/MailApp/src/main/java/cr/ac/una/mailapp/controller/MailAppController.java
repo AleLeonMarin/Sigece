@@ -83,6 +83,8 @@ public class MailAppController extends Controller implements Initializable {
     @FXML
     void onBtnMailBox(ActionEvent event) {
 
+        FlowController.getInstance().goView("BuzonView");
+
     }
 
 

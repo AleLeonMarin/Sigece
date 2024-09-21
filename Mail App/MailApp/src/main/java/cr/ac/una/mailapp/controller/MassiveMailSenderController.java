@@ -9,6 +9,7 @@ import cr.ac.una.mailapp.util.AppContext;
 import cr.ac.una.mailapp.util.FlowController;
 import cr.ac.una.mailapp.util.Mensaje;
 import cr.ac.una.mailapp.util.Respuesta;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,7 +33,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MassiveMailSenderController extends Controller implements Initializable {
@@ -53,36 +53,32 @@ public class MassiveMailSenderController extends Controller implements Initializ
     private TableColumn<CorreosDTO, String> tbcEstado, tbcDestinatario, tbcPlantilla;
 
     @FXML
-    private TableView<NotificacionDTO> tbvNotificationProcess; // Tabla para mostrar las notificaciones
+    private TableView<NotificacionDTO> tbvNotificationProcess;
 
     @FXML
-    private TableColumn<NotificacionDTO, String> tbcNotifications; // Columna que mostrará los nombres de las notificaciones
+    private TableColumn<NotificacionDTO, String> tbcNotifications;
 
     private NotificacionService notificacionService = new NotificacionService();
     private CorreosService correosService = new CorreosService();
     private ObservableList<CorreosDTO> correosGenerados = FXCollections.observableArrayList();
-    private ObservableList<NotificacionDTO> notificaciones = FXCollections.observableArrayList(); // Lista de notificaciones
+    private ObservableList<NotificacionDTO> notificaciones = FXCollections.observableArrayList();
     private NotificacionDTO notificacionSeleccionada;
+    private CorreosDTO correoSeleccionado;
 
     private Mensaje mensaje = new Mensaje();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicializar las columnas de la tabla
         tbcNotifications.setCellValueFactory(new PropertyValueFactory<>("notNombre"));
 
         cargarNotificaciones();
         configurarSeleccionNotificacion();
+        configurarSeleccionCorreo();
+
 
         tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("corDestinatario"));
         tbcEstado.setCellValueFactory(new PropertyValueFactory<>("corEstado"));
         tbcPlantilla.setCellValueFactory(new PropertyValueFactory<>("corResultado"));
-
-        tbvCorreoGenerados.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                cargarPlantillaFinal(newValue);
-            }
-        });
     }
 
     @Override
@@ -91,7 +87,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
     }
 
     private void cargarNotificaciones() {
-        // Obtener notificaciones del servicio
         Respuesta respuesta = notificacionService.obtenerNotificaciones();
         if (respuesta.getEstado()) {
             List<NotificacionDTO> listaNotificaciones = (List<NotificacionDTO>) respuesta.getResultado("Notificaciones");
@@ -105,8 +100,17 @@ public class MassiveMailSenderController extends Controller implements Initializ
     private void configurarSeleccionNotificacion() {
         tbvNotificationProcess.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                notificacionSeleccionada = newValue; ;
-                cargarPlantillaHTML(newValue); ;
+                notificacionSeleccionada = newValue;
+                cargarPlantillaHTML(newValue);
+            }
+        });
+    }
+
+    private void configurarSeleccionCorreo() {
+        tbvCorreoGenerados.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                correoSeleccionado = newValue;
+                cargarPlantillaFinal(newValue);
             }
         });
     }
@@ -163,9 +167,8 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     @FXML
     void onActionBtnSend(ActionEvent event) {
-        // Persistir los correos sin enviarlos, el WS será el encargado de enviarlos según parametrización
         correosGenerados.forEach(correo -> {
-            Respuesta respuesta = correosService.guardarCorreo(correo); // Persistir el correo en la BD
+            Respuesta respuesta = correosService.guardarCorreo(correo);
             if (!respuesta.getEstado()) {
                 mensaje.show(Alert.AlertType.ERROR, "Error", "Error al persistir correo de: " + correo.getCorDestinatario());
             }
@@ -175,27 +178,11 @@ public class MassiveMailSenderController extends Controller implements Initializ
         mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a persistir correctamente.");
     }
 
-    @FXML
-    void onActionBtnEnviarCorreos(ActionEvent event) {
-        // Enviar los correos pendientes
-        Respuesta respuesta = correosService.enviarCorreosPendientes();
-        if (respuesta.getEstado()) {
-            List<CorreosDTO> correosEnviados = (List<CorreosDTO>) respuesta.getResultado("Correos");
-            correosGenerados.setAll(correosEnviados); // Actualizar la lista de correos generados
-            tbvCorreoGenerados.refresh(); // Actualizar la tabla en la UI
-            mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados correctamente.");
-        } else {
-            mensaje.show(Alert.AlertType.ERROR, "Error", "Error al enviar correos: " + respuesta.getMensaje());
-        }
-    }
-
     private String generarContenidoConVariables(Row row) {
         String plantillaHTML = notificacionSeleccionada.getNotPlantilla();
 
-
         Sheet sheet = row.getSheet();
         Row headerRow = sheet.getRow(0);
-
 
         List<VariablesDTO> variables = notificacionSeleccionada.getSisVariablesList();
 
@@ -236,7 +223,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
     private String buscarValorPorDefecto(String nombreVariable, List<VariablesDTO> variables) {
         for (VariablesDTO variable : variables) {
             if (variable.getVarNombre().equals(nombreVariable)) {
-                return variable.getVarValor(); // Retornar el valor por defecto
+                return variable.getVarValor();
             }
         }
         return "Valor por defecto";
@@ -244,19 +231,15 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     @FXML
     void onActionBtnDowload(ActionEvent event) {
-
         if (notificacionSeleccionada == null) {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación.");
             return;
         }
 
-
         List<VariablesDTO> variables = notificacionSeleccionada.getSisVariablesList();
 
-        // Crear archivo Excel
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Plantilla Notificación");
-
 
         Row headerRow = sheet.createRow(0);
         int colIndex = 0;
