@@ -32,7 +32,6 @@ public class AdminParametersController extends Controller implements Initializab
     @FXML
     private AnchorPane root;
 
-    // Campos para los parámetros
     @FXML
     private TextField txtCorreo;
     @FXML
@@ -89,7 +88,6 @@ public class AdminParametersController extends Controller implements Initializab
     }
 
     private void cargarParametros() {
-        // Lógica para cargar los parámetros existentes desde el servicio
         Respuesta respuesta = parametrosService.getParametros();
         if (respuesta.getEstado()) {
             ParametrosDTO parametrosDTO = (ParametrosDTO) respuesta.getResultado("Parametros");

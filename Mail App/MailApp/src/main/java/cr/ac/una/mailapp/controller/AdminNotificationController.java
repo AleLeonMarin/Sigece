@@ -277,7 +277,6 @@ public class AdminNotificationController extends Controller implements Initializ
             return;
         }
 
-        // Validación para variables condicionales que no deben tener valor
         if (txtVarTipo.getValue().equals("C") && !txtVarValor.getText().isEmpty()) {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Las variables condicionales no deben tener contenido en el campo de valor.");
             return;

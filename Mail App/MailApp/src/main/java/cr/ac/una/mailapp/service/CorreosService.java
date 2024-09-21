@@ -13,59 +13,59 @@ public class CorreosService {
 
     private static final Logger LOG = Logger.getLogger(CorreosService.class.getName());
 
-    public Respuesta enviarCorreo(CorreosDTO correoDto) {
+
+    public Respuesta guardarCorreo(CorreosDTO correoDto) {
         try {
-            Request request = new Request("correos/enviar");
+            Request request = new Request("correos/guardar");
             request.post(correoDto);
 
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
             }
 
-            CorreosDTO correoEnviado = (CorreosDTO) request.readEntity(CorreosDTO.class);
-            return new Respuesta(true, "", "", "Correo", correoEnviado);
+            CorreosDTO correoGuardado = (CorreosDTO) request.readEntity(CorreosDTO.class);
+            return new Respuesta(true, "", "", "Correo", correoGuardado);
 
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error enviando el correo.", ex);
-            return new Respuesta(false, "Error enviando el correo.", "enviarCorreo " + ex.getMessage());
+            LOG.log(Level.SEVERE, "Error guardando el correo.", ex);
+            return new Respuesta(false, "Error guardando el correo.", "guardarCorreo " + ex.getMessage());
         }
     }
 
-
-    public Respuesta enviarCorreoConEspera(CorreosDTO correoDto) {
+    public Respuesta getCorreo(Long id) {
         try {
-            Request request = new Request("correos/enviarConEspera");
-            request.post(correoDto);
-
-            if (request.isError()) {
-                return new Respuesta(false, request.getError(), "");
-            }
-
-            CorreosDTO correoEnviado = (CorreosDTO) request.readEntity(CorreosDTO.class);
-            return new Respuesta(true, "", "", "Correo", correoEnviado);
-
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error enviando el correo con espera.", ex);
-            return new Respuesta(false, "Error enviando el correo con espera.", "enviarCorreoConEspera " + ex.getMessage());
-        }
-    }
-
-
-    public Respuesta obtenerCorreos() {
-        try {
-            Request request = new Request("correos/todos");
+            Request request = new Request("correos/" + id);
             request.get();
 
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
             }
 
-            List<CorreosDTO> correosList = (List<CorreosDTO>) request.readEntity(new GenericType<List<CorreosDTO>>() {});
-            return new Respuesta(true, "", "", "Correos", correosList);
+            CorreosDTO correo = (CorreosDTO) request.readEntity(CorreosDTO.class);
+            return new Respuesta(true, "", "", "Correo", correo);
 
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Error obteniendo los correos.", ex);
-            return new Respuesta(false, "Error obteniendo los correos.", "obtenerCorreos " + ex.getMessage());
+            LOG.log(Level.SEVERE, "Error obteniendo el correo.", ex);
+            return new Respuesta(false, "Error obteniendo el correo.", "getCorreo " + ex.getMessage());
+        }
+    }
+
+
+    public Respuesta enviarCorreosPendientes() {
+        try {
+            Request request = new Request("correos/enviarPendientes");
+            request.post(null);
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            List<CorreosDTO> correosEnviados = (List<CorreosDTO>) request.readEntity(new GenericType<List<CorreosDTO>>() {});
+            return new Respuesta(true, "", "", "Correos", correosEnviados);
+
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error enviando correos pendientes.", ex);
+            return new Respuesta(false, "Error enviando correos pendientes.", "enviarCorreosPendientes " + ex.getMessage());
         }
     }
 }

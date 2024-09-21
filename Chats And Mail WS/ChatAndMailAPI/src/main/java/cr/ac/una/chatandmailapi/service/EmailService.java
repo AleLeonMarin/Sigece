@@ -1,5 +1,6 @@
 package cr.ac.una.chatandmailapi.service;
 
+import cr.ac.una.chatandmailapi.model.CorreosDTO;
 import cr.ac.una.chatandmailapi.model.Parametros;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
@@ -11,8 +12,10 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
@@ -113,5 +116,53 @@ public class EmailService {
             return "Error: La espera fue interrumpida.";
         }
     }
+    
+    
+    public String enviarCorreos(List<CorreosDTO> correosList) {
+        Parametros parametros = obtenerParametrosCorreo();
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", parametros.getParServer());
+        props.put("mail.smtp.port", parametros.getParPuerto());
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        // Configuraciones de tiempo de espera (opcional)
+        props.put("mail.smtp.connectiontimeout", "10000"); // Tiempo de espera de conexión (10 segundos)
+        props.put("mail.smtp.timeout", "10000"); // Tiempo de espera para el envío de datos (10 segundos)
+
+        String correoRemitente = parametros.getParCorreo();
+        String passwordRemitente = parametros.getParClave();
+
+        Session session = Session.getInstance(props);
+        session.setDebug(true); // Habilitar logs para debug
+        // Enviar cada correo en la lista
+        for (CorreosDTO correoDto : correosList) {
+            try {
+                MimeMessage mensaje = new MimeMessage(session);
+                mensaje.setFrom(new InternetAddress(correoRemitente));
+                mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(correoDto.getCorDestinatario()));
+                mensaje.setSubject(correoDto.getCorAsunto());
+                mensaje.setText(correoDto.getCorResultado(), "UTF-8", "html");
+                
+                // Conectar y enviar el correo
+                Transport transport = session.getTransport("smtp");
+                transport.connect(correoRemitente, passwordRemitente);
+                transport.sendMessage(mensaje, mensaje.getAllRecipients());
+                transport.close();
+                
+                // Marcar el correo como enviado si es necesario
+                correoDto.setCorEstado("E"); // Estado enviado
+            } catch (MessagingException e) {
+                LOG.severe("Error al enviar el correo a: " + correoDto.getCorDestinatario() + " - " + e.getMessage());
+                correoDto.setCorEstado("F"); // Estado de fallo en el envío
+            }
+        }
+        return "Todos los correos fueron procesados. Resultados:\n" +
+                correosList.stream()
+                        .map(c -> "Correo a: " + c.getCorDestinatario() + " - Estado: " + c.getCorEstado())
+                        .collect(Collectors.joining("\n"));
+    }
+
 }
 
