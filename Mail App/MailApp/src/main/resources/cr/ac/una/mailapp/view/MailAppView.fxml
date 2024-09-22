@@ -22,7 +22,7 @@
                                         <Insets top="10.0" />
                                     </VBox.margin>
                                     <image>
-                                        <Image url="@../resources/profileBlank.png" />
+                                        <Image url="@../resources/Logo.png" />
                                     </image>
                                 </ImageView>
                                 <MFXButton fx:id="btnAdminParameters" onAction="#onActionBtnAdminParameters" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Administración de Parametros" textAlignment="JUSTIFY">
@@ -30,9 +30,10 @@
                                         <Insets top="35.0" />
                                     </VBox.margin>
                                 </MFXButton>
-                                <MFXButton fx:id="btnAdminProcess" ellipsisString="" onAction="#onActionBtnAdminProcess" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Administración de Procesos de Notificación" textOverrun="CLIP" />
+                                <MFXButton fx:id="btnAdminProcess" ellipsisString="" onAction="#onActionBtnAdminProcess" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Procesos de Notificación" textOverrun="CLIP" />
                                 <MFXButton fx:id="btnMailBox" onAction="#onBtnMailBox" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Buzón de Correos" />
                         <MFXButton fx:id="btnMassiveMails" onAction="#onActionBtnMassiveMails" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Generación de Correos Masivos" />
+                        <MFXButton fx:id="btnNewMail" onAction="#onActionBtnNewMail" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Envío de Correos" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <MFXButton fx:id="btnLogOut" buttonType="RAISED" prefHeight="48.0" prefWidth="46.0" styleClass="image-LogOut-button" text="‎ ">

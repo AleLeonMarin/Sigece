@@ -29,13 +29,12 @@ public class CorreosService {
 
     @PersistenceContext(unitName = "SigeceUnaWsPU")
     private EntityManager em;
-    
+
     @EJB
     private EmailService emailService;
     @EJB
     private ParametrosService parametroService;
 
-    
     public Respuesta guardarCorreo(CorreosDTO correosDto) {
         try {
             Correos correo;
@@ -49,7 +48,7 @@ public class CorreosService {
                 correo = em.merge(correo);
             } else {
                 correo = new Correos(correosDto);
-                
+
                 if (correosDto.getCorNotId() != null && correosDto.getCorNotId().getNotId() != null) {
                     Notificacion notificacion = em.find(Notificacion.class, correosDto.getCorNotId().getNotId());
                     if (notificacion != null) {
@@ -58,18 +57,18 @@ public class CorreosService {
                 }
                 em.persist(correo);
             }
-            em.flush(); 
+            em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Correo", new CorreosDTO(correo));
         } catch (ConstraintViolationException ex) {
-            ex.getConstraintViolations().forEach(violation -> 
-                LOG.severe("Error de validación: " + violation.getPropertyPath() + " " + violation.getMessage()));
+            ex.getConstraintViolations().forEach(violation
+                    -> LOG.severe("Error de validación: " + violation.getPropertyPath() + " " + violation.getMessage()));
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al guardar el correo. Detalles: " + ex.getMessage(), "guardarCorreo " + ex.getMessage());
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al guardar el correo.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al guardar el correo.", "guardarCorreo " + ex.getMessage());
         }
     }
-    
+
     public Respuesta enviarCorreo(CorreosDTO correosDto) {
         try {
             String resultadoEnvio = emailService.enviarCorreoConEspera(correosDto.getCorDestinatario(), correosDto.getCorAsunto(), correosDto.getCorResultado());
@@ -96,19 +95,18 @@ public class CorreosService {
         }
     }
 
-
     public Respuesta obtenerTodosLosCorreos() {
         try {
-            List<Correos> correos = em.createQuery("SELECT c FROM Correos c", Correos.class).getResultList();
-            List<CorreosDTO> correosDTOList = correos.stream().map(CorreosDTO::new).toList();
+            Query qrycorreos = em.createQuery("SELECT c FROM Correos c", Correos.class);
+            List<CorreosDTO> correosDTOList = qrycorreos.getResultList();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Correos", correosDTOList);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error al obtener los correos.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al obtener los correos.", "obtenerTodosLosCorreos " + ex.getMessage());
         }
     }
-    
-      public Respuesta persistirCorreo(CorreosDTO correosDto) {
+
+    public Respuesta persistirCorreo(CorreosDTO correosDto) {
         try {
             Correos correo = new Correos(correosDto);
             if (correosDto.getCorId() != null && correosDto.getCorId() > 0) {
@@ -124,57 +122,56 @@ public class CorreosService {
         }
     }
 
-  @Schedule(hour = "*", minute = "*", second = "30", persistent = false)
-public void enviarUnCorreoPendiente() {
-    try {
-        Respuesta parametros = parametroService.getParametros(); 
-        if (!parametros.getEstado()) {
-            LOG.log(Level.SEVERE, "Error obteniendo parámetros de configuración.");
-            return; 
-        }
-        
-        ParametrosDTO parametroDTO = (ParametrosDTO) parametros.getResultado("Parametros");
-        int correosPorHora = (int) parametroDTO.getParTimeout();
-
-        if (correosPorHora <= 0) {
-            LOG.log(Level.SEVERE, "El valor de correos por hora no es válido.");
-            return;
-        }
-        
-        int intervaloEntreCorreos = (60 / correosPorHora) * 60 * 1000; 
-        LOG.log(Level.INFO, "Se enviará 1 correo cada {0} minutos.", (60 / correosPorHora));
-
-        Correos correoPendiente = em.createQuery("SELECT c FROM Correos c WHERE c.corEstado = 'P'", Correos.class)
-                                    .setMaxResults(1)
-                                    .getSingleResult();
-
-        if (correoPendiente != null) {
-            String contenidoHtml = correoPendiente.getCorResultado();
-            String destinatario = correoPendiente.getCorDestinatario();
-            String asunto = correoPendiente.getCorAsunto();
-
-            String resultadoEnvio = emailService.enviarCorreo(destinatario, asunto, contenidoHtml);
-
-            if (resultadoEnvio.contains("exitosamente")) {
-                correoPendiente.setCorEstado("E"); 
-                em.merge(correoPendiente);  
-                em.flush();
-
-                Thread.sleep(intervaloEntreCorreos-30000);
+    @Schedule(hour = "*", minute = "*", second = "30", persistent = false)
+    public void enviarUnCorreoPendiente() {
+        try {
+            Respuesta parametros = parametroService.getParametros();
+            if (!parametros.getEstado()) {
+                LOG.log(Level.SEVERE, "Error obteniendo parámetros de configuración.");
+                return;
             }
+
+            ParametrosDTO parametroDTO = (ParametrosDTO) parametros.getResultado("Parametros");
+            int correosPorHora = (int) parametroDTO.getParTimeout();
+
+            if (correosPorHora <= 0) {
+                LOG.log(Level.SEVERE, "El valor de correos por hora no es válido.");
+                return;
+            }
+
+            int intervaloEntreCorreos = (60 / correosPorHora) * 60 * 1000;
+            LOG.log(Level.INFO, "Se enviará 1 correo cada {0} minutos.", (60 / correosPorHora));
+
+            Correos correoPendiente = em.createQuery("SELECT c FROM Correos c WHERE c.corEstado = 'P'", Correos.class)
+                    .setMaxResults(1)
+                    .getSingleResult();
+
+            if (correoPendiente != null) {
+                String contenidoHtml = correoPendiente.getCorResultado();
+                String destinatario = correoPendiente.getCorDestinatario();
+                String asunto = correoPendiente.getCorAsunto();
+
+                String resultadoEnvio = emailService.enviarCorreo(destinatario, asunto, contenidoHtml);
+
+                if (resultadoEnvio.contains("exitosamente")) {
+                    correoPendiente.setCorEstado("E");
+                    em.merge(correoPendiente);
+                    em.flush();
+
+                    Thread.sleep(intervaloEntreCorreos - 30000);
+                }
+            }
+
+        } catch (NoResultException ex) {
+            LOG.log(Level.INFO, "No hay correos pendientes por enviar.");
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt(); // Restablecer el estado de interrupción
+            LOG.log(Level.SEVERE, "La tarea fue interrumpida.", ex);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error enviando el correo pendiente.", ex);
         }
 
-    } catch (NoResultException ex) {
-        LOG.log(Level.INFO, "No hay correos pendientes por enviar.");
-    } catch (InterruptedException ex) {
-        Thread.currentThread().interrupt(); // Restablecer el estado de interrupción
-        LOG.log(Level.SEVERE, "La tarea fue interrumpida.", ex);
-    } catch (Exception ex) {
-        LOG.log(Level.SEVERE, "Error enviando el correo pendiente.", ex);
     }
-    
-   
-}
 
     public Respuesta eliminarCorreo(Long id) {
         try {
@@ -191,35 +188,40 @@ public void enviarUnCorreoPendiente() {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error eliminando el correo.", "eliminarCorreo " + ex.getMessage());
         }
     }
-    
-    
-public Respuesta enviarCorreoAhora(CorreosDTO correoDto) {
-    try {
 
-        Correos correo = em.find(Correos.class, correoDto.getCorId());
+    public Respuesta enviarCorreoAhora(CorreosDTO correosDto) {
+        try {
+            Correos correo;
 
-        if (correo == null) {
-            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el correo a enviar.", "enviarCorreoAhora");
+            // Verificar si el correo ya existe en la base de datos
+            if (correosDto.getCorId() != null && correosDto.getCorId() > 0) {
+                correo = em.find(Correos.class, correosDto.getCorId());
+                if (correo == null) {
+                    return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el correo a enviar.", "enviarCorreoAhora");
+                }
+            } else {
+                // Si es un correo nuevo, lo creamos
+                correo = new Correos(correosDto);
+                em.persist(correo);  // Persistir el nuevo correo
+                em.flush();
+            }
+
+            // Enviar el correo
+            String resultadoEnvio = emailService.enviarCorreo(correo.getCorDestinatario(), correo.getCorAsunto(), correo.getCorResultado());
+
+            // Verificar si el correo fue enviado correctamente
+            if (resultadoEnvio.contains("exitosamente")) {
+                correo.setCorEstado("E"); // Cambiar el estado a 'Enviado'
+                em.merge(correo);  // Guardar los cambios en la base de datos
+                em.flush();
+
+                return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Correo", new CorreosDTO(correo));
+            } else {
+                return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al enviar el correo.", "enviarCorreoAhora");
+            }
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Error enviando el correo de inmediato.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error enviando el correo de inmediato.", "enviarCorreoAhora");
         }
-
- 
-        String resultadoEnvio = emailService.enviarCorreo(correo.getCorDestinatario(), correo.getCorAsunto(), correo.getCorResultado());
-
-        // Verificar si el correo fue enviado correctamente
-        if (resultadoEnvio.contains("exitosamente")) {
-            correo.setCorEstado("E");
-            em.merge(correo); 
-            em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Correo", new CorreosDTO(correo));
-        } else {
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al enviar el correo.", "enviarCorreoAhora");
-        }
-    } catch (Exception ex) {
-        Logger.getLogger(CorreosService.class.getName()).log(Level.SEVERE, "Error enviando el correo de inmediato.", ex);
-        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error enviando el correo de inmediato.", "enviarCorreoAhora");
     }
 }
-
-}
-
-     

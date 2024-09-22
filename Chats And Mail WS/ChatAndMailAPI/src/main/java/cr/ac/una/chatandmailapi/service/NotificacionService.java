@@ -57,10 +57,8 @@ public Respuesta guardarNotificacion(NotificacionDTO notificacionDto) {
             if (notificacion == null) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la notificación a modificar.", "guardarNotificacion NoResultException");
             }
-            // Actualizar la notificación existente con los valores del DTO
             notificacion.actualizar(notificacionDto);
 
-            // Convertir VariablesDTO a Variables y asignar la relación bidireccional
             List<Variables> listaVariables = new ArrayList<>();
             for (VariablesDTO varDto : notificacionDto.getSisVariablesList()) {
                 Variables variable = new Variables(varDto);  // Conversión DTO a entidad

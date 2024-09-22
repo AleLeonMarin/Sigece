@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -40,6 +41,9 @@ public class MailAppController extends Controller implements Initializable {
 
     @FXML
     private MFXButton btnMassiveMails;
+
+    @FXML
+    private Button btnNewMail;
 
     @FXML
     private ImageView imgViewUserPhotProf;
@@ -84,6 +88,13 @@ public class MailAppController extends Controller implements Initializable {
     void onBtnMailBox(ActionEvent event) {
 
         FlowController.getInstance().goView("BuzonView");
+
+    }
+
+
+    @FXML
+    void onActionBtnNewMail(ActionEvent event) {
+        FlowController.getInstance().goViewInWindowModal("EnvioCorreoView", this.getStage(), Boolean.FALSE);
 
     }
 

@@ -2,6 +2,10 @@
     -fx-background-color: #808080;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
 }
+.stack-personal-pane2 {
+    -fx-background-color: rgba(204, 204, 204, 0.37);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
 .stack-personal-pane {
     -fx-background-color: #f0f0f0;
     -fx-background-radius: 15;
@@ -85,6 +89,56 @@
     -fx-font-size: 14px;
     -fx-font-weight: normal;
 
+}
+
+.button-redStyle {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #b70204;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+
+}
+
+.button-blueStyle {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: #587abe;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-text-fill: white;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+
+}
+
+.button-blueStyle:hover, .button-blueStyle:pressed, .button-blueStyle:armed, .button-blueStyle:focused {
+    -fx-background-color: #0A1B42;
+    -fx-text-fill: white;
+}
+
+.button-redStyle:hover, .button-redStyle:pressed, .button-redStyle:armed, .button-redStyle:focused {
+    -fx-background-color: #0A1B42;
+    -fx-text-fill: white;
 }
 
 .button-SignIn:pressed, .button-SignIn:hover, .button-SignIn:armed, .button-SignIn:focused {
@@ -413,6 +467,43 @@
     -fx-background-color: transparent;
 }
 
+.image-newMail-button {
+    -fx-background-image: url("../resources/newMail.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.image-newMail-button:armed,
+.image-newMail-button:focused{
+    -fx-background-image: url("../resources/newMail.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0, 0, 2);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.image-newMail-button:pressed,
+.image-newMail-button:hover{
+    -fx-background-image: url("../resources/newMail2.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+}
 
 
 

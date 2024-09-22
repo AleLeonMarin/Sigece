@@ -102,6 +102,7 @@ public class AdminNotificationController extends Controller implements Initializ
     @FXML
     private Button btnMaximazeView;
 
+
     @FXML
     private WebView plantillaPreviewFinal;
 
@@ -397,5 +398,7 @@ public class AdminNotificationController extends Controller implements Initializ
         AppContext.getInstance().set("htmlContent", htmlContent);
         FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
     }
+
+
 
 }
