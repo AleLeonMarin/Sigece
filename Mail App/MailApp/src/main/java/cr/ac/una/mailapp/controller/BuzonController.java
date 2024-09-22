@@ -86,7 +86,7 @@ public class BuzonController extends Controller implements Initializable {
 
         cmbEstado.getItems().addAll("Enviados", "Por enviar", "Todos");
 
-        iniciarRefrescamiento();
+
     }
 
     private void configurarTabla() {
@@ -98,21 +98,6 @@ public class BuzonController extends Controller implements Initializable {
         tbvMails.setItems(correosList);
     }
 
-    private void iniciarRefrescamiento() {
-        Thread refrescarTablaThread = new Thread(() -> {
-            while (true) {
-                try {
-
-                    Thread.sleep(5000);
-                    Platform.runLater(this::actualizarCorreos);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        refrescarTablaThread.setDaemon(true);
-        refrescarTablaThread.start();
-    }
 
     private void actualizarCorreos() {
         Respuesta respuesta = correosService.obtenerTodosLosCorreos();
@@ -125,6 +110,7 @@ public class BuzonController extends Controller implements Initializable {
 
     @Override
     public void initialize() {
+        actualizarCorreos();
     }
 
 

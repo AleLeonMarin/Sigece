@@ -102,6 +102,14 @@ public class AdminNotificationController extends Controller implements Initializ
     @FXML
     private Button btnMaximazeView;
 
+    @FXML
+    private Tab tabConfigHTML;
+
+    @FXML
+    private Tab tabConfigVariables;
+
+    private ObservableList<VariablesDTO> variablesTemporales = FXCollections.observableArrayList();
+
 
     @FXML
     private WebView plantillaPreviewFinal;
@@ -132,11 +140,20 @@ public class AdminNotificationController extends Controller implements Initializ
 
         cargarNotificaciones();
 
+        btnSave.setDisable(true);
+        tabConfigHTML.setDisable(true);
+        tabConfigVariables.setDisable(true);
+        txtNombre.setDisable(true);
+
         tbvProcesosNotificacion.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 notificacionSeleccionada = newValue;
+                tabConfigHTML.setDisable(false);
+                tabConfigVariables.setDisable(false);
+                txtNombre.setDisable(false);
                 cargarPlantilla(newValue);
                 cargarVariables();
+                btnSave.setDisable(false);
             }
         });
 
@@ -154,7 +171,7 @@ public class AdminNotificationController extends Controller implements Initializ
             }
         });
 
-        ObservableList<String> opciones = FXCollections.observableArrayList("D", "C");
+        ObservableList<String> opciones = FXCollections.observableArrayList("Por defecto", "Condicional", null);
         txtVarTipo.setItems(opciones);
 
         plantillaCode.setOnKeyReleased(event -> updatePreview());
@@ -163,6 +180,7 @@ public class AdminNotificationController extends Controller implements Initializ
     @Override
     public void initialize() {
         cargarNotificaciones();
+
     }
 
     private void updatePreview() {
@@ -201,7 +219,6 @@ public class AdminNotificationController extends Controller implements Initializ
 
     private void cargarNotificaciones() {
         Respuesta respuesta = notificacionService.obtenerNotificaciones();
-
         if (respuesta.getEstado()) {
             List<NotificacionDTO> notificaciones = (List<NotificacionDTO>) respuesta.getResultado("Notificaciones");
             tbvProcesosNotificacion.getItems().clear();
@@ -214,6 +231,9 @@ public class AdminNotificationController extends Controller implements Initializ
 
     @FXML
     void onActionBtnDelete(ActionEvent event) {
+        btnSave.setDisable(true);
+        tabConfigHTML.setDisable(true);
+        tabConfigVariables.setDisable(true);
         if (notificacionSeleccionada != null) {
             boolean confirm = mensaje.showConfirmation("Eliminar Notificación", root.getScene().getWindow(), "¿Está seguro de eliminar esta notificación?");
             if (confirm) {
@@ -228,13 +248,25 @@ public class AdminNotificationController extends Controller implements Initializ
                 }
             }
         } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación para eliminar.");
+            limpiarFormulario();
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Su formulario para la creación de un proceso de notificación " +
+                    "ha sido limpiado. " +
+                    " Si desea eliminar una  existente notificación debe seleccionarla.");
         }
+
     }
 
     @FXML
     void onActionBtnNuevo(ActionEvent event) {
         limpiarFormulario();
+        limpiarFormularioVar();
+        tabConfigHTML.setDisable(false);
+        tabConfigVariables.setDisable(false);
+        txtNombre.setDisable(false);
+        txtNombre.requestFocus();
+        tbvVariables.getItems().clear();
+        tbvProcesosNotificacion.getSelectionModel().clearSelection();
+        btnSave.setDisable(false);
     }
 
     @FXML
@@ -244,21 +276,39 @@ public class AdminNotificationController extends Controller implements Initializ
             return;
         }
 
-        ObservableList<VariablesDTO> variablesList = tbvVariables.getItems();
         String htmlContent = plantillaCode.getText();
+        boolean allVariablesPresent = true;//Bandera
 
-        for (VariablesDTO variable : variablesList) {
-            String variableName = variable.getVarNombre();
-            if (!htmlContent.contains(variableName)) {
+        for (VariablesDTO variable : tbvVariables.getItems()) {
+            String variablePattern = "[" + variable.getVarNombre() + "]";
+            if (!htmlContent.contains(variablePattern)) {
                 mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable '" + variable.getVarNombre() + "' no está implementada en la plantilla HTML.");
-                return;
+                allVariablesPresent = false;
             }
+        }
+
+        if (!allVariablesPresent) {
+            return;
         }
 
         NotificacionDTO notificacion = notificacionSeleccionada != null ? notificacionSeleccionada : new NotificacionDTO();
         notificacion.setNotNombre(txtNombre.getText());
         notificacion.setNotPlantilla(htmlContent);
-        notificacion.setSisVariablesList(new ArrayList<>(variablesList));
+
+        if (notificacionSeleccionada == null) {
+            ArrayList<VariablesDTO> variables = new ArrayList<>(tbvVariables.getItems());
+            for (VariablesDTO variable : variables) {
+                if (variable.getTipo().equals("Por defecto")) {
+                    variable.setTipo("P");
+                } else if (variable.getTipo().equals("Condicional")) {
+                    variable.setTipo("C");
+                }
+            }
+            notificacion.setSisVariablesList(variables);
+        } else {
+            List<VariablesDTO> listaActualizada = new ArrayList<>(tbvVariables.getItems());
+            notificacion.setSisVariablesList(listaActualizada);
+        }
 
         Respuesta respuesta = notificacionService.guardarNotificacion(notificacion);
 
@@ -266,10 +316,12 @@ public class AdminNotificationController extends Controller implements Initializ
             mensaje.show(Alert.AlertType.INFORMATION, "Éxito", notificacionSeleccionada != null ? "Notificación actualizada correctamente." : "Notificación guardada correctamente.");
             cargarNotificaciones();
             limpiarFormulario();
+            variablesTemporales.clear();
         } else {
             mensaje.show(Alert.AlertType.ERROR, "Error", "Error al guardar la notificación: " + respuesta.getMensaje());
         }
     }
+
 
     @FXML
     void onActionBtnSaveVar(ActionEvent event) {
@@ -278,74 +330,77 @@ public class AdminNotificationController extends Controller implements Initializ
             return;
         }
 
-        if (txtVarTipo.getValue().equals("C") && !txtVarValor.getText().isEmpty()) {
+        if (txtVarTipo.getValue().equals("Condicional") && !txtVarValor.getText().isEmpty()) {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Las variables condicionales no deben tener contenido en el campo de valor.");
             return;
         }
 
-        VariablesDTO variableAEditar;
-
-
         if (variableSeleccionada != null) {
-            variableAEditar = variableSeleccionada;
-        } else {
-            variableAEditar = new VariablesDTO();
-        }
+            variableSeleccionada.setVarNombre(txtVarNombre.getText());
+            variableSeleccionada.setTipo(txtVarTipo.getValue());
 
+            if (!txtVarTipo.getValue().equals("Condicional")) {
+                variableSeleccionada.setVarValor(txtVarValor.getText());
+            } else {
+                variableSeleccionada.setVarValor("");
+            }
 
-        variableAEditar.setVarNombre(txtVarNombre.getText());
-        variableAEditar.setTipo(txtVarTipo.getValue());
+            tbvVariables.refresh();
+            tbvVariables2.refresh();
 
-        if (!txtVarTipo.getValue().equals("C")) {
-            variableAEditar.setVarValor(txtVarValor.getText());
-        } else {
-            variableAEditar.setVarValor("");
-        }
-
-        if (notificacionSeleccionada != null) {
-            variableAEditar.setVarNotId(notificacionSeleccionada);  // Relacionar con la notificación seleccionada
-        } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación válida.");
+            limpiarFormularioVar();
+            variableSeleccionada = null;
             return;
         }
 
-        if (variableSeleccionada == null) {
-            if (!tbvVariables.getItems().contains(variableAEditar)) {
-                tbvVariables.getItems().add(variableAEditar);
-            }
+        VariablesDTO nuevaVariable = new VariablesDTO();
+        nuevaVariable.setVarNombre(txtVarNombre.getText());
+        nuevaVariable.setTipo(txtVarTipo.getValue());
 
-            if (!tbvVariables2.getItems().contains(variableAEditar)) {
-                tbvVariables2.getItems().add(variableAEditar);
-            }
+        if (!txtVarTipo.getValue().equals("Condicional")) {
+            nuevaVariable.setVarValor(txtVarValor.getText());
         } else {
-            tbvVariables.refresh();
-            tbvVariables2.refresh();
+            nuevaVariable.setVarValor("");
         }
 
-        limpiarFormularioVar();
-    }
+        boolean variableYaExiste = tbvVariables.getItems().stream()
+                .anyMatch(var -> var.getVarNombre().equalsIgnoreCase(nuevaVariable.getVarNombre()));
 
+        if (!variableYaExiste) {
+            if (notificacionSeleccionada == null) {
+                variablesTemporales.add(nuevaVariable);
+                tbvVariables.setItems(variablesTemporales);
+                tbvVariables2.setItems(variablesTemporales);
+            } else {
+                nuevaVariable.setVarNotId(notificacionSeleccionada);
+                tbvVariables.getItems().add(nuevaVariable);
+                tbvVariables2.setItems(tbvVariables.getItems());
+            }
+        } else {
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable ya existe en la lista.");
+        }
+
+        tbvVariables.refresh();
+        tbvVariables2.refresh();
+
+        limpiarFormularioVar();
+        variableSeleccionada = null;
+    }
 
     @FXML
     void onActionBtnDeleteVar(ActionEvent event) {
-        if (variableSeleccionada != null) {
+        VariablesDTO variableToDelete = tbvVariables.getSelectionModel().getSelectedItem();
+        if (variableToDelete != null) {
             boolean confirm = mensaje.showConfirmation("Eliminar Variable", root.getScene().getWindow(), "¿Está seguro de eliminar esta variable?");
             if (confirm) {
-                Respuesta respuesta = variablesService.eliminarVariable(variableSeleccionada.getVarId());
-
-                if (respuesta.getEstado()) {
-                    mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Variable eliminada correctamente.");
-                    cargarVariables();
-                    limpiarFormularioVar();
-                } else {
-                    mensaje.show(Alert.AlertType.ERROR, "Error", "Error al eliminar la variable: " + respuesta.getMensaje());
-                }
+                tbvVariables.getItems().remove(variableToDelete);
+                tbvVariables2.getItems().remove(variableToDelete);
+                limpiarFormularioVar();
             }
         } else {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una variable para eliminar.");
         }
     }
-
     @FXML
     void onActionBtnNewVar(ActionEvent event) {
         txtVarNombre.requestFocus();
@@ -367,7 +422,6 @@ public class AdminNotificationController extends Controller implements Initializ
     }
 
     private void setupDoubleClickForVariables() {
-        // Hacer que las filas de tbvVariables2 respondan al doble clic
         tbvVariables2.setRowFactory(tv -> {
             TableRow<VariablesDTO> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -384,13 +438,12 @@ public class AdminNotificationController extends Controller implements Initializ
         String currentHTML = plantillaCode.getText();
         int cursorPosition = plantillaCode.getCaretPosition(); // Obtener la posicion actual del cursor
 
-        String updatedHTML = currentHTML.substring(0, cursorPosition) + variable + currentHTML.substring(cursorPosition);
+        String updatedHTML = currentHTML.substring(0, cursorPosition) + "["+variable+"]" + currentHTML.substring(cursorPosition);
 
         plantillaCode.setText(updatedHTML);
         plantillaCode.positionCaret(cursorPosition + variable.length());
         updatePreview();
     }
-
 
     @FXML
     void onActionBtnMax(ActionEvent event) {

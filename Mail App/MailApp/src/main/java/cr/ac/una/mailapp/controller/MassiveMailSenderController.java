@@ -129,7 +129,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     @FXML
     void onActionBtnUpload(ActionEvent event) {
-        // Cargar el archivo Excel
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Cargar archivo Excel");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos Excel", "*.xlsx"));
@@ -140,23 +139,36 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 Workbook workbook = WorkbookFactory.create(fis);
                 Sheet sheet = workbook.getSheetAt(0);
 
-                correosGenerados.clear(); // Limpiar correos previos
+                correosGenerados.clear();
 
                 for (Row row : sheet) {
-                    if (row.getRowNum() == 0) continue; // Saltar encabezado
+                    if (row.getRowNum() == 0) continue;
 
                     CorreosDTO correoDto = new CorreosDTO();
-                    correoDto.setCorDestinatario(row.getCell(2).getStringCellValue()); // El correo del destinatario está en la columna 2
-                    correoDto.setCorAsunto(notificacionSeleccionada.getNotNombre());  // Asunto basado en la notificación
-                    correoDto.setCorNotId(notificacionSeleccionada); // Asociar notificación
+
+                    Cell correoCell = row.getCell(0);
+                    if (correoCell != null) {
+                        correoDto.setCorDestinatario(correoCell.getStringCellValue());
+                    } else {
+                        mensaje.show(Alert.AlertType.WARNING, "Advertencia", "El archivo Excel tiene una fila sin correo.");
+                        continue;
+                    }
+
+                    correoDto.setCorAsunto(notificacionSeleccionada.getNotNombre());
+                    correoDto.setCorNotId(notificacionSeleccionada);
 
                     String contenidoHTML = generarContenidoConVariables(row);
-                    correoDto.setCorResultado(contenidoHTML); // Plantilla con variables reemplazadas
-                    correoDto.setCorEstado("P"); // Estado "Por enviar"
+                    if (contenidoHTML == null) {
+                        mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Una variable condicional no tiene valor.");
+                        return;
+                    }
+
+                    correoDto.setCorResultado(contenidoHTML);
+                    correoDto.setCorEstado("P");
                     correosGenerados.add(correoDto);
                 }
 
-                tbvCorreoGenerados.setItems(correosGenerados); // Mostrar correos generados
+                tbvCorreoGenerados.setItems(correosGenerados);
                 mensaje.show(Alert.AlertType.INFORMATION, "Carga exitosa", "El archivo Excel se ha procesado correctamente.");
 
             } catch (IOException e) {
@@ -164,6 +176,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
             }
         }
     }
+
 
     @FXML
     void onActionBtnSend(ActionEvent event) {
@@ -177,22 +190,21 @@ public class MassiveMailSenderController extends Controller implements Initializ
         tbvCorreoGenerados.refresh();
         mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a persistir correctamente.");
     }
-
     private String generarContenidoConVariables(Row row) {
         String plantillaHTML = notificacionSeleccionada.getNotPlantilla();
-
         Sheet sheet = row.getSheet();
         Row headerRow = sheet.getRow(0);
-
         List<VariablesDTO> variables = notificacionSeleccionada.getSisVariablesList();
 
-        for (int i = 0; i < row.getLastCellNum(); i++) {
+        for (int i = 1; i < row.getLastCellNum(); i++) {
             Cell headerCell = headerRow.getCell(i);
             if (headerCell != null) {
                 String columnName = headerCell.getStringCellValue();
-                String variable = "{" + columnName + "}";
+                String variable = "[" + columnName + "]";
+
                 Cell cell = row.getCell(i);
                 String valor = "";
+
                 if (cell != null) {
                     switch (cell.getCellType()) {
                         case STRING:
@@ -205,11 +217,16 @@ public class MassiveMailSenderController extends Controller implements Initializ
                             valor = String.valueOf(cell.getBooleanCellValue());
                             break;
                         default:
-                            valor = "Valor no reconocido";
+                            valor = "";
                     }
                 }
 
-                if (valor == null || valor.trim().isEmpty()) {
+                boolean isCondicional = esVariableCondicional(columnName, variables);
+                if (isCondicional && (valor == null || valor.trim().isEmpty())) {
+                    return null;
+                }
+
+                if (!isCondicional && (valor == null || valor.trim().isEmpty())) {
                     valor = buscarValorPorDefecto(columnName, variables);
                 }
 
@@ -219,6 +236,17 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
         return plantillaHTML;
     }
+
+
+    private boolean esVariableCondicional(String columnName, List<VariablesDTO> variables) {
+        for (VariablesDTO variable : variables) {
+            if (variable.getVarNombre().equals(columnName) && "Condicional".equals(variable.getTipo())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private String buscarValorPorDefecto(String nombreVariable, List<VariablesDTO> variables) {
         for (VariablesDTO variable : variables) {
@@ -243,13 +271,15 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
         Row headerRow = sheet.createRow(0);
         int colIndex = 0;
+
+        Cell emailCell = headerRow.createCell(colIndex++);
+        emailCell.setCellValue("Correo Destino");
+
+
         for (VariablesDTO variable : variables) {
             Cell cell = headerRow.createCell(colIndex++);
             cell.setCellValue(variable.getVarNombre());
         }
-
-        Cell emailCell = headerRow.createCell(colIndex);
-        emailCell.setCellValue("Correo Destino");
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Guardar Plantilla Excel");
@@ -266,6 +296,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
             }
         }
     }
+
 
     @FXML
     void onActionBtnMaximize(ActionEvent event) {

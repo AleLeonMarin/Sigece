@@ -46,7 +46,7 @@
                               </AnchorPane>
                           </content>
                         </Tab>
-                      <Tab closable="false" text="Configuracion Plantilla HTML">
+                      <Tab fx:id="tabConfigHTML" closable="false" text="Configuracion Plantilla HTML">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="658.0">
                                  <children>
@@ -65,7 +65,7 @@
                               </AnchorPane>
                         </content>
                       </Tab>
-                        <Tab closable="false" text="Configuracion de Variables">
+                        <Tab fx:id="tabConfigVariables" closable="false" text="Configuracion de Variables">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
