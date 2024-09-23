@@ -12,10 +12,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Kendall
- */
 public class ChatsService {
 
     public Respuesta getUsuarios() {
@@ -45,10 +41,6 @@ public class ChatsService {
             Request request = new Request("ChatsController/chats", "/{idEmisor}/{idReceptor}", parametros);
             request.get();
 
-            if (request.isError()) {
-                return new Respuesta(false, request.getError(), "");
-            }
-
             List<ChatsDTO> chatsList = (List<ChatsDTO>) request.readEntity(new GenericType<List<ChatsDTO>>() {});
 
             return new Respuesta(true, "", "", "Chats", chatsList);
@@ -58,6 +50,23 @@ public class ChatsService {
         }
     }
 
+    public Respuesta getChatsByUsuario(Long usuarioId) {
+        try {
+            Request request = new Request("ChatsController/chats/usuario/" + usuarioId);
+            request.get();
+
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            List<ChatsDTO> chatsList = (List<ChatsDTO>) request.readEntity(new GenericType<List<ChatsDTO>>() {});
+
+            return new Respuesta(true, "", "", "Chats", chatsList);
+        } catch (Exception ex) {
+            Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error obteniendo los chats del usuario con ID: " + usuarioId, ex);
+            return new Respuesta(false, "Error obteniendo los chats del usuario.", "getChatsByUsuario " + ex.getMessage());
+        }
+    }
 
     public Respuesta guardarChat(ChatsDTO chatDto) {
         try {
@@ -68,7 +77,7 @@ public class ChatsService {
                 return new Respuesta(false, request.getError(), "");
             }
 
-            ChatsDTO chatGuardado = (ChatsDTO) request.readEntity(ChatsDTO.class);  // Convertir la respuesta en ChatsDTO
+            ChatsDTO chatGuardado = (ChatsDTO) request.readEntity(ChatsDTO.class);
             return new Respuesta(true, "", "", "Chat", chatGuardado);
         } catch (Exception ex) {
             Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error guardando el chat.", ex);
@@ -78,7 +87,6 @@ public class ChatsService {
 
     public Respuesta eliminarChat(String idChat) {
         try {
-
             Request request = new Request("ChatsController/chat/" + idChat);
             request.delete();
 
@@ -86,13 +94,10 @@ public class ChatsService {
                 return new Respuesta(false, request.getError(), "");
             }
 
-
             return new Respuesta(true, "", "", "Chat eliminado correctamente.", null);
         } catch (Exception ex) {
             Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error eliminando el chat con ID: " + idChat, ex);
             return new Respuesta(false, "Error eliminando el chat.", "eliminarChat " + ex.getMessage());
         }
     }
-
-
 }

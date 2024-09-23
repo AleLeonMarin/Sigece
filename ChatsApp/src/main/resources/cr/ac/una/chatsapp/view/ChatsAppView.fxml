@@ -7,6 +7,8 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -20,9 +22,14 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <VBox prefHeight="649.0" prefWidth="255.0">
+                  <VBox alignment="CENTER" prefHeight="649.0" prefWidth="255.0">
                      <children>
-                        <TableView fx:id="tbvContactos" prefHeight="436.0" prefWidth="255.0">
+                        <ImageView fitHeight="48.0" fitWidth="218.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/img.png" />
+                           </image>
+                        </ImageView>
+                        <TableView fx:id="tbvContactos" prefHeight="386.0" prefWidth="255.0">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
@@ -33,9 +40,28 @@
                               <TableColumn fx:id="tbcContactos" prefWidth="254.0" text="Contactos" />
                            </columns>
                         </TableView>
+                        <MFXButton fx:id="btnNewChat" onAction="#onActionBtnNewChat" prefHeight="40.0" prefWidth="140.0" styleClass="button-blueStyle" text="Nuevo Chat">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="32.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/burbuja-de-dialogo.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </MFXButton>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                            <children>
-                              <MFXButton fx:id="BtnDeleteChat" onAction="#onActionBtnDeleteChat" prefHeight="40.0" prefWidth="91.0" text="Eliminar Chat" />
+                              <MFXButton fx:id="BtnDeleteChat" onAction="#onActionBtnDeleteChat" prefHeight="40.0" prefWidth="140.0" styleClass="button-redStyle" text="Eliminar Chat">
+                                 <graphic>
+                                    <ImageView fitHeight="26.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/eliminar.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></MFXButton>
                            </children>
                         </HBox>
                      </children></VBox>
@@ -53,7 +79,7 @@
                         <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="764.0" spacing="10.0">
                            <children>
                               <MFXTextField fx:id="txtMensaje" floatMode="DISABLED" prefHeight="31.0" prefWidth="552.0" />
-                              <MFXButton fx:id="btnSend" onAction="#onActonBtnSend" prefHeight="37.0" prefWidth="60.0" text="Enviar" />
+                              <MFXButton fx:id="btnSend" onAction="#onActonBtnSend" prefHeight="29.0" prefWidth="58.0" styleClass="button-blueStyle" text="Enviar" />
                            </children>
                            <VBox.margin>
                               <Insets left="20.0" />
