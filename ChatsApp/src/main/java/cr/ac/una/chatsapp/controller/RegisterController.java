@@ -12,9 +12,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.imageio.ImageIO;
-
 import cr.ac.una.chatsapp.model.UsuariosDTO;
 import cr.ac.una.chatsapp.service.UsuariosService;
 import cr.ac.una.chatsapp.util.AppContext;
@@ -195,7 +193,7 @@ public class RegisterController extends Controller implements Initializable {
     }
 
     private void bindUser(boolean newUser) {
-        txfNombre.textProperty().bindBidirectional(usuariosDto.usuIdioma);
+        txfNombre.textProperty().bindBidirectional(usuariosDto.usuNombre);
         txfLasts.textProperty().bindBidirectional(usuariosDto.usuApellidos);
         txfCed.textProperty().bindBidirectional(usuariosDto.usuCedula);
         txfMail.textProperty().bindBidirectional(usuariosDto.usuCorreo);
