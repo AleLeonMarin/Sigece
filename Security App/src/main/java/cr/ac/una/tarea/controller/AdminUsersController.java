@@ -506,7 +506,10 @@ public class AdminUsersController extends Controller implements Initializable {
             if (!validation.isEmpty()) {
                 new Mensaje().showModal(AlertType.WARNING, "Guardar Usuario", getStage(), validation);
             } else {
-                this.usuariosDto.setEstado("I"); // Set as inactive or similar
+
+                if (this.usuariosDto.getId() == null) {
+                    this.usuariosDto.setEstado("I");
+                }
 
                 List<RolesDto> rolesList = new ArrayList<>();
                 for (SistemasDto sistema : tbvUsers.getItems()) {
@@ -517,9 +520,6 @@ public class AdminUsersController extends Controller implements Initializable {
                 }
 
                 // Assign the roles to the user
-                this.usuariosDto.setRolesDto(rolesList);
-
-                // Asignar los roles al usuario
                 this.usuariosDto.setRolesDto(rolesList);
 
                 rolesList.forEach(rol -> System.out.println("Rol seleccionado: " + rol.getNombre()));

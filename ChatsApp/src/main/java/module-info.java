@@ -12,6 +12,8 @@ module cr.ac.una.chatsapp {
     requires jakarta.json.bind;
     requires jersey.common;
     requires transitive javafx.graphics;
+    requires jakarta.xml.soap;
+    requires jakarta.xml.ws;
 
 
     opens cr.ac.una.chatsapp.model;
