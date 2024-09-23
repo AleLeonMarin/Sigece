@@ -2,18 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
-package cr.ac.una.chatsapp.controller;
+package cr.ac.una.mailapp.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import cr.ac.una.chatsapp.model.UsuariosDTO;
-import cr.ac.una.chatsapp.service.UsuariosService;
-import cr.ac.una.chatsapp.util.FlowController;
-import cr.ac.una.chatsapp.util.Mensaje;
-import cr.ac.una.chatsapp.util.Respuesta;
+import cr.ac.una.tarea.model.UsuariosDto;
+import cr.ac.una.tarea.service.UsuariosService;
+import cr.ac.una.tarea.util.FlowController;
+import cr.ac.una.tarea.util.Mensaje;
+import cr.ac.una.tarea.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
@@ -80,9 +79,9 @@ public class LoginController extends Controller implements Initializable {
                 Respuesta respuesta = service.logIn(textMail.getText(), textPassword.getText());
                 if (respuesta.getEstado()) {
 
-                    UsuariosDTO usuario = (UsuariosDTO) respuesta.getResultado("Usuario");
-                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Normal")) && usuario.getUsuEstado().equals("A")) {
-                        FlowController.getInstance().goViewInWindow("ChatsAppView");
+                    UsuariosDto usuario = (UsuariosDto) respuesta.getResultado("Usuario");
+                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Admin")) && usuario.getEstado().equals("A")) {
+                        FlowController.getInstance().goMain("SecurityAppView");
                         getStage().close();
                     } else {
                         new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),

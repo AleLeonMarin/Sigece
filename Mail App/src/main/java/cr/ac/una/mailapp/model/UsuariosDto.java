@@ -1,4 +1,4 @@
-package cr.ac.una.tarea.model;
+package cr.ac.una.mailapp.model;
 
 import java.io.Serializable;
 import java.util.List;
