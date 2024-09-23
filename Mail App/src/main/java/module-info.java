@@ -15,11 +15,11 @@ module cr.ac.una.mailapp {
     requires transitive javafx.graphics;
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml;
-    requires jakarta.xml.bind;
     requires jakarta.xml.soap;
     requires jakarta.xml.ws;
 
     opens cr.ac.una.mailapp.model;
+    opens cr.ac.una.securityws.controller;
 
     opens cr.ac.una.mailapp to javafx.fxml;
     exports cr.ac.una.mailapp;

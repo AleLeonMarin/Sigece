@@ -8,6 +8,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <jaxws.plugin.version>4.0.1</jaxws.plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -107,7 +108,7 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-scratchpad</artifactId>
             <version>5.2.3</version>
-
+        </dependency>
             <!-- JAX-WS dependencies -->
             <dependency>
                 <groupId>jakarta.xml.ws</groupId>
@@ -138,11 +139,9 @@
                 <scope>runtime</scope>
             </dependency>
 
-        </dependency>
+
     </dependencies>
     <build>
-        <plugins>
-
             <resources>
                 <resource>
                     <targetPath>META-INF</targetPath>
