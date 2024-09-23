@@ -18,7 +18,7 @@
    <children>
       <VBox prefHeight="200.0" prefWidth="0.0">
          <children>
-            <TabPane prefHeight="600.0" prefWidth="846.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="tpbSistemas" prefHeight="600.0" prefWidth="846.0" tabClosingPolicy="UNAVAILABLE">
                <tabs>
                   <Tab fx:id="tptSistemas" text="Administracion de Sistemas">
                      <content>
@@ -65,7 +65,7 @@
                         </HBox>
                      </content>
                   </Tab>
-                  <Tab fx:id="tptRoles" text="Administracion de Roles">
+                  <Tab fx:id="tptRoles" onSelectionChanged="#onSelectiontptRoles" text="Administracion de Roles">
                      <content>
                         <HBox alignment="CENTER" prefHeight="627.0" prefWidth="856.0" spacing="10.0">
                            <children>

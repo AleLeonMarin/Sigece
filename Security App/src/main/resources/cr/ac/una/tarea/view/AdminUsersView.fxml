@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -27,7 +28,7 @@
                   <Font name="Segoe UI" size="20.0" />
                </font>
             </Label>
-            <TabPane prefHeight="650.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="tbpUsuarios" prefHeight="650.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab fx:id="tptMantenimiento" text="Mantenimiento Usuarios">
                      <content>
@@ -45,7 +46,10 @@
                                                 <Insets left="120.0" right="120.0" />
                                              </VBox.margin>
                                              <children>
-                                                <ImageView fx:id="imgViewUser" fitHeight="115.0" fitWidth="135.0" onMouseClicked="#onActionImgvPhoto" pickOnBounds="true" preserveRatio="true" />
+                                                <ImageView fx:id="imgViewUser" fitHeight="115.0" fitWidth="135.0" onMouseClicked="#onActionImgvPhoto" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../resources/add-photo.jpg" />
+                                                   </image></ImageView>
                                              </children>
                                           </StackPane>
                                           <MFXTextField fx:id="txfID" floatMode="BORDER" floatingText="ID" onKeyPressed="#onKeyPressedTxId" prefHeight="41.0" prefWidth="137.0">

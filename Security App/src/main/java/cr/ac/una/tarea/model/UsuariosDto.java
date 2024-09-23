@@ -1,6 +1,7 @@
 package cr.ac.una.tarea.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -27,7 +28,7 @@ public class UsuariosDto implements Serializable {
     public SimpleStringProperty status;
     public Long version;
     public Boolean modificado;
-    public ObservableList<RolesDto> rolesDto;
+    public List<RolesDto> rolesDto;
 
     public UsuariosDto() {
         this.id = new SimpleStringProperty("");
@@ -74,7 +75,6 @@ public class UsuariosDto implements Serializable {
     }
 
     public cr.ac.una.securityws.controller.UsuariosDto registers() {
-
         cr.ac.una.securityws.controller.UsuariosDto usuarios = new cr.ac.una.securityws.controller.UsuariosDto();
 
         usuarios.setId(this.getId());
@@ -92,12 +92,13 @@ public class UsuariosDto implements Serializable {
         usuarios.setStatus(this.getStatus());
         usuarios.setVersion(this.getVersion());
 
-        if (!this.getRolesDto().isEmpty()) {
-            List<cr.ac.una.securityws.controller.RolesDto> roles = FXCollections.observableArrayList();
+        // Aquí se asignan los roles directamente a la lista de rolesDto
+        if (this.getRolesDto() != null && !this.getRolesDto().isEmpty()) {
             for (RolesDto rol : this.getRolesDto()) {
-                roles.add(rol.register());
+                usuarios.getRolesDto().add(rol.register()); // Agregar directamente a la lista
             }
         }
+
         return usuarios;
     }
 
@@ -167,7 +168,7 @@ public class UsuariosDto implements Serializable {
         return modificado;
     }
 
-    public ObservableList<RolesDto> getRolesDto() {
+    public List<RolesDto> getRolesDto() {
         return rolesDto;
     }
 
@@ -233,9 +234,8 @@ public class UsuariosDto implements Serializable {
         this.modificado = modificado;
     }
 
-    public void setRolesDto(ObservableList<RolesDto> rolesDto) {
+    public void setRolesDto(List<RolesDto> rolesDto) {
         this.rolesDto = FXCollections.observableArrayList(rolesDto);
     }
 
-    
 }

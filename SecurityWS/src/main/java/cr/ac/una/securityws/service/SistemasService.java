@@ -89,30 +89,6 @@ public class SistemasService {
 
                 // Actualiza el sistema con los datos del DTO
                 systems.actualizar(sistemasDto);
-
-                // Remover roles eliminados
-                for (RolesDto rolDto : sistemasDto.getElminados()) {
-                    Roles rol = em.find(Roles.class, rolDto.getId()); // Busca el rol a eliminar
-                    if (rol != null) {
-                        systems.getRoles().remove(rol); // Remover el rol de la colección del sistema
-                    }
-                }
-
-                // Agregar o modificar roles asociados
-                for (RolesDto rolDto : sistemasDto.getRolesDto()) {
-                    if (rolDto.getModificado()) {
-                        Roles rol = em.find(Roles.class, rolDto.getId());
-                        if (rol != null) {
-                            // Si el rol existe, asegúrate de agregarlo correctamente
-                            systems.getRoles().add(rol);
-                        }
-                    } else if (rolDto.getId() == null) {
-                        Roles nuevoRol = new Roles(rolDto);
-                        em.persist(nuevoRol);
-                        systems.getRoles().add(nuevoRol);
-                    }
-                }
-
                 systems = em.merge(systems); // Merge para actualizar el sistema
             }
             // Crear un nuevo sistema

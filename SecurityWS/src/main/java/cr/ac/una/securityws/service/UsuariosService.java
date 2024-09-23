@@ -86,21 +86,24 @@ public class UsuariosService {
 
                 usuarios.actualizar(usuariosDto);
 
+                // Eliminar roles
                 for (RolesDto rolDto : usuariosDto.getRolesEliminados()) {
-                    Roles rol = em.find(Roles.class, rolDto.getId());
-                    if (rol != null) {
-                        usuarios.getRoles().remove(rol);
-                    }
+                    usuariosDto.getRolesDto().remove(new Roles(rolDto.getId()));
+                    LOG.log(Level.INFO, "Rol elimnado: {0}", rolDto.getId());
                 }
 
-                for (RolesDto rolDto : usuariosDto.getRolesDto()) {
-                    if (rolDto.getModificado()) {
-                        Roles rol = em.find(Roles.class, rolDto.getId());
-                        if (rol != null) {
+                // Agregar roles
+                if (!usuariosDto.getRolesDto().isEmpty()) {
+                    for (RolesDto rolDto : usuariosDto.getRolesDto()) {
+                        if (rolDto.getModificado()) {
+                            Roles rol = em.find(Roles.class, rolDto.getId());
+                            rol.getUsuarios().add(usuarios);
                             usuarios.getRoles().add(rol);
+                            LOG.log(Level.INFO, "Rol agregado: {0}", rol.getId());
                         }
                     }
                 }
+
                 usuarios = em.merge(usuarios);
             } else {
                 usuarios = new Usuarios(usuariosDto);
@@ -205,6 +208,29 @@ public class UsuariosService {
             LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuairo.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.",
                     "getUsuario " + ex.getMessage());
+        }
+    }
+
+    public Respuesta getUserByMail(String correo) {
+        try {
+
+            Query query = em.createNamedQuery("Usuarios.findByCorreo", Usuarios.class);
+            query.setParameter("correo", correo);
+            Usuarios usuarios = (Usuarios) query.getSingleResult();
+            UsuariosDto usuariosDto = new UsuariosDto(usuarios);
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", usuariosDto);
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
+                    "No existe un usuario con el correo ingresado.", "getUserByMail NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.",
+                    "getUserByMail NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.",
+                    "getUserByMail " + ex.getMessage());
         }
     }
 
