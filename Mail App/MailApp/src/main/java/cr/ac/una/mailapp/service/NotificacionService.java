@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Servicio para la gestión de notificaciones.
- */
 public class NotificacionService {
 
     public Respuesta getNotificacionById(Long id) {

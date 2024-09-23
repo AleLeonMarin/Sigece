@@ -5,9 +5,6 @@ import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
 import java.io.Serializable;
 
-/**
- * DTO para la entidad Parametros.
- */
 
 @JsonbPropertyOrder({
         "parId", "parCorreo", "parClave", "parPuerto", "parServer",

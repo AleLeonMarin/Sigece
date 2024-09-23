@@ -2,8 +2,6 @@ package cr.ac.una.chatandmailapi.service;
 
 import cr.ac.una.chatandmailapi.model.Chats;
 import cr.ac.una.chatandmailapi.model.ChatsDTO;
-import cr.ac.una.chatandmailapi.model.Usuarios;
-import cr.ac.una.chatandmailapi.model.UsuariosDTO;
 import cr.ac.una.chatandmailapi.util.CodigoRespuesta;
 import cr.ac.una.chatandmailapi.util.Respuesta;
 import jakarta.ejb.LocalBean;

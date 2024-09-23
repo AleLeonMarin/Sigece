@@ -5,9 +5,7 @@ import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
 import java.io.Serializable;
 
-/**
- * DTO para la entidad VariablesMultimedia.
- */
+
 @JsonbPropertyOrder({
         "mediaId", "mediaUrl", "mediaTipo", "mediaVersion", "mediaVarId"
 })

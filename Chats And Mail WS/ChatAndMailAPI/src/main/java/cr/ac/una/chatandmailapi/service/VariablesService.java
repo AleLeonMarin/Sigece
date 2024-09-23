@@ -23,9 +23,7 @@ public class VariablesService {
     @PersistenceContext(unitName = "SigeceUnaWsPU")
     private EntityManager em;
 
-    /**
-     * Método para obtener una variable por su ID.
-     */
+ 
     public Respuesta obtenerVariablePorId(Long varId) {
         try {
             Query qryVariable = em.createNamedQuery("Variables.findByVarId", Variables.class);
@@ -43,9 +41,7 @@ public class VariablesService {
         }
     }
 
-    /**
-     * Método para guardar o actualizar una variable.
-     */
+  
     public Respuesta guardarVariable(VariablesDTO variablesDto) {
         try {
             Variables variable;

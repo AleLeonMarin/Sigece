@@ -11,7 +11,7 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="727.0" prefWidth="1147.0" styleClass="stack-personal-pane1" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mailapp.controller.MailAppController">
     <children>
-        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="721.0" prefWidth="1081.0" styleClass="stack-personal-pane">
+        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1081.0" styleClass="stack-personal-pane">
             <children>
                 <HBox fx:id="root" prefHeight="100.0" prefWidth="200.0">
                     <children>
@@ -22,7 +22,7 @@
                                         <Insets top="10.0" />
                                     </VBox.margin>
                                     <image>
-                                        <Image url="@../resources/profileBlank.png" />
+                                        <Image url="@../resources/Logo.png" />
                                     </image>
                                 </ImageView>
                                 <MFXButton fx:id="btnAdminParameters" onAction="#onActionBtnAdminParameters" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Administración de Parametros" textAlignment="JUSTIFY">
@@ -30,9 +30,10 @@
                                         <Insets top="35.0" />
                                     </VBox.margin>
                                 </MFXButton>
-                                <MFXButton fx:id="btnAdminProcess" onAction="#onActionBtnAdminProcess" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Administración de Procesos de Notificación" />
+                                <MFXButton fx:id="btnAdminProcess" ellipsisString="" onAction="#onActionBtnAdminProcess" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Procesos de Notificación" textOverrun="CLIP" />
                                 <MFXButton fx:id="btnMailBox" onAction="#onBtnMailBox" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Buzón de Correos" />
                         <MFXButton fx:id="btnMassiveMails" onAction="#onActionBtnMassiveMails" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Generación de Correos Masivos" />
+                        <MFXButton fx:id="btnNewMail" onAction="#onActionBtnNewMail" prefHeight="45.0" prefWidth="240.0" styleClass="button-ForgetPass" text="Envío de Correos" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <MFXButton fx:id="btnLogOut" buttonType="RAISED" prefHeight="48.0" prefWidth="46.0" styleClass="image-LogOut-button" text="‎ ">

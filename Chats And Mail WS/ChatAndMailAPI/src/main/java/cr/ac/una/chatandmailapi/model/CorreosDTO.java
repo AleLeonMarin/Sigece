@@ -6,9 +6,7 @@ import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * DTO para la entidad Correos.
- */
+
 
 @JsonbPropertyOrder({
         "corId","corAsunto","corDestinatario","corResultado",

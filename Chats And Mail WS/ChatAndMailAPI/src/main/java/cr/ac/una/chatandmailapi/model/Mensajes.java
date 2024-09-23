@@ -21,10 +21,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- *
- * @author Kendall Fonseca
- */
 @Entity
 @Table(name = "SIS_MENSAJES")
 @XmlRootElement

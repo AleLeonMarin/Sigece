@@ -57,10 +57,8 @@ public Respuesta guardarNotificacion(NotificacionDTO notificacionDto) {
             if (notificacion == null) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la notificación a modificar.", "guardarNotificacion NoResultException");
             }
-            // Actualizar la notificación existente con los valores del DTO
             notificacion.actualizar(notificacionDto);
 
-            // Convertir VariablesDTO a Variables y asignar la relación bidireccional
             List<Variables> listaVariables = new ArrayList<>();
             for (VariablesDTO varDto : notificacionDto.getSisVariablesList()) {
                 Variables variable = new Variables(varDto);  // Conversión DTO a entidad
@@ -68,29 +66,28 @@ public Respuesta guardarNotificacion(NotificacionDTO notificacionDto) {
                 listaVariables.add(variable);
 
                 if (variable.getVarId() == null) {
-                    em.persist(variable);  // Persistir nueva variable
+                    em.persist(variable);  
                 } else {
-                    em.merge(variable);  // Actualizar variable existente
+                    em.merge(variable); 
                 }
             }
-            notificacion.setSisVariablesList(listaVariables);  // Asignar lista de entidades a la notificación
-            notificacion = em.merge(notificacion);  // Actualizar la notificación
+            notificacion.setSisVariablesList(listaVariables);
+            notificacion = em.merge(notificacion); 
         } else {
-            // Crear nueva notificación
+      
             notificacion = new Notificacion(notificacionDto);
 
-            // Persistir las variables asociadas a la nueva notificación
             List<Variables> listaVariables = new ArrayList<>();
             for (VariablesDTO varDto : notificacionDto.getSisVariablesList()) {
-                Variables variable = new Variables(varDto);  // Conversión DTO a entidad
-                variable.setVarNotId(notificacion);  // Establecer relación con la notificación
+                Variables variable = new Variables(varDto); 
+                variable.setVarNotId(notificacion);
                 listaVariables.add(variable);
-                em.persist(variable);  // Persistir la variable
+                em.persist(variable); 
             }
-            notificacion.setSisVariablesList(listaVariables);  // Asignar lista de variables a la notificación
-            em.persist(notificacion);  // Persistir la notificación
+            notificacion.setSisVariablesList(listaVariables); 
+            em.persist(notificacion);
         }
-        em.flush();  // Asegurarse de que todo está guardado
+        em.flush();
         return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Notificacion", new NotificacionDTO(notificacion));  // Retornar DTO
     } catch (Exception ex) {
         LOG.log(Level.SEVERE, "Ocurrió un error al guardar la notificación.", ex);
@@ -99,13 +96,6 @@ public Respuesta guardarNotificacion(NotificacionDTO notificacionDto) {
 }
 
 
-
-
-
-
-
-
-    // Método para eliminar Notificación, siguiendo la misma estructura
     public Respuesta eliminarNotificacion(Long notId) {
         try {
             Notificacion notificacion = em.find(Notificacion.class, notId);

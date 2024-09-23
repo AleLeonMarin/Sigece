@@ -9,6 +9,7 @@ import cr.ac.una.mailapp.util.AppContext;
 import cr.ac.una.mailapp.util.FlowController;
 import cr.ac.una.mailapp.util.Mensaje;
 import cr.ac.una.mailapp.util.Respuesta;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,7 +33,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class MassiveMailSenderController extends Controller implements Initializable {
@@ -53,42 +53,32 @@ public class MassiveMailSenderController extends Controller implements Initializ
     private TableColumn<CorreosDTO, String> tbcEstado, tbcDestinatario, tbcPlantilla;
 
     @FXML
-    private TableView<NotificacionDTO> tbvNotificationProcess; // Tabla para mostrar las notificaciones
+    private TableView<NotificacionDTO> tbvNotificationProcess;
 
     @FXML
-    private TableColumn<NotificacionDTO, String> tbcNotifications; // Columna que mostrará los nombres de las notificaciones
+    private TableColumn<NotificacionDTO, String> tbcNotifications;
 
     private NotificacionService notificacionService = new NotificacionService();
     private CorreosService correosService = new CorreosService();
     private ObservableList<CorreosDTO> correosGenerados = FXCollections.observableArrayList();
-    private ObservableList<NotificacionDTO> notificaciones = FXCollections.observableArrayList(); // Lista de notificaciones
+    private ObservableList<NotificacionDTO> notificaciones = FXCollections.observableArrayList();
     private NotificacionDTO notificacionSeleccionada;
+    private CorreosDTO correoSeleccionado;
 
     private Mensaje mensaje = new Mensaje();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicializar las columnas de la tabla
-
         tbcNotifications.setCellValueFactory(new PropertyValueFactory<>("notNombre"));
-
 
         cargarNotificaciones();
         configurarSeleccionNotificacion();
-
+        configurarSeleccionCorreo();
 
 
         tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("corDestinatario"));
         tbcEstado.setCellValueFactory(new PropertyValueFactory<>("corEstado"));
         tbcPlantilla.setCellValueFactory(new PropertyValueFactory<>("corResultado"));
-
-        tbvCorreoGenerados.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                cargarPlantillaFinal(newValue);
-            }
-        });
-
-
     }
 
     @Override
@@ -97,36 +87,41 @@ public class MassiveMailSenderController extends Controller implements Initializ
     }
 
     private void cargarNotificaciones() {
-        // Obtener notificaciones del servicio
         Respuesta respuesta = notificacionService.obtenerNotificaciones();
         if (respuesta.getEstado()) {
             List<NotificacionDTO> listaNotificaciones = (List<NotificacionDTO>) respuesta.getResultado("Notificaciones");
-            notificaciones.setAll(listaNotificaciones); // Agregar las notificaciones a la lista observable
-            tbvNotificationProcess.setItems(notificaciones); // Asociar la lista a la tabla
+            notificaciones.setAll(listaNotificaciones);
+            tbvNotificationProcess.setItems(notificaciones);
         } else {
             mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar las notificaciones: " + respuesta.getMensaje());
         }
     }
 
     private void configurarSeleccionNotificacion() {
-        // Escuchar los cambios en la selección de la tabla de notificaciones
         tbvNotificationProcess.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                notificacionSeleccionada = newValue; // Asignar la notificación seleccionada
-                cargarPlantillaHTML(newValue); // Cargar la plantilla HTML correspondiente a la notificación seleccionada
+                notificacionSeleccionada = newValue;
+                cargarPlantillaHTML(newValue);
+            }
+        });
+    }
+
+    private void configurarSeleccionCorreo() {
+        tbvCorreoGenerados.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                correoSeleccionado = newValue;
+                cargarPlantillaFinal(newValue);
             }
         });
     }
 
     private void cargarPlantillaHTML(NotificacionDTO notificacion) {
-        // Mostrar la plantilla de la notificación en el WebView
         if (notificacion != null && notificacion.getNotPlantilla() != null) {
             htmlPreview.getEngine().loadContent(notificacion.getNotPlantilla());
         }
     }
 
     private void cargarPlantillaFinal(CorreosDTO correo) {
-        // Mostrar la plantilla generada con variables reemplazadas en el WebView
         if (correo != null && correo.getCorResultado() != null) {
             webViewPlantillaFinal.getEngine().loadContent(correo.getCorResultado());
         }
@@ -134,7 +129,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     @FXML
     void onActionBtnUpload(ActionEvent event) {
-        // Cargar el archivo Excel
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Cargar archivo Excel");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos Excel", "*.xlsx"));
@@ -145,23 +139,36 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 Workbook workbook = WorkbookFactory.create(fis);
                 Sheet sheet = workbook.getSheetAt(0);
 
-                correosGenerados.clear(); // Limpiar correos previos
+                correosGenerados.clear();
 
                 for (Row row : sheet) {
-                    if (row.getRowNum() == 0) continue; // Saltar encabezado
+                    if (row.getRowNum() == 0) continue;
 
                     CorreosDTO correoDto = new CorreosDTO();
-                    correoDto.setCorDestinatario(row.getCell(2).getStringCellValue()); // El correo del destinatario está en la columna 2
-                    correoDto.setCorAsunto(notificacionSeleccionada.getNotNombre());  // Asunto basado en la notificación
-                    correoDto.setCorNotId(notificacionSeleccionada); // Asociar notificación
+
+                    Cell correoCell = row.getCell(0);
+                    if (correoCell != null) {
+                        correoDto.setCorDestinatario(correoCell.getStringCellValue());
+                    } else {
+                        mensaje.show(Alert.AlertType.WARNING, "Advertencia", "El archivo Excel tiene una fila sin correo.");
+                        continue;
+                    }
+
+                    correoDto.setCorAsunto(notificacionSeleccionada.getNotNombre());
+                    correoDto.setCorNotId(notificacionSeleccionada);
 
                     String contenidoHTML = generarContenidoConVariables(row);
-                    correoDto.setCorResultado(contenidoHTML); // Plantilla con variables reemplazadas
-                    correoDto.setCorEstado("P"); // Estado "Por enviar"
+                    if (contenidoHTML == null) {
+                        mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Una variable condicional no tiene valor.");
+                        return;
+                    }
+
+                    correoDto.setCorResultado(contenidoHTML);
+                    correoDto.setCorEstado("P");
                     correosGenerados.add(correoDto);
                 }
 
-                tbvCorreoGenerados.setItems(correosGenerados); // Mostrar correos generados
+                tbvCorreoGenerados.setItems(correosGenerados);
                 mensaje.show(Alert.AlertType.INFORMATION, "Carga exitosa", "El archivo Excel se ha procesado correctamente.");
 
             } catch (IOException e) {
@@ -170,60 +177,110 @@ public class MassiveMailSenderController extends Controller implements Initializ
         }
     }
 
+
     @FXML
     void onActionBtnSend(ActionEvent event) {
         correosGenerados.forEach(correo -> {
-            Respuesta respuesta = correosService.enviarCorreo(correo);
-
-            if (respuesta.getEstado()) {
-                correo.setCorEstado("E"); // Cambiar estado a Enviado
-            } else {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al enviar correo a: " + correo.getCorDestinatario());
+            Respuesta respuesta = correosService.guardarCorreo(correo);
+            if (!respuesta.getEstado()) {
+                mensaje.show(Alert.AlertType.ERROR, "Error", "Error al persistir correo de: " + correo.getCorDestinatario());
             }
         });
 
-        tbvCorreoGenerados.refresh(); // Actualizar tabla
+        tbvCorreoGenerados.refresh();
+        mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a persistir correctamente.");
+    }
+    private String generarContenidoConVariables(Row row) {
+        String plantillaHTML = notificacionSeleccionada.getNotPlantilla();
+        Sheet sheet = row.getSheet();
+        Row headerRow = sheet.getRow(0);
+        List<VariablesDTO> variables = notificacionSeleccionada.getSisVariablesList();
+
+        for (int i = 1; i < row.getLastCellNum(); i++) {
+            Cell headerCell = headerRow.getCell(i);
+            if (headerCell != null) {
+                String columnName = headerCell.getStringCellValue();
+                String variable = "[" + columnName + "]";
+
+                Cell cell = row.getCell(i);
+                String valor = "";
+
+                if (cell != null) {
+                    switch (cell.getCellType()) {
+                        case STRING:
+                            valor = cell.getStringCellValue();
+                            break;
+                        case NUMERIC:
+                            valor = String.valueOf(cell.getNumericCellValue());
+                            break;
+                        case BOOLEAN:
+                            valor = String.valueOf(cell.getBooleanCellValue());
+                            break;
+                        default:
+                            valor = "";
+                    }
+                }
+
+                boolean isCondicional = esVariableCondicional(columnName, variables);
+                if (isCondicional && (valor == null || valor.trim().isEmpty())) {
+                    return null;
+                }
+
+                if (!isCondicional && (valor == null || valor.trim().isEmpty())) {
+                    valor = buscarValorPorDefecto(columnName, variables);
+                }
+
+                plantillaHTML = plantillaHTML.replace(variable, valor);
+            }
+        }
+
+        return plantillaHTML;
     }
 
-    private String generarContenidoConVariables(Row row) {
-        // Generar contenido del correo reemplazando las variables en la plantilla HTML
-        String plantillaHTML = notificacionSeleccionada.getNotPlantilla();
-        for (int i = 1; i < row.getLastCellNum(); i++) {
-            String variable = "${var" + i + "}";
-            String valor = row.getCell(i) != null ? row.getCell(i).toString() : "Valor por defecto";
-            plantillaHTML = plantillaHTML.replace(variable, valor);
+
+    private boolean esVariableCondicional(String columnName, List<VariablesDTO> variables) {
+        for (VariablesDTO variable : variables) {
+            if (variable.getVarNombre().equals(columnName) && "Condicional".equals(variable.getTipo())) {
+                return true;
+            }
         }
-        return plantillaHTML;
+        return false;
+    }
+
+
+    private String buscarValorPorDefecto(String nombreVariable, List<VariablesDTO> variables) {
+        for (VariablesDTO variable : variables) {
+            if (variable.getVarNombre().equals(nombreVariable)) {
+                return variable.getVarValor();
+            }
+        }
+        return "Valor por defecto";
     }
 
     @FXML
     void onActionBtnDowload(ActionEvent event) {
-        // Asegurarnos de que haya una notificación seleccionada
         if (notificacionSeleccionada == null) {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación.");
             return;
         }
 
-        // Obtener las variables asociadas a la notificación
         List<VariablesDTO> variables = notificacionSeleccionada.getSisVariablesList();
 
-        // Crear archivo Excel
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Plantilla Notificación");
 
-        // Crear fila de encabezado
         Row headerRow = sheet.createRow(0);
         int colIndex = 0;
+
+        Cell emailCell = headerRow.createCell(colIndex++);
+        emailCell.setCellValue("Correo Destino");
+
+
         for (VariablesDTO variable : variables) {
             Cell cell = headerRow.createCell(colIndex++);
             cell.setCellValue(variable.getVarNombre());
         }
 
-        // Añadir una columna extra para el correo electrónico
-        Cell emailCell = headerRow.createCell(colIndex);
-        emailCell.setCellValue("Correo Destino");
-
-        // Abrir diálogo de guardar archivo
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Guardar Plantilla Excel");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos Excel", "*.xlsx"));
@@ -240,6 +297,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
         }
     }
 
+
     @FXML
     void onActionBtnMaximize(ActionEvent event) {
         if (notificacionSeleccionada != null) {
@@ -248,25 +306,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
             FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
         } else {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación.");
-        }
-    }
-
-    @FXML
-    void onActionBtnEnviarCorreos(ActionEvent event) {
-        if (correosGenerados.isEmpty()) {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "No hay correos generados para enviar.");
-        } else {
-            correosGenerados.forEach(correo -> {
-                if ("P".equals(correo.getCorEstado())) {
-                    Respuesta respuesta = correosService.enviarCorreo(correo);
-                    if (respuesta.getEstado()) {
-                        correo.setCorEstado("E");
-                    } else {
-                        mensaje.show(Alert.AlertType.ERROR, "Error", "Error al enviar correo a: " + correo.getCorDestinatario());
-                    }
-                }
-            });
-            tbvCorreoGenerados.refresh(); // Actualizar la tabla para reflejar cambios
         }
     }
 }

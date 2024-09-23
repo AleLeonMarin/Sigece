@@ -17,10 +17,6 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-/**
- *
- * @author Kendall Fonseca
- */
 @Entity
 @Table(name = "SIS_USUARIOS")
 @XmlRootElement

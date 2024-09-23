@@ -5,6 +5,7 @@ import cr.ac.una.mailapp.util.FlowController;
 import javafx.application.Application;
 //import cr.ac.una.tarea.controller.LoginController;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -21,7 +22,8 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         FlowController.getInstance().InitializeFlow(stage, null);
         FlowController.getInstance().goMain("MailAppView");
-       // loginController.initialize();
+        stage.getIcons().add(new Image("cr/ac/una/mailapp/resources/logo2.png"));
+        stage.setTitle("SigeceUna");
     }
 
     public static void main(String[] args) {
