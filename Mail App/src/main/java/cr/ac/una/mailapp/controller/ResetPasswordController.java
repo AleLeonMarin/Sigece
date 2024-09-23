@@ -6,7 +6,6 @@ package cr.ac.una.mailapp.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import javafx.event.ActionEvent;

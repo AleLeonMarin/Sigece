@@ -1,6 +1,5 @@
 package cr.ac.una.mailapp;
 
-import cr.ac.una.mailapp.controller.MailAppController;
 import cr.ac.una.mailapp.util.FlowController;
 import javafx.application.Application;
 //import cr.ac.una.tarea.controller.LoginController;
