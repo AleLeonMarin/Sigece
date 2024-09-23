@@ -154,7 +154,7 @@ public class EmailService {
                 correoDto.setCorEstado("E");
             } catch (MessagingException e) {
                 LOG.severe("Error al enviar el correo a: " + correoDto.getCorDestinatario() + " - " + e.getMessage());
-                correoDto.setCorEstado("F"); 
+                correoDto.setCorEstado("P"); 
             }
         }
         return "Todos los correos fueron procesados. Resultados:\n" +
