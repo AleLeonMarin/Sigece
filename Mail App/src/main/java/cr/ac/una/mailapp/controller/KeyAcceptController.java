@@ -7,7 +7,7 @@ package cr.ac.una.mailapp.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import cr.ac.una.tarea.util.FlowController;
+import cr.ac.una.mailapp.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;

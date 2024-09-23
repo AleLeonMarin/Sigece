@@ -8,11 +8,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import cr.ac.una.tarea.model.UsuariosDto;
-import cr.ac.una.tarea.service.UsuariosService;
-import cr.ac.una.tarea.util.FlowController;
-import cr.ac.una.tarea.util.Mensaje;
-import cr.ac.una.tarea.util.Respuesta;
+
+import cr.ac.una.mailapp.model.UsuariosDto;
+import cr.ac.una.mailapp.service.UsuariosService;
+import cr.ac.una.mailapp.util.FlowController;
+import cr.ac.una.mailapp.util.Mensaje;
+import cr.ac.una.mailapp.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
@@ -80,8 +81,8 @@ public class LoginController extends Controller implements Initializable {
                 if (respuesta.getEstado()) {
 
                     UsuariosDto usuario = (UsuariosDto) respuesta.getResultado("Usuario");
-                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Admin")) && usuario.getEstado().equals("A")) {
-                        FlowController.getInstance().goMain("SecurityAppView");
+                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Administrador de correos masivos")) && usuario.getEstado().equals("A")) {
+                        FlowController.getInstance().goMain("MailAppView");
                         getStage().close();
                     } else {
                         new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),

@@ -17,6 +17,8 @@ module cr.ac.una.mailapp {
     requires org.apache.poi.ooxml;
     requires jakarta.xml.soap;
     requires jakarta.xml.ws;
+    requires javafx.swing;
+    requires webcam.capture;
 
     opens cr.ac.una.mailapp.model;
     opens cr.ac.una.securityws.controller;

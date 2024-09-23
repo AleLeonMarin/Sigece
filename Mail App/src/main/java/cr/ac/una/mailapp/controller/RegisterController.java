@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 import cr.ac.una.mailapp.model.RolesDto;
 import cr.ac.una.mailapp.model.SistemasDto;
 import cr.ac.una.mailapp.model.UsuariosDto;
-import xr.ac.una.mailapp.service.UsuariosService;
+import cr.ac.una.mailapp.service.UsuariosService;
 import cr.ac.una.mailapp.util.AppContext;
 import cr.ac.una.mailapp.util.FlowController;
 import cr.ac.una.mailapp.util.Mensaje;
@@ -146,7 +146,7 @@ public class RegisterController extends Controller implements Initializable {
         } catch (
 
         Exception e) {
-            Logger.getLogger(AdminUsersController.class.getName()).log(Level.SEVERE, "Error guardando el usuario", e);
+            Logger.getLogger(RegisterController.class.getName()).log(Level.SEVERE, "Error guardando el usuario", e);
             new Mensaje().showModal(AlertType.ERROR, "Guardar Usuario", getStage(), "Error guardando el usuario.");
         }
 

@@ -21,7 +21,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FlowController.getInstance().InitializeFlow(stage, null);
-        FlowController.getInstance().goMain("MailAppView");
+        FlowController.getInstance().goMain("LoginView");
         stage.getIcons().add(new Image("cr/ac/una/mailapp/resources/logo2.png"));
         stage.setTitle("SigeceUna");
     }
