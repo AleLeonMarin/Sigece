@@ -2,46 +2,101 @@ package cr.ac.una.chatsapp.model;
 
 import jakarta.json.bind.annotation.JsonbProperty;
 import javafx.beans.property.SimpleStringProperty;
-
+import javafx.collections.FXCollections;
 import java.io.Serializable;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * DTO para la entidad Usuarios, contiene la información de los usuarios.
  */
 public class UsuariosDTO implements Serializable {
 
-    private SimpleStringProperty usuId;
-    private SimpleStringProperty usuNombre;
-    private SimpleStringProperty usuApellidos;
-    private SimpleStringProperty usuCedula;
-    private SimpleStringProperty usuCorreo;
-    private SimpleStringProperty usuTelefono;
-    private SimpleStringProperty usuCelular;
-    private SimpleStringProperty usuIdioma;
-    private byte[] usuFoto; // Almacenamos el byte[] directamente
-    private SimpleStringProperty usuUsuario;
-    private SimpleStringProperty usuClave;
-    private SimpleStringProperty usuEstado;
-    private SimpleStringProperty usuStatus;
-    private Long usuVersion;
+    public SimpleStringProperty usuId;
+    public SimpleStringProperty usuNombre;
+    public SimpleStringProperty usuApellidos;
+    public SimpleStringProperty usuCedula;
+    public SimpleStringProperty usuCorreo;
+    public SimpleStringProperty usuTelefono;
+    public SimpleStringProperty usuCelular;
+    public SimpleStringProperty usuIdioma;
+    public byte[] usuFoto; // Almacenamos el byte[] directamente
+    public SimpleStringProperty usuUsuario;
+    public SimpleStringProperty usuClave;
+    public SimpleStringProperty usuEstado;
+    public SimpleStringProperty usuStatus;
+    public Long usuVersion;
+    public List<RolesDto> rolesDto;
 
     // Constructor vacío
-             public UsuariosDTO() {
-             this.usuId = new SimpleStringProperty("");
-             this.usuNombre = new SimpleStringProperty("");
-            this.usuApellidos = new SimpleStringProperty("");
-            this.usuCedula = new SimpleStringProperty("");
-            this.usuCorreo = new SimpleStringProperty("");
-            this.usuTelefono = new SimpleStringProperty("");
-            this.usuCelular = new SimpleStringProperty("");
-            this.usuIdioma = new SimpleStringProperty("");
-            this.usuFoto = null;
-            this.usuUsuario = new SimpleStringProperty("");
-            this.usuClave = new SimpleStringProperty("");
-            this.usuEstado = new SimpleStringProperty("");
-            this.usuStatus = new SimpleStringProperty("");
-            this.usuVersion = 0L;
+    public UsuariosDTO() {
+        this.usuId = new SimpleStringProperty("");
+        this.usuNombre = new SimpleStringProperty("");
+        this.usuApellidos = new SimpleStringProperty("");
+        this.usuCedula = new SimpleStringProperty("");
+        this.usuCorreo = new SimpleStringProperty("");
+        this.usuTelefono = new SimpleStringProperty("");
+        this.usuCelular = new SimpleStringProperty("");
+        this.usuIdioma = new SimpleStringProperty("");
+        this.usuFoto = null;
+        this.usuUsuario = new SimpleStringProperty("");
+        this.usuClave = new SimpleStringProperty("");
+        this.usuEstado = new SimpleStringProperty("");
+        this.usuStatus = new SimpleStringProperty("");
+        this.usuVersion = 0L;
+        this.rolesDto = FXCollections.observableArrayList();
+    }
+
+    public UsuariosDTO(cr.ac.una.securityws.controller.UsuariosDto usuarios) {
+        this();
+        this.usuId.set(usuarios.getId().toString());
+        this.usuNombre.set(usuarios.getNombre());
+        this.usuApellidos.set(usuarios.getApellidos());
+        this.usuCedula.set(usuarios.getCedula());
+        this.usuCorreo.set(usuarios.getCorreo());
+        this.usuTelefono.set(usuarios.getTelefono());
+        this.usuCelular.set(usuarios.getCelular());
+        this.usuIdioma.set(usuarios.getIdioma());
+        this.usuFoto = usuarios.getFoto(); // Asignación directa del byte[]
+        this.usuUsuario.set(usuarios.getUsuario());
+        this.usuClave.set(usuarios.getClave());
+        this.usuEstado.set(usuarios.getEstado());
+        this.usuStatus.set(usuarios.getStatus());
+        this.usuVersion = usuarios.getVersion();
+    
+        if (usuarios.getRolesDto() != null && !usuarios.getRolesDto().isEmpty()) {
+            for (cr.ac.una.securityws.controller.RolesDto rol : usuarios.getRolesDto()) {
+                this.rolesDto.add(new RolesDto(rol));
+            }
+        }
+    }
+
+    public cr.ac.una.securityws.controller.UsuariosDto registers() {
+        cr.ac.una.securityws.controller.UsuariosDto usuarios = new cr.ac.una.securityws.controller.UsuariosDto();
+
+        usuarios.setId(this.getUsuId());
+        usuarios.setNombre(this.getUsuNombre());
+        usuarios.setApellidos(this.getUsuApellidos());
+        usuarios.setCedula(this.getUsuCedula());
+        usuarios.setCorreo(this.getUsuCorreo());
+        usuarios.setTelefono(this.getUsuTelefono());
+        usuarios.setCelular(this.getUsuCelular());
+        usuarios.setIdioma(this.getUsuIdioma());
+        usuarios.setFoto(this.getUsuFoto());
+        usuarios.setUsuario(this.getUsuUsuario());
+        usuarios.setClave(this.getUsuClave());
+        usuarios.setEstado(this.getUsuEstado());
+        usuarios.setStatus(this.getUsuStatus());
+        usuarios.setVersion(this.getUsuVersion());
+
+        // Aquí se asignan los roles directamente a la lista de rolesDto
+        if (this.getRolesDto() != null && !this.getRolesDto().isEmpty()) {
+            for (RolesDto rol : this.getRolesDto()) {
+                usuarios.getRolesDto().add(rol.register()); // Agregar directamente a la lista
+            }
+        }
+
+        return usuarios;
     }
 
     // Getters and Setters
@@ -85,6 +140,7 @@ public class UsuariosDTO implements Serializable {
     public String getUsuCorreo() {
         return usuCorreo.get();
     }
+
     @JsonbProperty("correo")
     public void setUsuCorreo(String usuCorreo) {
         this.usuCorreo.set(usuCorreo);
@@ -122,16 +178,6 @@ public class UsuariosDTO implements Serializable {
     // Setter para establecer la foto desde un byte[]
     public void setUsuFoto(byte[] usuFoto) {
         this.usuFoto = usuFoto;
-    }
-
-    // Método para obtener la foto como Base64 (para transferencias)
-    public String getUsuFotoBase64() {
-        return usuFoto != null ? Base64.getEncoder().encodeToString(usuFoto) : null;
-    }
-
-    // Setter para establecer la foto desde una cadena Base64
-    public void setUsuFotoBase64(String usuFotoBase64) {
-        this.usuFoto = usuFotoBase64 != null ? Base64.getDecoder().decode(usuFotoBase64) : null;
     }
 
     public String getUsuUsuario() {
@@ -174,6 +220,14 @@ public class UsuariosDTO implements Serializable {
         this.usuVersion = usuVersion;
     }
 
+    public List<RolesDto> getRolesDto() {
+        return rolesDto;
+    }
+
+    public void setRolesDto(List<RolesDto> rolesDto) {
+        this.rolesDto = FXCollections.observableArrayList(rolesDto);
+    }
+
     @Override
     public String toString() {
         return "UsuariosDTO{" +
@@ -192,5 +246,14 @@ public class UsuariosDTO implements Serializable {
                 ", usuStatus='" + usuStatus + '\'' +
                 ", usuVersion=" + usuVersion +
                 '}';
+    }
+
+    public String getUsuFotoBase64() {
+        return usuFoto != null ? Base64.getEncoder().encodeToString(usuFoto) : null;
+    }
+
+    // Setter para establecer la foto desde una cadena Base64
+    public void setUsuFotoBase64(String usuFotoBase64) {
+        this.usuFoto = usuFotoBase64 != null ? Base64.getDecoder().decode(usuFotoBase64) : null;
     }
 }

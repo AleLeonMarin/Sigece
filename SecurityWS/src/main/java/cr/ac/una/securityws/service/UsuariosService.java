@@ -28,44 +28,33 @@ public class UsuariosService {
 
     public Respuesta validateUser(String usuario, String clave) {
         try {
-            LOG.log(Level.INFO, "Ejecutando consulta con usuario: {0} y clave: {1}", new Object[] { usuario, clave });
-
-            // Realiza la consulta para encontrar el usuario con las credenciales
-            // proporcionadas
+            LOG.log(Level.INFO, "Ejecutando consulta con usuario: {0} y clave: {1}", new Object[]{usuario, clave});
+            
             Query query = em.createNamedQuery("Usuarios.findByUsuClave", Usuarios.class);
             query.setParameter("usuario", usuario);
             query.setParameter("clave", clave);
-            Usuarios usuarios = (Usuarios) query.getSingleResult();
-
-            if (usuarios == null) {
+            
+            List<Usuarios> usuariosList = query.getResultList();
+            
+            // Check if no users were found
+            if (usuariosList.isEmpty()) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
-                        "No existe un usuario con las credenciales ingresadas.", "validateUser Usuario nulo");
+                        "No existe un usuario con las credenciales ingresadas.", "validateUser Usuario no encontrado");
             }
-
-            // Crea un DTO de Usuarios basado en el usuario encontrado
+    
+            // Only one user found
+            Usuarios usuarios = usuariosList.get(0);
             UsuariosDto usuariosDto = new UsuariosDto(usuarios);
-
-            // Agrega los roles del usuario al DTO
             for (Roles rol : usuarios.getRoles()) {
                 usuariosDto.getRolesDto().add(new RolesDto(rol));
             }
-
+    
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", usuariosDto);
-
+    
         } catch (NoResultException ex) {
             LOG.log(Level.INFO, "No se encontró ningún usuario con las credenciales proporcionadas.");
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                     "No existe un usuario con las credenciales ingresadas.", "validateUser NoResultException");
-        } catch (NonUniqueResultException ex) {
-            LOG.log(Level.SEVERE, "Ocurrió un error al consultar el usuario. Más de un resultado encontrado.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
-                    "Ocurrió un error al consultar el usuario. Más de un resultado encontrado.",
-                    "validateUser NonUniqueResultException");
-        } catch (NullPointerException ex) {
-            LOG.log(Level.SEVERE, "Error de referencia nula en la consulta o procesamiento del usuario.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
-                    "Error de referencia nula en la consulta o procesamiento del usuario.",
-                    "validateUser NullPointerException");
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrió un error inesperado al consultar el usuario.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO,
