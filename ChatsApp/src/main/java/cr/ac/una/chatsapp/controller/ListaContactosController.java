@@ -4,6 +4,8 @@ import cr.ac.una.chatsapp.model.UsuariosDTO;
 import cr.ac.una.chatsapp.service.ChatsService;
 import cr.ac.una.chatsapp.util.AppContext;
 import cr.ac.una.chatsapp.util.Respuesta;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class ListaContactosController extends Controller implements Initializable {
 
@@ -32,6 +35,12 @@ public class ListaContactosController extends Controller implements Initializabl
 
     private ObservableList<UsuariosDTO> listaUsuarios;
     private ChatsService chatsService = new ChatsService();
+
+    @FXML
+    private MFXButton btnSearch;
+
+    @FXML
+    private MFXTextField txtSearch;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -76,6 +85,7 @@ public class ListaContactosController extends Controller implements Initializabl
             });
             return row;
         });
+
         cargarUsuarios();
     }
 
@@ -93,4 +103,22 @@ public class ListaContactosController extends Controller implements Initializabl
             System.out.println("Error obteniendo los usuarios: " + respuesta.getMensaje());
         }
     }
+
+    @FXML
+    void onActionBtnSearch() {
+        String searchText = txtSearch.getText().toLowerCase();
+
+        if (searchText.isEmpty()) {
+            tbvContactos.setItems(listaUsuarios);
+        } else {
+            ObservableList<UsuariosDTO> listaFiltrada = listaUsuarios.stream()
+                    .filter(usuario -> usuario.getUsuNombre().toLowerCase().contains(searchText) ||
+                            usuario.getUsuApellidos().toLowerCase().contains(searchText))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+            tbvContactos.setItems(listaFiltrada);
+            tbvContactos.refresh();
+        }
+    }
+
 }

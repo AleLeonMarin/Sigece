@@ -50,23 +50,6 @@ public class ChatsService {
         }
     }
 
-    public Respuesta getChatsByUsuario(Long usuarioId) {
-        try {
-            Request request = new Request("ChatsController/chats/usuario/" + usuarioId);
-            request.get();
-
-            if (request.isError()) {
-                return new Respuesta(false, request.getError(), "");
-            }
-
-            List<ChatsDTO> chatsList = (List<ChatsDTO>) request.readEntity(new GenericType<List<ChatsDTO>>() {});
-
-            return new Respuesta(true, "", "", "Chats", chatsList);
-        } catch (Exception ex) {
-            Logger.getLogger(ChatsService.class.getName()).log(Level.SEVERE, "Error obteniendo los chats del usuario con ID: " + usuarioId, ex);
-            return new Respuesta(false, "Error obteniendo los chats del usuario.", "getChatsByUsuario " + ex.getMessage());
-        }
-    }
 
     public Respuesta guardarChat(ChatsDTO chatDto) {
         try {

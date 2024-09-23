@@ -10,7 +10,7 @@ public class ChatsDTO implements Serializable {
     private String chtId;
     private Date chtFecha;
     private Long chtVersion;
-    private UsuariosDTO emisorId;  // Cambiado a UsuariosDTO
+    private UsuariosDTO emisorId;
     private UsuariosDTO receptorId;
     private List<MensajesDTO> mensajesList;
 

@@ -11,6 +11,8 @@ import cr.ac.una.chatsapp.model.MensajesDTO;
 import cr.ac.una.chatsapp.model.UsuariosDTO;
 import cr.ac.una.chatsapp.service.ChatsService;
 import cr.ac.una.chatsapp.service.MensajesService;
+import cr.ac.una.chatsapp.util.AppContext;
+import cr.ac.una.chatsapp.util.FlowController;
 import cr.ac.una.chatsapp.util.Mensaje;
 import cr.ac.una.chatsapp.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -73,6 +75,7 @@ public class ChatsAppController extends Controller implements Initializable {
 
         iniciarActualizacionPeriodica();
     }
+
     private Long obtenerIdEmisorActual() {
         return 2L;
     }
@@ -81,12 +84,25 @@ public class ChatsAppController extends Controller implements Initializable {
         Respuesta respuesta = chatsService.getUsuarios();
         if (respuesta.getEstado()) {
             List<UsuariosDTO> usuarios = (List<UsuariosDTO>) respuesta.getResultado("Usuarios");
-            ObservableList<UsuariosDTO> usuariosList = FXCollections.observableArrayList(
-                    usuarios.stream()
-                            .filter(usuario -> "A".equals(usuario.getUsuEstado()) || "I".equals(usuario.getUsuEstado()))
-                            .collect(Collectors.toList())
-            );
 
+            List<UsuariosDTO> usuariosConChats = new ArrayList<>();
+
+            usuarios.stream()
+                    .filter(usuario -> "A".equals(usuario.getUsuEstado()))
+                    .filter(usuario -> !idEmisor.equals(usuario.getUsuId()))
+                    .forEach(usuario -> {
+                        Respuesta respuestaChat = chatsService.getChatsEntreUsuarios(idEmisor, usuario.getUsuId());
+                        if (respuestaChat.getEstado()) {
+                            List<ChatsDTO> chats = (List<ChatsDTO>) respuestaChat.getResultado("Chats");
+                            if (chats != null && !chats.isEmpty()) {
+                                usuariosConChats.add(usuario); // Agregar solo los usuarios con chats
+                            }
+                        } else {
+                            System.out.println("Error obteniendo los chats: " + respuestaChat.getMensaje());
+                        }
+                    });
+
+            ObservableList<UsuariosDTO> usuariosList = FXCollections.observableArrayList(usuariosConChats);
             tbvContactos.setItems(usuariosList);
             tbcContactos.setCellFactory(new Callback<TableColumn<UsuariosDTO, String>, TableCell<UsuariosDTO, String>>() {
                 @Override
@@ -154,30 +170,30 @@ public class ChatsAppController extends Controller implements Initializable {
             mensajes.stream()
                     .sorted(Comparator.comparing(MensajesDTO::getSmsTiempo))
                     .forEach(mensaje -> {
-                HBox hbox = new HBox();
-                Label mensajeLabel = new Label(mensaje.getSmsTexto());
-                hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
-                hbox.setMaxWidth(vboxChats.getPrefWidth() - 20);
-                mensajeLabel.setWrapText(true);
-                mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
+                        HBox hbox = new HBox();
+                        Label mensajeLabel = new Label(mensaje.getSmsTexto());
+                        hbox.setPrefWidth(vboxChats.getPrefWidth() - 20);
+                        hbox.setMaxWidth(vboxChats.getPrefWidth() - 20);
+                        mensajeLabel.setWrapText(true);
+                        mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
 
-                // Crear botón de eliminar
-                Button btnEliminar = new Button("Eliminar");
-                btnEliminar.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-                btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje)); // Acción para eliminar el mensaje
+                        // Crear botón de eliminar
+                        Button btnEliminar = new Button("Eliminar");
+                        btnEliminar.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+                        btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje)); // Acción para eliminar el mensaje
 
-                // Determinar si el mensaje fue enviado por el emisor actual
-                Long emisorIdMensaje = mensaje.getEmisorId().getUsuId();
-                if (emisorIdMensaje != null && emisorIdMensaje.equals(idEmisor)) {
-                    hbox.setAlignment(Pos.CENTER_RIGHT);
-                    mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
-                } else {
-                    hbox.setAlignment(Pos.CENTER_LEFT);
-                    mensajeLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10px; -fx-background-radius: 10px;");
-                }
+                        // Determinar si el mensaje fue enviado por el emisor actual
+                        Long emisorIdMensaje = mensaje.getEmisorId().getUsuId();
+                        if (emisorIdMensaje != null && emisorIdMensaje.equals(idEmisor)) {
+                            hbox.setAlignment(Pos.CENTER_RIGHT);
+                            mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
+                        } else {
+                            hbox.setAlignment(Pos.CENTER_LEFT);
+                            mensajeLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10px; -fx-background-radius: 10px;");
+                        }
 
-                hbox.getChildren().addAll(mensajeLabel, btnEliminar);
-                vboxChats.getChildren().add(hbox);
+                        hbox.getChildren().addAll(mensajeLabel, btnEliminar);
+                        vboxChats.getChildren().add(hbox);
                     });
         } else {
             Label noMessagesLabel = new Label("No hay mensajes en este chat.");
@@ -189,8 +205,8 @@ public class ChatsAppController extends Controller implements Initializable {
     // Iniciar el timeline para actualización periódica
     private void iniciarActualizacionPeriodica() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> actualizarMensajes()));
-        timeline.setCycleCount(Timeline.INDEFINITE);  // se repite indefinidamente
-        timeline.play();  // iniciar la actualización automática
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     private void actualizarMensajes() {
@@ -209,6 +225,7 @@ public class ChatsAppController extends Controller implements Initializable {
                 });
     }
 
+
     @FXML
     void onActonBtnSend(ActionEvent event) {
         String textoMensaje = txtMensaje.getText();
@@ -225,10 +242,8 @@ public class ChatsAppController extends Controller implements Initializable {
             return;
         }
 
-        // verificar si hay un chat cargado, si no, crearlo
         if (currentChat == null) {
 
-            // Crear un nuevo chat entre el emisor y el receptor
             ChatsDTO nuevoChat = new ChatsDTO();
             UsuariosDTO emisor = new UsuariosDTO();
             UsuariosDTO receptor = new UsuariosDTO();
@@ -239,7 +254,6 @@ public class ChatsAppController extends Controller implements Initializable {
             nuevoChat.setEmisorId(emisor);
             nuevoChat.setReceptorId(receptor);
 
-            // Guardar el nuevo chat en la base de datos
             Respuesta respuestaChat = chatsService.guardarChat(nuevoChat);
             if (respuestaChat.getEstado()) {
                 currentChat = (ChatsDTO) respuestaChat.getResultado("Chat");
@@ -250,7 +264,6 @@ public class ChatsAppController extends Controller implements Initializable {
             }
         }
 
-        // Crear el mensaje para el chat actual o nuevo
         MensajesDTO mensajeDto = new MensajesDTO();
         mensajeDto.setSmsTexto(textoMensaje);
 
@@ -289,6 +302,8 @@ public class ChatsAppController extends Controller implements Initializable {
     @FXML
     void onActionBtnDeleteChat(ActionEvent event) {
         if (currentChat == null) {
+            tbvContactos.getItems().remove(tbvContactos.getSelectionModel().getSelectedItem());
+            tbvContactos.refresh();
             Mensaje mensaje = new Mensaje();
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "No hay ningún chat seleccionado para eliminar.");
             return;
@@ -308,6 +323,9 @@ public class ChatsAppController extends Controller implements Initializable {
                 Mensaje mensaje = new Mensaje();
                 mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "El chat ha sido eliminado correctamente.");
 
+                tbvContactos.getItems().remove(tbvContactos.getSelectionModel().getSelectedItem());
+                tbvContactos.refresh();
+
                 currentChat = null;
                 vboxChats.getChildren().clear();
                 Label noChatLabel = new Label("El chat ha sido eliminado.");
@@ -324,7 +342,7 @@ public class ChatsAppController extends Controller implements Initializable {
 
 
     private void onActionEliminarMensaje(MensajesDTO mensaje) {
-       
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Eliminar mensaje");
         alert.setHeaderText("¿Está seguro de que desea eliminar este mensaje?");
@@ -354,8 +372,21 @@ public class ChatsAppController extends Controller implements Initializable {
     void onActionBtnNewChat(ActionEvent event) {
         vboxChats.getChildren().clear();
         currentChat = null;
+
+        FlowController.getInstance().goViewInWindowModal("ListaContactosView", this.getStage(), Boolean.TRUE);
+
+        UsuariosDTO usuarioSeleccionado = (UsuariosDTO) AppContext.getInstance().get("usuarioSeleccionado");
+
+        if (usuarioSeleccionado != null) {
+            ObservableList<UsuariosDTO> usuariosList = tbvContactos.getItems();
+
+            if (!usuariosList.contains(usuarioSeleccionado)) {
+                usuariosList.add(usuarioSeleccionado);
+                tbvContactos.setItems(usuariosList);
+                tbvContactos.refresh();
+            }
+        }
+
+
     }
-
-
-
 }
