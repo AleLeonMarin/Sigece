@@ -350,6 +350,12 @@ public class ChatsAppController extends Controller implements Initializable {
         }
     }
 
+    @FXML
+    void onActionBtnNewChat(ActionEvent event) {
+        vboxChats.getChildren().clear();
+        currentChat = null;
+    }
+
 
 
 }

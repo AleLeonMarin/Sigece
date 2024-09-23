@@ -154,21 +154,7 @@ public class BuzonController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnSendNow(ActionEvent event) {
-        CorreosDTO correoSeleccionado = tbvMails.getSelectionModel().getSelectedItem();
-
-        if (correoSeleccionado != null) {
-            Respuesta respuesta = correosService.enviarCorreoAhora(correoSeleccionado);
-
-            if (respuesta.getEstado()) {
-                correoSeleccionado.setCorEstado("E");
-                tbvMails.refresh();
-                mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "El correo ha sido enviado exitosamente.");
-            } else {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Hubo un error al enviar el correo: " + respuesta.getMensaje());
-            }
-        } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar un correo para enviar.");
-        }
+       actualizarCorreos();
     }
 
 
@@ -213,9 +199,7 @@ public class BuzonController extends Controller implements Initializable {
 
     @FXML
     void onActionBtnNewMail(ActionEvent event) {
-
         FlowController.getInstance().goViewInWindow("EnvioCorreoView");
-
     }
 
 
