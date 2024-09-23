@@ -40,7 +40,6 @@ public class KeyAcceptController extends Controller implements Initializable {
     @FXML
     private MFXTextField txtMail;
 
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -51,14 +50,11 @@ public class KeyAcceptController extends Controller implements Initializable {
         btnAcceptKey.setDisable(true);
         txtKey.setDisable(true);
 
-
     }
-
-
 
     @FXML
     void onActionBtnAcceptKey(ActionEvent event) {
-        FlowController.getInstance().goView ("ResetPasswordView");
+        FlowController.getInstance().goViewInWindow("ResetPasswordView");
     }
 
     @FXML
@@ -73,6 +69,4 @@ public class KeyAcceptController extends Controller implements Initializable {
 
     }
 
-
-    
 }

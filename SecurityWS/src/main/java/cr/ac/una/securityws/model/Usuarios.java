@@ -30,7 +30,8 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "Usuarios.findAll", query = "SELECT s FROM Usuarios s"),
         @NamedQuery(name = "Usuarios.findByUsuClave", query = "SELECT s FROM Usuarios s LEFT JOIN FETCH s.roles WHERE s.usuario = :usuario AND s.clave = :clave"),
-        @NamedQuery(name = "Usuarios.findById", query = "SELECT s FROM Usuarios s WHERE s.id = :id")
+        @NamedQuery(name = "Usuarios.findById", query = "SELECT s FROM Usuarios s WHERE s.id = :id"),
+        @NamedQuery(name = "Usuarios.findByCorreo", query = "SELECT s FROM Usuarios s WHERE s.correo = :correo"),
 /*
  * @NamedQuery(name = "SisUsuarios.findByUsuNombre", query =
  * "SELECT s FROM SisUsuarios s WHERE s.usuNombre = :usuNombre"),

@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import cr.ac.una.tarea.model.UsuariosDto;
 import cr.ac.una.tarea.service.UsuariosService;
 import cr.ac.una.tarea.util.FlowController;
@@ -31,15 +30,6 @@ public class LoginController extends Controller implements Initializable {
     /**
      * Initializes the controller class.
      */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
-
-    @Override
-    public void initialize() {
-        // TODO Auto-generated method stub
-    }
 
     @FXML
     private MFXButton btnChangePass;
@@ -56,10 +46,22 @@ public class LoginController extends Controller implements Initializable {
     @FXML
     private MFXTextField textPassword;
 
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+    }
+
+    @Override
+    public void initialize() {
+        textMail.clear();
+        textPassword.clear();
+    }
+
     @FXML
     void onActionBtnChangePass(ActionEvent event) {
 
         FlowController.getInstance().goViewInWindow("KeyAcceptView");
+        getStage().close();
 
     }
 
@@ -78,12 +80,12 @@ public class LoginController extends Controller implements Initializable {
                 if (respuesta.getEstado()) {
 
                     UsuariosDto usuario = (UsuariosDto) respuesta.getResultado("Usuario");
-                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Admin"))) {
+                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Admin")) && usuario.getEstado().equals("A")) {
                         FlowController.getInstance().goMain("SecurityAppView");
                         getStage().close();
                     } else {
                         new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
-                                "Usuario no tiene permisos para ingresar al sistema.");
+                                "Usuario no tiene permisos para ingresar al sistema o no esta activo.");
                     }
                 } else {
                     new Mensaje().showModal(AlertType.ERROR, "Validacion de Usuario", getStage(),
@@ -103,6 +105,7 @@ public class LoginController extends Controller implements Initializable {
     void onActionBtnRegister(ActionEvent event) {
 
         FlowController.getInstance().goViewInWindow("RegisterView");
+        getStage().close();
 
     }
 

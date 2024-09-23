@@ -12,6 +12,7 @@ module cr.ac.una.tarea {
     requires javafx.swing;
     requires webcam.capture;
     requires javafx.base;
+    requires java.desktop;
     
     opens cr.ac.una.tarea.model;
 
