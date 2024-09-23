@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.3.payara-p1 (metro-4.0.3.payara-maintenance-004e4e3; 2023-11-08T12:59:53+0000) XMLWS-Impl/4.0.2 XMLWS-API/4.0.1 XMLB-Impl/4.0.4 XMLB-API/4.0.1 git-revision#004e4e3. --><xs:schema xmlns:tns="http://controller.securityws.una.ac.cr/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://controller.securityws.una.ac.cr/">
+
+<xs:element name="deleteRole" type="tns:deleteRole"/>
+
+<xs:element name="deleteRoleResponse" type="tns:deleteRoleResponse"/>
+
+<xs:element name="deleteSystem" type="tns:deleteSystem"/>
+
+<xs:element name="deleteSystemResponse" type="tns:deleteSystemResponse"/>
+
+<xs:element name="deleteUser" type="tns:deleteUser"/>
+
+<xs:element name="deleteUserResponse" type="tns:deleteUserResponse"/>
+
+<xs:element name="getAllRoles" type="tns:getAllRoles"/>
+
+<xs:element name="getAllRolesResponse" type="tns:getAllRolesResponse"/>
+
+<xs:element name="getAllSystems" type="tns:getAllSystems"/>
+
+<xs:element name="getAllSystemsResponse" type="tns:getAllSystemsResponse"/>
+
+<xs:element name="getAllUsers" type="tns:getAllUsers"/>
+
+<xs:element name="getAllUsersResponse" type="tns:getAllUsersResponse"/>
+
+<xs:element name="getRole" type="tns:getRole"/>
+
+<xs:element name="getRoleResponse" type="tns:getRoleResponse"/>
+
+<xs:element name="getSystem" type="tns:getSystem"/>
+
+<xs:element name="getSystemResponse" type="tns:getSystemResponse"/>
+
+<xs:element name="getUser" type="tns:getUser"/>
+
+<xs:element name="getUserByMail" type="tns:getUserByMail"/>
+
+<xs:element name="getUserByMailResponse" type="tns:getUserByMailResponse"/>
+
+<xs:element name="getUserResponse" type="tns:getUserResponse"/>
+
+<xs:element name="logIn" type="tns:logIn"/>
+
+<xs:element name="logInResponse" type="tns:logInResponse"/>
+
+<xs:element name="saveRole" type="tns:saveRole"/>
+
+<xs:element name="saveRoleResponse" type="tns:saveRoleResponse"/>
+
+<xs:element name="saveSystem" type="tns:saveSystem"/>
+
+<xs:element name="saveSystemResponse" type="tns:saveSystemResponse"/>
+
+<xs:element name="saveUser" type="tns:saveUser"/>
+
+<xs:element name="saveUserResponse" type="tns:saveUserResponse"/>
+
+<xs:complexType name="deleteUser">
+<xs:sequence>
+<xs:element name="usuario" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteUserResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="usuariosDto">
+<xs:sequence>
+<xs:element name="apellidos" type="xs:string" minOccurs="0"/>
+<xs:element name="cedula" type="xs:string" minOccurs="0"/>
+<xs:element name="celular" type="xs:string" minOccurs="0"/>
+<xs:element name="clave" type="xs:string" minOccurs="0"/>
+<xs:element name="correo" type="xs:string" minOccurs="0"/>
+<xs:element name="estado" type="xs:string" minOccurs="0"/>
+<xs:element name="foto" type="xs:base64Binary" minOccurs="0"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="idioma" type="xs:string" minOccurs="0"/>
+<xs:element name="modificado" type="xs:boolean" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+<xs:element name="rolesDto" type="tns:rolesDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="rolesEliminados" type="tns:rolesDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="status" type="xs:string" minOccurs="0"/>
+<xs:element name="telefono" type="xs:string" minOccurs="0"/>
+<xs:element name="usuario" type="xs:string" minOccurs="0"/>
+<xs:element name="version" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="rolesDto">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="modificado" type="xs:boolean" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+<xs:element name="sistema" type="tns:sistemasDto" minOccurs="0"/>
+<xs:element name="usuariosDto" type="tns:usuariosDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="usuariosDtoEliminados" type="tns:usuariosDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="version" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="sistemasDto">
+<xs:sequence>
+<xs:element name="elminados" type="tns:rolesDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="modificado" type="xs:boolean" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+<xs:element name="rolesDto" type="tns:rolesDto" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="version" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="saveUser">
+<xs:sequence>
+<xs:element name="arg0" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="saveUserResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getSystem">
+<xs:sequence>
+<xs:element name="sistema" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getSystemResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:sistemasDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getUserByMail">
+<xs:sequence>
+<xs:element name="mail" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getUserByMailResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getRole">
+<xs:sequence>
+<xs:element name="rol" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getRoleResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:rolesDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="logIn">
+<xs:sequence>
+<xs:element name="usuario" type="xs:string" minOccurs="0"/>
+<xs:element name="clave" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="logInResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteRole">
+<xs:sequence>
+<xs:element name="rol" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteRoleResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:rolesDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllRoles">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getAllRolesResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:rolesDto" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteSystem">
+<xs:sequence>
+<xs:element name="sistema" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteSystemResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:sistemasDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllUsers">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getAllUsersResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="saveSystem">
+<xs:sequence>
+<xs:element name="arg0" type="tns:sistemasDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="saveSystemResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:sistemasDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="saveRole">
+<xs:sequence>
+<xs:element name="arg0" type="tns:rolesDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="saveRoleResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:rolesDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getUser">
+<xs:sequence>
+<xs:element name="usuario" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getUserResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:usuariosDto" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllSystems">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getAllSystemsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:sistemasDto" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
