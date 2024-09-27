@@ -72,6 +72,32 @@ public Respuesta getAllUsuarios() {
     }
 }
 
+
+public Respuesta activarUsuario(String nombreUsuario) {
+    try {
+        Query query = em.createQuery("SELECT u FROM Usuarios u WHERE u.usuUsuario = :usuUsuario", Usuarios.class);
+        query.setParameter("usuUsuario", nombreUsuario);
+
+        Usuarios usuario = (Usuarios) query.getSingleResult();
+        if (usuario == null) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario con el nombre proporcionado.", "activarUsuario NoResultException");
+        }
+
+        // Cambiar el estado del usuario a 'Activo' (por ejemplo, dependiendo de la lógica de activación)
+        usuario.setUsuEstado("A");  // Cambia el estado a Activo
+        em.merge(usuario);  // Persistir el cambio en la base de datos
+        em.flush();  // Asegurar que los cambios se envíen
+
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "Usuario activado exitosamente.", "", "Usuario", new UsuariosDTO(usuario));
+    } catch (NoResultException ex) {
+        return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el usuario con el nombre proporcionado.", "activarUsuario NoResultException");
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al activar el usuario.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al activar el usuario.", "activarUsuario " + ex.getMessage());
+    }
+}
+
+
 }
 
 

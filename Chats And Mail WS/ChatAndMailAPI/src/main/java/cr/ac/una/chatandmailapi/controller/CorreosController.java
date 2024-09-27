@@ -1,6 +1,7 @@
 package cr.ac.una.chatandmailapi.controller;
 
 import cr.ac.una.chatandmailapi.model.CorreosDTO;
+import cr.ac.una.chatandmailapi.model.UsuariosDTO;
 import cr.ac.una.chatandmailapi.service.CorreosService;
 import cr.ac.una.chatandmailapi.util.Respuesta;
 import io.swagger.v3.oas.annotations.Operation;
@@ -177,5 +178,38 @@ public Response enviarCorreoAhora(CorreosDTO correoDto) {
                 .build();
     }
 }
+
+@POST
+@Path("/enviarActivacion")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+@Operation(summary = "Enviar correo de activación", description = "Envía un correo de activación al usuario que se acaba de registrar.")
+@ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Correo de activación enviado exitosamente"),
+    @ApiResponse(responseCode = "500", description = "Error al enviar el correo de activación")
+})
+public Response enviarCorreoActivacion(UsuariosDTO usuarioDto) {
+    try {
+        Respuesta respuesta = correosService.enviarCorreoActivacion(usuarioDto);
+        
+        // Validar si el correo fue enviado correctamente
+        if (!respuesta.getEstado()) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Error enviando el correo de activación: " + respuesta.getMensaje() + "\"}")
+                    .build();
+        }
+        
+        // Respuesta exitosa
+        return Response.ok("{\"message\": \"Correo de activación enviado exitosamente.\"}").build();
+        
+    } catch (Exception e) {
+        // Manejar cualquier excepción inesperada
+        Logger.getLogger(CorreosController.class.getName()).log(Level.SEVERE, "Error enviando el correo de activación", e);
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("{\"error\": \"Error enviando el correo de activación: " + e.getMessage() + "\"}")
+                .build();
+    }
+}
+
     
 }

@@ -5,6 +5,7 @@ import cr.ac.una.chatandmailapi.model.CorreosDTO;
 import cr.ac.una.chatandmailapi.model.Notificacion;
 import cr.ac.una.chatandmailapi.model.Parametros;
 import cr.ac.una.chatandmailapi.model.ParametrosDTO;
+import cr.ac.una.chatandmailapi.model.UsuariosDTO;
 import cr.ac.una.chatandmailapi.util.CodigoRespuesta;
 import cr.ac.una.chatandmailapi.util.Respuesta;
 import jakarta.ejb.EJB;
@@ -224,4 +225,47 @@ public class CorreosService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error enviando el correo de inmediato.", "enviarCorreoAhora");
         }
     }
+    
+    public Respuesta enviarCorreoActivacion(UsuariosDTO usuario) {
+    try {
+        // Obtener la notificación de activación (ID = 3)
+        Notificacion notificacion = em.find(Notificacion.class, 3L);
+        if (notificacion == null) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la notificación de activación.", "enviarCorreoActivacion NoResultException");
+        }
+
+        // Reemplazar la variable [Usuario] en el contenido HTML
+        String contenidoHtml = notificacion.getNotPlantilla()
+                .replace("[Usuario]", usuario.getUsuUsuario());
+
+        // Crear el correo a persistir
+        CorreosDTO correoDto = new CorreosDTO();
+        correoDto.setCorAsunto("Activación de cuenta SigeceUna");
+        correoDto.setCorDestinatario(usuario.getUsuCorreo());
+        correoDto.setCorResultado(contenidoHtml);
+        correoDto.setCorNotId(notificacion); // Asignamos la notificación al correo
+        correoDto.setCorEstado("E"); // Estado inicial pendiente
+        correoDto.setCorFecha(new Date());
+        correoDto.setCorVersion(Long.MIN_VALUE);
+
+        // Persistir el correo
+        Respuesta respuestaGuardarCorreo = guardarCorreo(correoDto);
+        if (!respuestaGuardarCorreo.getEstado()) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al guardar el correo de activación.", "enviarCorreoActivacion " + respuestaGuardarCorreo.getMensaje());
+        }
+
+        // Enviar el correo utilizando el servicio de email
+        String resultadoEnvio = emailService.enviarCorreo(correoDto.getCorDestinatario(), correoDto.getCorAsunto(), contenidoHtml);
+        if (resultadoEnvio.contains("exitosamente")) {
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "Correo de activación enviado exitosamente.", "", "Correo", correoDto);
+        } else {
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error enviando el correo de activación: " + resultadoEnvio, "enviarCorreoActivacion");
+        }
+
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al enviar el correo de activación.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al enviar el correo de activación.", "enviarCorreoActivacion " + ex.getMessage());
+    }
+}
+
 }

@@ -123,13 +123,9 @@ public class EmailService {
 
         Properties props = new Properties();
         props.put("mail.smtp.host", parametros.getParServer());
-        props.put("mail.smtp.port", parametros.getParPuerto());
+        props.put("mail.smtp.port", "587");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-
-
-        props.put("mail.smtp.connectiontimeout", "10000"); 
-        props.put("mail.smtp.timeout", "10000"); 
 
         String correoRemitente = parametros.getParCorreo();
         String passwordRemitente = parametros.getParClave();
@@ -162,6 +158,8 @@ public class EmailService {
                         .map(c -> "Correo a: " + c.getCorDestinatario() + " - Estado: " + c.getCorEstado())
                         .collect(Collectors.joining("\n"));
     }
+    
+    
 
 }
 
