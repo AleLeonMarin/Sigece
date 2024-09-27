@@ -1,6 +1,7 @@
 package cr.ac.una.mailapp.service;
 
 import cr.ac.una.mailapp.model.CorreosDTO;
+import cr.ac.una.mailapp.model.UsuariosDto;
 import cr.ac.una.mailapp.util.Request;
 import cr.ac.una.mailapp.util.Respuesta;
 import jakarta.ws.rs.core.GenericType;
@@ -121,5 +122,25 @@ public class CorreosService {
         }
     }
 
+    public Respuesta enviarCorreoActivacion(UsuariosDto usuarioDto) {
+        try {
+            // Construimos la solicitud HTTP para el endpoint que envía el correo de activación
+            Request request = new Request("correos/enviarActivacion");
+            request.post(usuarioDto);
+
+            // Verificamos si la solicitud tuvo algún error
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+
+            // Si no hubo errores, retornamos una respuesta de éxito
+            return new Respuesta(true, "", "Correo de activación enviado correctamente.");
+
+        } catch (Exception ex) {
+            // Manejo de excepciones y logging en caso de error
+            LOG.log(Level.SEVERE, "Error enviando el correo de activación.", ex);
+            return new Respuesta(false, "Error enviando el correo de activación.", "enviarCorreoActivacion " + ex.getMessage());
+        }
+    }
 
 }

@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import cr.ac.una.mailapp.model.RolesDto;
 import cr.ac.una.mailapp.model.SistemasDto;
 import cr.ac.una.mailapp.model.UsuariosDto;
+import cr.ac.una.mailapp.service.CorreosService;
 import cr.ac.una.mailapp.service.UsuariosService;
 import cr.ac.una.mailapp.util.AppContext;
 import cr.ac.una.mailapp.util.FlowController;
@@ -115,6 +116,7 @@ public class RegisterController extends Controller implements Initializable {
             } else {
                 this.usuariosDto.setEstado("I"); // Set as inactive or similar
                 UsuariosService service = new UsuariosService();
+                CorreosService correosService = new CorreosService();
                 Respuesta respuesta = service.saveUser(usuariosDto.registers());
 
                 if (!respuesta.getEstado()) {
@@ -124,6 +126,8 @@ public class RegisterController extends Controller implements Initializable {
                     unbindUser();
                     this.usuariosDto = (UsuariosDto) respuesta.getResultado("Usuario");
                     bindUser(false);
+
+                    Respuesta respuestaCorreo = correosService.enviarCorreoActivacion(usuariosDto);
                     new Mensaje().showModal(AlertType.INFORMATION, "Guardar Usuario", getStage(),
                             "Usuario guardado correctamente, revise su correo para activacion.");
 
