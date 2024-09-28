@@ -247,8 +247,7 @@ public class CorreosService {
         correoDto.setCorEstado("E"); // Estado inicial pendiente
         correoDto.setCorFecha(new Date());
         correoDto.setCorVersion(Long.MIN_VALUE);
-
-        // Persistir el correo
+     
         Respuesta respuestaGuardarCorreo = guardarCorreo(correoDto);
         if (!respuestaGuardarCorreo.getEstado()) {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error al guardar el correo de activación.", "enviarCorreoActivacion " + respuestaGuardarCorreo.getMensaje());

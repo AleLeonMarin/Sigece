@@ -128,8 +128,12 @@ public class RegisterController extends Controller implements Initializable {
                     bindUser(false);
 
                     Respuesta respuestaCorreo = correosService.enviarCorreoActivacion(usuariosDto);
-                    new Mensaje().showModal(AlertType.INFORMATION, "Guardar Usuario", getStage(),
-                            "Usuario guardado correctamente, revise su correo para activacion.");
+                    if (!respuestaCorreo.getEstado()) {
+                        new Mensaje().showModal(AlertType.WARNING, "Error", getStage(), respuestaCorreo.getMensaje());
+                    } else {
+                        new Mensaje().showModal(AlertType.INFORMATION, "Registro Exitoso",
+                                getStage(), "Usuario guardado correctamente. Revise su correo para activación.");
+                    }
 
                     File file = new File("photo.png");
                     if (file.exists()) {
