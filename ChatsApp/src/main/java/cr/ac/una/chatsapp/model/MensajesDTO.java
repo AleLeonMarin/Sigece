@@ -7,9 +7,7 @@ import javax.print.DocFlavor;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * DTO para la entidad Mensajes.
- */
+
 public class MensajesDTO implements Serializable {
 
     private String smsId;
@@ -19,7 +17,6 @@ public class MensajesDTO implements Serializable {
     private ChatsDTO chatId;
     private UsuariosDTO emisorId;
 
-    // Constructor vacío
     public MensajesDTO() {
         this.smsId = "";
         this.smsTexto = "";

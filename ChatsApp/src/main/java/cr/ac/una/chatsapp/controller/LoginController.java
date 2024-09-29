@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import cr.ac.una.chatsapp.model.UsuariosDTO;
 import cr.ac.una.chatsapp.service.UsuariosService;
+import cr.ac.una.chatsapp.util.AppContext;
 import cr.ac.una.chatsapp.util.FlowController;
 import cr.ac.una.chatsapp.util.Mensaje;
 import cr.ac.una.chatsapp.util.Respuesta;
@@ -81,6 +82,8 @@ public class LoginController extends Controller implements Initializable {
                 if (respuesta.getEstado()) {
 
                     UsuariosDTO usuario = (UsuariosDTO) respuesta.getResultado("Usuario");
+                    AppContext.getInstance().set("UsuarioActual", usuario);
+
                     if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Normal")) && usuario.getUsuEstado().equals("A")) {
                         FlowController.getInstance().goViewInWindow("ChatsAppView");
                         getStage().close();
