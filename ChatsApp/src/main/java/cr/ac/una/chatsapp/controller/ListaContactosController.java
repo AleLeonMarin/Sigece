@@ -97,12 +97,21 @@ public class ListaContactosController extends Controller implements Initializabl
         Respuesta respuesta = chatsService.getUsuarios();
         if (respuesta.getEstado()) {
             List<UsuariosDTO> usuarios = (List<UsuariosDTO>) respuesta.getResultado("Usuarios");
-            listaUsuarios = FXCollections.observableArrayList(usuarios);
+
+            UsuariosDTO usuarioActual = (UsuariosDTO) AppContext.getInstance().get("UsuarioActual");
+
+            List<UsuariosDTO> usuariosFiltrados = usuarios.stream()
+                    .filter(usuario -> "A".equals(usuario.getUsuEstado()))
+                    .filter(usuario -> !usuario.getUsuId().equals(usuarioActual.getUsuId()))
+                    .collect(Collectors.toList());
+
+            listaUsuarios = FXCollections.observableArrayList(usuariosFiltrados);
             tbvContactos.setItems(listaUsuarios);
         } else {
             System.out.println("Error obteniendo los usuarios: " + respuesta.getMensaje());
         }
     }
+
 
     @FXML
     void onActionBtnSearch() {

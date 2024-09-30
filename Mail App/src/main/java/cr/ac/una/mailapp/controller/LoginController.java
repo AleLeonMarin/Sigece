@@ -81,7 +81,7 @@ public class LoginController extends Controller implements Initializable {
                 if (respuesta.getEstado()) {
 
                     UsuariosDto usuario = (UsuariosDto) respuesta.getResultado("Usuario");
-                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Administrador de correos masivos")) && usuario.getEstado().equals("A")) {
+                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Admin")) && usuario.getEstado().equals("A")) {
                         FlowController.getInstance().goMain("MailAppView");
                         getStage().close();
                     } else {

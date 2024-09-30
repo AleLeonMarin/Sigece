@@ -29,11 +29,10 @@ public class RolesDto implements Serializable {
         this.version = rol.getVersion();
         this.modificado = rol.isModificado();
 
-        // Validación para evitar NullPointerException
         if (rol.getSistema() != null) {
             this.sistema = new SistemasDto(rol.getSistema());
         } else {
-            this.sistema = null; // O asigna un valor predeterminado si es necesario
+            this.sistema = null;
         }
 
         if (!rol.getUsuariosDto().isEmpty()) {
@@ -50,7 +49,6 @@ public class RolesDto implements Serializable {
         rol.setNombre(this.getNombre());
         rol.setVersion(this.getVersion());
 
-        // Validación para evitar NullPointerException
         if (this.getSistema() != null) {
             rol.setSistema(this.getSistema().registers());
         }

@@ -28,7 +28,6 @@ public class UsuariosDTO implements Serializable {
     public Long usuVersion;
     public List<RolesDto> rolesDto;
 
-    // Constructor vacío
     public UsuariosDTO() {
         this.usuId = new SimpleStringProperty("");
         this.usuNombre = new SimpleStringProperty("");

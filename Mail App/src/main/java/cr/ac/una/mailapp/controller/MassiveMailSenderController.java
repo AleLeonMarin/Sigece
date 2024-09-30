@@ -9,6 +9,7 @@ import cr.ac.una.mailapp.util.AppContext;
 import cr.ac.una.mailapp.util.FlowController;
 import cr.ac.una.mailapp.util.Mensaje;
 import cr.ac.una.mailapp.util.Respuesta;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -50,6 +51,12 @@ public class MassiveMailSenderController extends Controller implements Initializ
     private TableView<CorreosDTO> tbvCorreoGenerados;
 
     @FXML
+    private MFXTextField txtAsunto;
+
+    @FXML
+    private Button btnMaximizeMail;
+
+    @FXML
     private TableColumn<CorreosDTO, String> tbcEstado, tbcDestinatario, tbcPlantilla;
 
     @FXML
@@ -71,9 +78,11 @@ public class MassiveMailSenderController extends Controller implements Initializ
     public void initialize(URL url, ResourceBundle rb) {
         tbcNotifications.setCellValueFactory(new PropertyValueFactory<>("notNombre"));
 
-        cargarNotificaciones();
+
         configurarSeleccionNotificacion();
         configurarSeleccionCorreo();
+
+        cargarNotificaciones();
 
 
         tbcDestinatario.setCellValueFactory(new PropertyValueFactory<>("corDestinatario"));
@@ -84,6 +93,8 @@ public class MassiveMailSenderController extends Controller implements Initializ
     @Override
     public void initialize() {
         cargarNotificaciones();
+        correoSeleccionado = new CorreosDTO();
+
     }
 
     private void cargarNotificaciones() {
@@ -102,18 +113,22 @@ public class MassiveMailSenderController extends Controller implements Initializ
             if (newValue != null) {
                 notificacionSeleccionada = newValue;
                 cargarPlantillaHTML(newValue);
+                btnDowloadExcel.setDisable(false);
+                btnUploadExcel.setDisable(false);
             }
         });
     }
 
+    //NO funciona correctamente
     private void configurarSeleccionCorreo() {
         tbvCorreoGenerados.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 correoSeleccionado = newValue;
-                cargarPlantillaFinal(newValue);
+//                cargarPlantillaFinal(newValue);
             }
         });
     }
+
 
     private void cargarPlantillaHTML(NotificacionDTO notificacion) {
         if (notificacion != null && notificacion.getNotPlantilla() != null) {
@@ -121,11 +136,18 @@ public class MassiveMailSenderController extends Controller implements Initializ
         }
     }
 
-    private void cargarPlantillaFinal(CorreosDTO correo) {
-        if (correo != null && correo.getCorResultado() != null) {
-            webViewPlantillaFinal.getEngine().loadContent(correo.getCorResultado());
-        }
-    }
+
+    //NO funciona correctamente
+//    private void cargarPlantillaFinal(CorreosDTO correo) {
+//        if (correo != null && correo.getCorResultado() != null) {
+//            System.out.println("Actualizando WebView con el contenido del correo: " + correo.getCorResultado());
+//            webViewPlantillaFinal.getEngine().loadContent(correo.getCorResultado());
+//        } else {
+//            System.out.println("El correo seleccionado no tiene contenido o es nulo.");
+//            webViewPlantillaFinal.getEngine().loadContent("No hay contenido disponible para este correo.</p>");
+//        }
+//    }
+
 
     @FXML
     void onActionBtnUpload(ActionEvent event) {
@@ -154,7 +176,12 @@ public class MassiveMailSenderController extends Controller implements Initializ
                         continue;
                     }
 
-                    correoDto.setCorAsunto(notificacionSeleccionada.getNotNombre());
+                    if (txtAsunto.getText() != null && !txtAsunto.getText().trim().isEmpty()) {
+                        correoDto.setCorAsunto(txtAsunto.getText());
+                    } else {
+                        correoDto.setCorAsunto(notificacionSeleccionada.getNotNombre());
+                    }
+
                     correoDto.setCorNotId(notificacionSeleccionada);
 
                     String contenidoHTML = generarContenidoConVariables(row);
@@ -169,6 +196,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 }
 
                 tbvCorreoGenerados.setItems(correosGenerados);
+
                 mensaje.show(Alert.AlertType.INFORMATION, "Carga exitosa", "El archivo Excel se ha procesado correctamente.");
 
             } catch (IOException e) {
@@ -176,7 +204,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
             }
         }
     }
-
 
     @FXML
     void onActionBtnSend(ActionEvent event) {
@@ -188,8 +215,9 @@ public class MassiveMailSenderController extends Controller implements Initializ
         });
 
         tbvCorreoGenerados.refresh();
-        mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a persistir correctamente.");
+        mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "Correos enviados a la base de datos, serán enviados automáticamente.");
     }
+
     private String generarContenidoConVariables(Row row) {
         String plantillaHTML = notificacionSeleccionada.getNotPlantilla();
         Sheet sheet = row.getSheet();
@@ -222,6 +250,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 }
 
                 boolean isCondicional = esVariableCondicional(columnName, variables);
+
                 if (isCondicional && (valor == null || valor.trim().isEmpty())) {
                     return null;
                 }
@@ -230,12 +259,26 @@ public class MassiveMailSenderController extends Controller implements Initializ
                     valor = buscarValorPorDefecto(columnName, variables);
                 }
 
+                if (valor == null || valor.equals("NULL")) {
+                    valor = "";
+                }
+
                 plantillaHTML = plantillaHTML.replace(variable, valor);
             }
         }
 
         return plantillaHTML;
     }
+
+    private String buscarValorPorDefecto(String nombreVariable, List<VariablesDTO> variables) {
+        for (VariablesDTO variable : variables) {
+            if (variable.getVarNombre().equals(nombreVariable)) {
+                return variable.getVarValor() != null ? variable.getVarValor() : "";
+            }
+        }
+        return "";
+    }
+
 
 
     private boolean esVariableCondicional(String columnName, List<VariablesDTO> variables) {
@@ -247,15 +290,6 @@ public class MassiveMailSenderController extends Controller implements Initializ
         return false;
     }
 
-
-    private String buscarValorPorDefecto(String nombreVariable, List<VariablesDTO> variables) {
-        for (VariablesDTO variable : variables) {
-            if (variable.getVarNombre().equals(nombreVariable)) {
-                return variable.getVarValor();
-            }
-        }
-        return "Valor por defecto";
-    }
 
     @FXML
     void onActionBtnDowload(ActionEvent event) {
@@ -306,6 +340,18 @@ public class MassiveMailSenderController extends Controller implements Initializ
             FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
         } else {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación.");
+        }
+    }
+
+
+    @FXML
+    void onActionBtnMaximizeMail(ActionEvent event) {
+        if (tbvCorreoGenerados.getSelectionModel().getSelectedItem() != null) {
+            String htmlContent = tbvCorreoGenerados.getSelectionModel().getSelectedItem().getCorResultado();
+            AppContext.getInstance().set("htmlContent", htmlContent);
+            FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
+        } else {
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una correo.");
         }
     }
 }

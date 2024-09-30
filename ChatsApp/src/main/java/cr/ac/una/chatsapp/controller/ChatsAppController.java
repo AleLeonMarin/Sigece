@@ -11,6 +11,7 @@ import cr.ac.una.chatsapp.model.MensajesDTO;
 import cr.ac.una.chatsapp.model.UsuariosDTO;
 import cr.ac.una.chatsapp.service.ChatsService;
 import cr.ac.una.chatsapp.service.MensajesService;
+import cr.ac.una.chatsapp.service.UsuariosServiceRest;
 import cr.ac.una.chatsapp.util.AppContext;
 import cr.ac.una.chatsapp.util.FlowController;
 import cr.ac.una.chatsapp.util.Mensaje;
@@ -44,6 +45,8 @@ public class ChatsAppController extends Controller implements Initializable {
 
     private ChatsService chatsService = new ChatsService();
 
+    private UsuariosServiceRest usuariosService = new UsuariosServiceRest();
+
     private Long idEmisor;
 
     @FXML
@@ -55,6 +58,13 @@ public class ChatsAppController extends Controller implements Initializable {
     private ChatsDTO currentChat;
 
     private Timeline timeline;
+
+    @FXML
+    private MFXButton btnGuardarEstado;
+
+    @FXML
+    private MFXTextField txtEstado;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -72,76 +82,61 @@ public class ChatsAppController extends Controller implements Initializable {
                 cargarChatConUsuario(newValue.getUsuId());
             }
         });
-
         iniciarActualizacionPeriodica();
+        txtEstado.setText(((UsuariosDTO) AppContext.getInstance().get("UsuarioActual")).getUsuStatus());
     }
 
     private Long obtenerIdEmisorActual() {
-        return 2L;
+        return ((UsuariosDTO) AppContext.getInstance().get("UsuarioActual")).getUsuId();
     }
 
     private void cargarUsuarios() {
         Respuesta respuesta = chatsService.getUsuarios();
         if (respuesta.getEstado()) {
             List<UsuariosDTO> usuarios = (List<UsuariosDTO>) respuesta.getResultado("Usuarios");
-
             List<UsuariosDTO> usuariosConChats = new ArrayList<>();
-
-            usuarios.stream()
-                    .filter(usuario -> "A".equals(usuario.getUsuEstado()))
-                    .filter(usuario -> !idEmisor.equals(usuario.getUsuId()))
-                    .forEach(usuario -> {
-                        Respuesta respuestaChat = chatsService.getChatsEntreUsuarios(idEmisor, usuario.getUsuId());
-                        if (respuestaChat.getEstado()) {
-                            List<ChatsDTO> chats = (List<ChatsDTO>) respuestaChat.getResultado("Chats");
-                            if (chats != null && !chats.isEmpty()) {
-                                usuariosConChats.add(usuario); // Agregar solo los usuarios con chats
-                            }
-                        } else {
-                            System.out.println("Error obteniendo los chats: " + respuestaChat.getMensaje());
+            for (UsuariosDTO usuario : usuarios) {
+                if ("A".equals(usuario.getUsuEstado()) && !idEmisor.equals(usuario.getUsuId())) {
+                    Respuesta respuestaChat = chatsService.getChatsEntreUsuarios(idEmisor, usuario.getUsuId());
+                    if (respuestaChat.getEstado()) {
+                        List<ChatsDTO> chats = (List<ChatsDTO>) respuestaChat.getResultado("Chats");
+                        if (chats != null && !chats.isEmpty()) {
+                            usuariosConChats.add(usuario);
                         }
-                    });
+                    }
+                }
+            }
 
             ObservableList<UsuariosDTO> usuariosList = FXCollections.observableArrayList(usuariosConChats);
             tbvContactos.setItems(usuariosList);
-            tbcContactos.setCellFactory(new Callback<TableColumn<UsuariosDTO, String>, TableCell<UsuariosDTO, String>>() {
+            tbcContactos.setCellFactory(column -> new TableCell<UsuariosDTO, String>() {
                 @Override
-                public TableCell<UsuariosDTO, String> call(TableColumn<UsuariosDTO, String> param) {
-                    return new TableCell<UsuariosDTO, String>() {
-                        @Override
-                        protected void updateItem(String item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (!empty) {
-                                UsuariosDTO usuario = getTableRow().getItem();
-                                HBox hbox = new HBox(10);
-                                ImageView imageView = new ImageView();
-                                if (usuario.getUsuFotoBase64() != null && !usuario.getUsuFotoBase64().isEmpty()) {
-                                    try {
-                                        byte[] imageBytes = usuario.getUsuFoto();
-                                        ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
-                                        imageView.setImage(new Image(bis));
-                                    } catch (IllegalArgumentException e) {
-                                        imageView.setImage(new Image("src/main/resources/cr/ac/una/chatsapp/resources/add-user.png"));
-                                    }
-                                } else {
-                                    imageView.setImage(new Image("src/main/resources/cr/ac/una/chatsapp/resources/add-user.png"));
-                                }
-                                imageView.setFitHeight(40);
-                                imageView.setFitWidth(40);
-                                Label nombreLabel = new Label(usuario.getUsuNombre() + " " + usuario.getUsuApellidos());
-                                Label estadoLabel = new Label(usuario.getUsuStatus());
-                                estadoLabel.setStyle("-fx-text-fill: #00bfff;");
-                                hbox.getChildren().addAll(imageView, nombreLabel, estadoLabel);
-                                setGraphic(hbox);
-                            }
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (!empty) {
+                        UsuariosDTO usuario = getTableRow().getItem();
+                        HBox hbox = new HBox(10);
+                        ImageView imageView = new ImageView();
+                        if (usuario.getUsuFotoBase64() != null && !usuario.getUsuFotoBase64().isEmpty()) {
+                            byte[] imageBytes = usuario.getUsuFoto();
+                            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+                            imageView.setImage(new Image(bis));
+                        } else {
+                            imageView.setImage(new Image("src/main/resources/cr/ac/una/chatsapp/resources/add-user.png"));
                         }
-                    };
+                        imageView.setFitHeight(40);
+                        imageView.setFitWidth(40);
+                        Label nombreLabel = new Label(usuario.getUsuNombre() + " " + usuario.getUsuApellidos());
+                        Label estadoLabel = new Label(usuario.getUsuStatus());
+                        estadoLabel.setStyle("-fx-text-fill: #00bfff;");
+                        hbox.getChildren().addAll(imageView, nombreLabel, estadoLabel);
+                        setGraphic(hbox);
+                    }
                 }
             });
-        } else {
-            System.out.println("Error obteniendo los usuarios: " + respuesta.getMensaje());
         }
     }
+
 
     private void cargarChatConUsuario(Long idReceptor) {
         vboxChats.getChildren().clear();
@@ -181,7 +176,6 @@ public class ChatsAppController extends Controller implements Initializable {
                         Button btnEliminar = new Button("Eliminar");
                         btnEliminar.setStyle("-fx-background-color: red; -fx-text-fill: white;");
                         btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje)); // Acción para eliminar el mensaje
-
                         // Determinar si el mensaje fue enviado por el emisor actual
                         Long emisorIdMensaje = mensaje.getEmisorId().getUsuId();
                         if (emisorIdMensaje != null && emisorIdMensaje.equals(idEmisor)) {
@@ -202,7 +196,6 @@ public class ChatsAppController extends Controller implements Initializable {
         }
     }
 
-    // Iniciar el timeline para actualización periódica
     private void iniciarActualizacionPeriodica() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> actualizarMensajes()));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -233,6 +226,12 @@ public class ChatsAppController extends Controller implements Initializable {
         if (textoMensaje.isEmpty()) {
             Mensaje mensaje = new Mensaje();
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "El campo de mensaje no puede estar vacío.");
+            return;
+        }
+
+        if (tbvContactos.getSelectionModel().getSelectedItem() == null) {
+            Mensaje mensaje = new Mensaje();
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "No se ha seleccionado ningún chat.");
             return;
         }
 
@@ -342,13 +341,12 @@ public class ChatsAppController extends Controller implements Initializable {
 
 
     private void onActionEliminarMensaje(MensajesDTO mensaje) {
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Eliminar mensaje");
         alert.setHeaderText("¿Está seguro de que desea eliminar este mensaje?");
         alert.setContentText("Esta acción no se puede deshacer.");
-
         Optional<ButtonType> result = alert.showAndWait();
+
         if (result.isPresent() && result.get() == ButtonType.OK) {
             MensajesService mensajesService = new MensajesService();
             Respuesta respuesta = mensajesService.eliminarMensaje(mensaje.getSmsId());
@@ -371,6 +369,7 @@ public class ChatsAppController extends Controller implements Initializable {
     @FXML
     void onActionBtnNewChat(ActionEvent event) {
         vboxChats.getChildren().clear();
+        tbvContactos.getSelectionModel().clearSelection();
         currentChat = null;
 
         FlowController.getInstance().goViewInWindowModal("ListaContactosView", this.getStage(), Boolean.TRUE);
@@ -380,13 +379,37 @@ public class ChatsAppController extends Controller implements Initializable {
         if (usuarioSeleccionado != null) {
             ObservableList<UsuariosDTO> usuariosList = tbvContactos.getItems();
 
-            if (!usuariosList.contains(usuarioSeleccionado)) {
+            boolean usuarioYaEnLista = usuariosList.stream()
+                    .anyMatch(usuario -> usuario.getUsuId().equals(usuarioSeleccionado.getUsuId()));
+
+            if (!usuarioYaEnLista) {
                 usuariosList.add(usuarioSeleccionado);
                 tbvContactos.setItems(usuariosList);
                 tbvContactos.refresh();
+            } else {
+                new Mensaje().show(Alert.AlertType.INFORMATION, "Información", "YA TIENES UN CHAT CON ESTE USUARIO.");
             }
         }
+    }
 
 
+    @FXML
+    void onBtnGuardarEstado(ActionEvent event) {
+        String nuevoEstado = txtEstado.getText();
+        if (nuevoEstado == null || nuevoEstado.isEmpty()) {
+            new Mensaje().show(Alert.AlertType.WARNING, "Advertencia", "El estado no puede estar vacío.");
+            return;
+        }
+
+        UsuariosDTO usuarioActual = (UsuariosDTO) AppContext.getInstance().get("UsuarioActual");
+
+        usuarioActual.setUsuStatus(nuevoEstado);
+
+        Respuesta respuesta = usuariosService.actualizarEstadoUsuario(usuarioActual);
+        if (respuesta.getEstado()) {
+            new Mensaje().show(Alert.AlertType.INFORMATION, "Éxito", "El estado ha sido actualizado correctamente.");
+        } else {
+            new Mensaje().show(Alert.AlertType.ERROR, "Error", "Ocurrió un error al actualizar el estado: " + respuesta.getMensaje());
+        }
     }
 }

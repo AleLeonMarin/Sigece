@@ -8,6 +8,7 @@ import cr.ac.una.mailapp.util.AppContext;
 import cr.ac.una.mailapp.util.FlowController;
 import cr.ac.una.mailapp.util.Mensaje;
 import cr.ac.una.mailapp.util.Respuesta;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
@@ -53,6 +54,9 @@ public class AdminNotificationController extends Controller implements Initializ
 
     @FXML
     private MFXTextField txtVarNombre;
+
+    @FXML
+    private MFXButton btnInfo;
 
     @FXML
     private MFXComboBox<String> txtVarTipo;
@@ -394,13 +398,18 @@ public class AdminNotificationController extends Controller implements Initializ
             boolean confirm = mensaje.showConfirmation("Eliminar Variable", root.getScene().getWindow(), "¿Está seguro de eliminar esta variable?");
             if (confirm) {
                 tbvVariables.getItems().remove(variableToDelete);
-                tbvVariables2.getItems().remove(variableToDelete);
+
+                if (tbvVariables != tbvVariables2) {
+                    tbvVariables2.getItems().remove(variableToDelete);
+                }
+
                 limpiarFormularioVar();
             }
         } else {
             mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una variable para eliminar.");
         }
     }
+
     @FXML
     void onActionBtnNewVar(ActionEvent event) {
         txtVarNombre.requestFocus();
@@ -436,7 +445,7 @@ public class AdminNotificationController extends Controller implements Initializ
 
     private void insertarVariableEnHTML(String variable) {
         String currentHTML = plantillaCode.getText();
-        int cursorPosition = plantillaCode.getCaretPosition(); // Obtener la posicion actual del cursor
+        int cursorPosition = plantillaCode.getCaretPosition();
 
         String updatedHTML = currentHTML.substring(0, cursorPosition) + "["+variable+"]" + currentHTML.substring(cursorPosition);
 
@@ -451,6 +460,17 @@ public class AdminNotificationController extends Controller implements Initializ
         AppContext.getInstance().set("htmlContent", htmlContent);
         FlowController.getInstance().goViewInWindowModal("MaxViewHTML", this.getStage(), Boolean.TRUE);
     }
+
+    @FXML
+    void onActionBtnInfo(ActionEvent event) {
+        if (notificacionSeleccionada != null) {
+            AppContext.getInstance().set("notificacionSeleccionada", notificacionSeleccionada);
+            FlowController.getInstance().goViewInWindowModal("InfoNotificationView", this.getStage(), Boolean.TRUE);
+        } else {
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar una notificación antes de ver la información.");
+        }
+    }
+
 
 
 
