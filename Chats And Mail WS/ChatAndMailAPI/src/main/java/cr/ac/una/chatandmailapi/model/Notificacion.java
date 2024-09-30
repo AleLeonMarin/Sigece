@@ -64,8 +64,7 @@ public class Notificacion implements Serializable {
     private List<Variables> sisVariablesList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "corNotId")
-    @XmlTransient
-    @JsonbTransient 
+
     private List<Correos> sisCorreosList;
 
     public Notificacion() {

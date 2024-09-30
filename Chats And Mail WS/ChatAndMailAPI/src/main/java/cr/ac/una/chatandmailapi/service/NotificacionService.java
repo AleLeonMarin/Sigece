@@ -52,7 +52,6 @@ public Respuesta guardarNotificacion(NotificacionDTO notificacionDto) {
     try {
         Notificacion notificacion;
         if (notificacionDto.getNotId() != null && notificacionDto.getNotId() > 0) {
-            // Encontrar la notificación en la base de datos
             notificacion = em.find(Notificacion.class, notificacionDto.getNotId());
             if (notificacion == null) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la notificación a modificar.", "guardarNotificacion NoResultException");
@@ -61,8 +60,8 @@ public Respuesta guardarNotificacion(NotificacionDTO notificacionDto) {
 
             List<Variables> listaVariables = new ArrayList<>();
             for (VariablesDTO varDto : notificacionDto.getSisVariablesList()) {
-                Variables variable = new Variables(varDto);  // Conversión DTO a entidad
-                variable.setVarNotId(notificacion);  // Establecer la relación con la notificación
+                Variables variable = new Variables(varDto);  
+                variable.setVarNotId(notificacion);
                 listaVariables.add(variable);
 
                 if (variable.getVarId() == null) {

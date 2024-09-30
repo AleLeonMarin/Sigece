@@ -1,5 +1,6 @@
 package cr.ac.una.chatandmailapi.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -83,6 +84,7 @@ public class Correos implements Serializable {
     
     @JoinColumn(name = "COR_NOT_ID", referencedColumnName = "NOT_ID")
     @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
+    @JsonbTransient 
     private Notificacion corNotId;
 
     public Correos() {

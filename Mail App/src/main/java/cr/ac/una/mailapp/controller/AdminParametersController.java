@@ -18,11 +18,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * FXML Controller class
- *
- * @author
- */
+
 public class AdminParametersController extends Controller implements Initializable {
 
     @FXML
