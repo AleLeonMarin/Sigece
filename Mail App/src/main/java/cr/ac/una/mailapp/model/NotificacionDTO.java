@@ -22,7 +22,6 @@ public class NotificacionDTO implements Serializable {
     }
 
 
-    // Getters y Setters
     public Long getNotId() {
         if (this.notId!=null&& !this.notId.equals(0L)) {
             return notId;

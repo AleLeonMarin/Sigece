@@ -24,7 +24,6 @@ public class CorreosController {
     @EJB
     private CorreosService correosService;
 
-
     @POST
     @Path("/guardar")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -73,7 +72,6 @@ public class CorreosController {
         }
     }
 
-
     @POST
     @Path("/enviarPendientes")
     @Produces(MediaType.APPLICATION_JSON)
@@ -82,12 +80,10 @@ public class CorreosController {
         @ApiResponse(responseCode = "200", description = "Correos pendientes enviados exitosamente"),
         @ApiResponse(responseCode = "500", description = "Error al enviar correos pendientes")
     })
-    
-    
+
     public Response enviarCorreosPendientes() {
         try {
-       
-         
+
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Error enviando correos pendientes", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -96,9 +92,8 @@ public class CorreosController {
         }
         return null;
     }
-    
-  
-      @GET
+
+    @GET
     @Path("/obtenerTodos")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Obtener todos los correos", description = "Obtiene todos los correos de la base de datos.")
@@ -122,9 +117,8 @@ public class CorreosController {
                     .build();
         }
     }
-    
-    
-        @DELETE
+
+    @DELETE
     @Path("/eliminar/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Eliminar un correo", description = "Elimina un correo por su ID")
@@ -149,67 +143,66 @@ public class CorreosController {
                     .build();
         }
     }
-    
+
     @POST
-@Path("/enviarAhora")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@Operation(summary = "Enviar un correo de inmediato", description = "Envía un correo inmediatamente sin el timeout.")
-@ApiResponses({
-    @ApiResponse(responseCode = "200", description = "Correo enviado exitosamente"),
-    @ApiResponse(responseCode = "500", description = "Error al enviar el correo")
-})
-    
-public Response enviarCorreoAhora(CorreosDTO correoDto) {
-    try {
-        Respuesta respuesta = correosService.enviarCorreoAhora(correoDto);
+    @Path("/enviarAhora")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Enviar un correo de inmediato", description = "Envía un correo inmediatamente sin el timeout.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Correo enviado exitosamente"),
+        @ApiResponse(responseCode = "500", description = "Error al enviar el correo")
+    })
 
-        if (!respuesta.getEstado()) {
+    public Response enviarCorreoAhora(CorreosDTO correoDto) {
+        try {
+            Respuesta respuesta = correosService.enviarCorreoAhora(correoDto);
+
+            if (!respuesta.getEstado()) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(respuesta.getMensaje())
+                        .build();
+            }
+
+            return Response.ok().build(); // Envío exitoso
+        } catch (Exception e) {
+            Logger.getLogger(CorreosController.class.getName()).log(Level.SEVERE, "Error enviando el correo de inmediato", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(respuesta.getMensaje())
+                    .entity("{\"error\": \"Error enviando el correo de inmediato: " + e.getMessage() + "\"}")
                     .build();
         }
-
-        return Response.ok().build(); // Envío exitoso
-    } catch (Exception e) {
-        Logger.getLogger(CorreosController.class.getName()).log(Level.SEVERE, "Error enviando el correo de inmediato", e);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity("{\"error\": \"Error enviando el correo de inmediato: " + e.getMessage() + "\"}")
-                .build();
     }
-}
 
-@POST
-@Path("/enviarActivacion")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@Operation(summary = "Enviar correo de activación", description = "Envía un correo de activación al usuario que se acaba de registrar.")
-@ApiResponses({
-    @ApiResponse(responseCode = "200", description = "Correo de activación enviado exitosamente"),
-    @ApiResponse(responseCode = "500", description = "Error al enviar el correo de activación")
-})
-public Response enviarCorreoActivacion(UsuariosDTO usuarioDto) {
-    try {
-        Respuesta respuesta = correosService.enviarCorreoActivacion(usuarioDto);
-        
-        // Validar si el correo fue enviado correctamente
-        if (!respuesta.getEstado()) {
+    @POST
+    @Path("/enviarActivacion")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Enviar correo de activación", description = "Envía un correo de activación al usuario que se acaba de registrar.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Correo de activación enviado exitosamente"),
+        @ApiResponse(responseCode = "500", description = "Error al enviar el correo de activación")
+    })
+    public Response enviarCorreoActivacion(UsuariosDTO usuarioDto) {
+        try {
+            Respuesta respuesta = correosService.enviarCorreoActivacion(usuarioDto);
+
+            // Validar si el correo fue enviado correctamente
+            if (!respuesta.getEstado()) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity("{\"error\": \"Error enviando el correo de activación: " + respuesta.getMensaje() + "\"}")
+                        .build();
+            }
+
+            // Respuesta exitosa
+            return Response.ok("{\"message\": \"Correo de activación enviado exitosamente.\"}").build();
+
+        } catch (Exception e) {
+            // Manejar cualquier excepción inesperada
+            Logger.getLogger(CorreosController.class.getName()).log(Level.SEVERE, "Error enviando el correo de activación", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"Error enviando el correo de activación: " + respuesta.getMensaje() + "\"}")
+                    .entity("{\"error\": \"Error enviando el correo de activación: " + e.getMessage() + "\"}")
                     .build();
         }
-        
-        // Respuesta exitosa
-        return Response.ok("{\"message\": \"Correo de activación enviado exitosamente.\"}").build();
-        
-    } catch (Exception e) {
-        // Manejar cualquier excepción inesperada
-        Logger.getLogger(CorreosController.class.getName()).log(Level.SEVERE, "Error enviando el correo de activación", e);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity("{\"error\": \"Error enviando el correo de activación: " + e.getMessage() + "\"}")
-                .build();
     }
-}
 
-    
 }

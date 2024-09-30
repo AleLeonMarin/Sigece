@@ -53,13 +53,13 @@ public class ParametrosController {
         @ApiResponse(responseCode = "404", description = "Parámetros no encontrados"),
         @ApiResponse(responseCode = "500", description = "Error al obtener los parámetros")
     })
-    
+
     public Response getParametros() {
         try {
-            Respuesta respuesta = parametrosService.getParametros(); 
+            Respuesta respuesta = parametrosService.getParametros();
             ParametrosDTO parametrosDTO = (ParametrosDTO) respuesta.getResultado("Parametros");
-                    
-           return Response.ok(parametrosDTO).build();
+
+            return Response.ok(parametrosDTO).build();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Error obteniendo los parámetros", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)

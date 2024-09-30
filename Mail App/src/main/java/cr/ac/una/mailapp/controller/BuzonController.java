@@ -131,25 +131,25 @@ public class BuzonController extends Controller implements Initializable {
     }
 
 
-    @FXML
-    void onActionBtnSendAgain(ActionEvent event) {
-        CorreosDTO correoSeleccionado = tbvMails.getSelectionModel().getSelectedItem();
-
-        if (correoSeleccionado != null) {
-            correoSeleccionado.setCorEstado("P");
-
-            Respuesta respuesta = correosService.guardarCorreo(correoSeleccionado);
-
-            if (respuesta.getEstado()) {
-                mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "El estado del correo ha sido cambiado a 'Por enviar'.");
-                tbvMails.refresh();
-            } else {
-                mensaje.show(Alert.AlertType.ERROR, "Error", "Hubo un error al actualizar el estado del correo: " + respuesta.getMensaje());
-            }
-        } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar un correo para reenviar.");
-        }
-    }
+//    @FXML
+//    void onActionBtnSendAgain(ActionEvent event) {
+//        CorreosDTO correoSeleccionado = tbvMails.getSelectionModel().getSelectedItem();
+//
+//        if (correoSeleccionado != null) {
+//            correoSeleccionado.setCorEstado("P");
+//
+//            Respuesta respuesta = correosService.guardarCorreo(correoSeleccionado);
+//
+//            if (respuesta.getEstado()) {
+//                mensaje.show(Alert.AlertType.INFORMATION, "Éxito", "El estado del correo ha sido cambiado a 'Por enviar'.");
+//                tbvMails.refresh();
+//            } else {
+//                mensaje.show(Alert.AlertType.ERROR, "Error", "Hubo un error al actualizar el estado del correo: " + respuesta.getMensaje());
+//            }
+//        } else {
+//            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar un correo para reenviar.");
+//        }
+//    }
 
 
     @FXML

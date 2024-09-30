@@ -8,9 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DTO para la entidad Notificación.
- */
+
 @JsonbPropertyOrder({
         "notId", "notNombre", "notPlantilla", "notVersion", "sisVariablesList", "sisCorreosList"
 })
