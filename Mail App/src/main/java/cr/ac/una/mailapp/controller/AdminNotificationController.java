@@ -144,34 +144,34 @@ public class AdminNotificationController extends Controller implements Initializ
 
         cargarNotificaciones();
 
+
         btnSave.setDisable(true);
         tabConfigHTML.setDisable(true);
         tabConfigVariables.setDisable(true);
         txtNombre.setDisable(true);
 
+
         tbvProcesosNotificacion.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                limpiarFormularioVar();
                 notificacionSeleccionada = newValue;
+
                 tabConfigHTML.setDisable(false);
                 tabConfigVariables.setDisable(false);
                 txtNombre.setDisable(false);
                 cargarPlantilla(newValue);
                 cargarVariables();
+
+
                 btnSave.setDisable(false);
             }
         });
 
         tbvVariables.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                limpiarFormularioVar();
                 variableSeleccionada = newValue;
                 cargarVariableSeleccionada();
-            }
-        });
-
-        tbvVariables2.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && newValue instanceof VariablesDTO) {
-                VariablesDTO variableSeleccionada = (VariablesDTO) newValue;
-                insertarVariableEnHTML(variableSeleccionada.getVarNombre());
             }
         });
 
@@ -181,9 +181,18 @@ public class AdminNotificationController extends Controller implements Initializ
         plantillaCode.setOnKeyReleased(event -> updatePreview());
     }
 
+
     @Override
     public void initialize() {
         cargarNotificaciones();
+
+        tbvVariables.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                limpiarFormularioVar();
+                variableSeleccionada = newValue;
+                cargarVariableSeleccionada();
+            }
+        });
 
     }
 
@@ -206,7 +215,8 @@ public class AdminNotificationController extends Controller implements Initializ
                 List<VariablesDTO> variablesList = (List<VariablesDTO>) respuesta.getResultado("Variables");
                 ObservableList<VariablesDTO> variablesObservableList = FXCollections.observableArrayList(variablesList);
                 tbvVariables.setItems(variablesObservableList);
-                tbvVariables2.setItems(variablesObservableList);
+
+
             } else {
                 mensaje.show(Alert.AlertType.ERROR, "Error", "Error al cargar las variables: " + respuesta.getMensaje());
             }
@@ -264,6 +274,7 @@ public class AdminNotificationController extends Controller implements Initializ
     void onActionBtnNuevo(ActionEvent event) {
         limpiarFormulario();
         limpiarFormularioVar();
+        tbvVariables2.getItems().clear();
         tabConfigHTML.setDisable(false);
         tabConfigVariables.setDisable(false);
         txtNombre.setDisable(false);
@@ -339,6 +350,11 @@ public class AdminNotificationController extends Controller implements Initializ
             return;
         }
 
+        if (txtVarTipo.getValue().equals("Por defecto") && txtVarValor.getText().isEmpty()) {
+            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "Las variables por defecto deben tener contenido en el campo de valor.");
+            return;
+        }
+
         if (variableSeleccionada != null) {
             variableSeleccionada.setVarNombre(txtVarNombre.getText());
             variableSeleccionada.setTipo(txtVarTipo.getValue());
@@ -350,59 +366,44 @@ public class AdminNotificationController extends Controller implements Initializ
             }
 
             tbvVariables.refresh();
-            tbvVariables2.refresh();
-
-            limpiarFormularioVar();
-            variableSeleccionada = null;
-            return;
-        }
-
-        VariablesDTO nuevaVariable = new VariablesDTO();
-        nuevaVariable.setVarNombre(txtVarNombre.getText());
-        nuevaVariable.setTipo(txtVarTipo.getValue());
-
-        if (!txtVarTipo.getValue().equals("Condicional")) {
-            nuevaVariable.setVarValor(txtVarValor.getText());
         } else {
-            nuevaVariable.setVarValor("");
-        }
 
-        boolean variableYaExiste = tbvVariables.getItems().stream()
-                .anyMatch(var -> var.getVarNombre().equalsIgnoreCase(nuevaVariable.getVarNombre()));
+            VariablesDTO nuevaVariable = new VariablesDTO();
+            nuevaVariable.setVarNombre(txtVarNombre.getText());
+            nuevaVariable.setTipo(txtVarTipo.getValue());
 
-        if (!variableYaExiste) {
-            if (notificacionSeleccionada == null) {
-                variablesTemporales.add(nuevaVariable);
-                tbvVariables.setItems(variablesTemporales);
-                tbvVariables2.setItems(variablesTemporales);
+            if (!txtVarTipo.getValue().equals("Condicional")) {
+                nuevaVariable.setVarValor(txtVarValor.getText());
             } else {
-                nuevaVariable.setVarNotId(notificacionSeleccionada);
-                tbvVariables.getItems().add(nuevaVariable);
-                tbvVariables2.setItems(tbvVariables.getItems());
+                nuevaVariable.setVarValor("");
             }
-        } else {
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable ya existe en la lista.");
+
+            boolean variableYaExiste = tbvVariables.getItems().stream()
+                    .anyMatch(var -> var.getVarNombre().equalsIgnoreCase(nuevaVariable.getVarNombre()));
+
+            if (variableYaExiste) {
+                mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable ya existe en la lista.");
+                return;
+            }
+
+            tbvVariables.getItems().add(nuevaVariable);
         }
 
-        tbvVariables.refresh();
-        tbvVariables2.refresh();
-
-        limpiarFormularioVar();
+        tbvVariables.getSelectionModel().clearSelection();
         variableSeleccionada = null;
+        limpiarFormularioVar();
     }
+
 
     @FXML
     void onActionBtnDeleteVar(ActionEvent event) {
         VariablesDTO variableToDelete = tbvVariables.getSelectionModel().getSelectedItem();
+
         if (variableToDelete != null) {
             boolean confirm = mensaje.showConfirmation("Eliminar Variable", root.getScene().getWindow(), "¿Está seguro de eliminar esta variable?");
+
             if (confirm) {
                 tbvVariables.getItems().remove(variableToDelete);
-
-                if (tbvVariables != tbvVariables2) {
-                    tbvVariables2.getItems().remove(variableToDelete);
-                }
-
                 limpiarFormularioVar();
             }
         } else {
@@ -410,9 +411,12 @@ public class AdminNotificationController extends Controller implements Initializ
         }
     }
 
+
+
     @FXML
     void onActionBtnNewVar(ActionEvent event) {
         txtVarNombre.requestFocus();
+        tbvVariables.getSelectionModel().clearSelection();
         limpiarFormularioVar();
     }
 
@@ -429,7 +433,6 @@ public class AdminNotificationController extends Controller implements Initializ
         txtVarTipo.clear();
         variableSeleccionada = null;
     }
-
     private void setupDoubleClickForVariables() {
         tbvVariables2.setRowFactory(tv -> {
             TableRow<VariablesDTO> row = new TableRow<>();

@@ -14,8 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="738.0" stylesheets="@Styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="cr.ac.una.mailapp.controller.BuzonController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="738.0" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.mailapp.controller.BuzonController">
    <children>
       <StackPane layoutX="16.0" layoutY="127.0" prefHeight="501.0" prefWidth="730.0" styleClass="stack-personal-pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-4.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -67,8 +66,7 @@
                            </HBox.margin>
                         </MFXButton>
                         <MFXButton fx:id="btnShowContent" onAction="#onActionBtnShowContent" prefHeight="30.0" prefWidth="112.0" styleClass="button-blueStyle" text="Ver Contenido" />
-                        <MFXButton fx:id="btnSendAgain" onAction="#onActionBtnSendAgain" prefHeight="30.0" prefWidth="122.0" styleClass="button-blueStyle" text="Volver a enviar" />
-                        <MFXButton fx:id="btnSendNow" onAction="#onActionBtnSendNow" prefHeight="30.0" prefWidth="162.0" styleClass="button-blueStyle" text="Enviar inmediatamente" />
+                        <MFXButton fx:id="btnSendNow" onAction="#onActionBtnSendNow" prefHeight="30.0" prefWidth="162.0" styleClass="button-blueStyle" text="Actualizar Correos" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />

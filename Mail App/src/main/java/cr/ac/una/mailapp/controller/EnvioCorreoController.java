@@ -33,12 +33,12 @@ public class EnvioCorreoController extends Controller implements Initializable {
     private MFXTextField txtDireccionCorreo;
 
     private CorreosService correosService;
-    private Mensaje mensaje; // Para mostrar mensajes al usuario.
+    private Mensaje mensaje;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        correosService = new CorreosService(); // Instancia del servicio de correos.
-        mensaje = new Mensaje(); // Instancia de la clase para mostrar mensajes.
+        correosService = new CorreosService();
+        mensaje = new Mensaje();
     }
 
     @Override

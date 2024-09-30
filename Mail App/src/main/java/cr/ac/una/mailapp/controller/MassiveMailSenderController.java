@@ -220,6 +220,7 @@ public class MassiveMailSenderController extends Controller implements Initializ
 
     private String generarContenidoConVariables(Row row) {
         String plantillaHTML = notificacionSeleccionada.getNotPlantilla();
+        String plantillaHTMLFinal = plantillaHTML;
         Sheet sheet = row.getSheet();
         Row headerRow = sheet.getRow(0);
         List<VariablesDTO> variables = notificacionSeleccionada.getSisVariablesList();
@@ -252,33 +253,41 @@ public class MassiveMailSenderController extends Controller implements Initializ
                 boolean isCondicional = esVariableCondicional(columnName, variables);
 
                 if (isCondicional && (valor == null || valor.trim().isEmpty())) {
+                    mensaje.show(Alert.AlertType.WARNING, "Advertencia", "La variable condicional '" + columnName + "' está vacía. Revisa la estructura de tu Excel.");
                     return null;
                 }
 
                 if (!isCondicional && (valor == null || valor.trim().isEmpty())) {
                     valor = buscarValorPorDefecto(columnName, variables);
+                    if (valor == null || valor.trim().isEmpty()) {
+                        continue;
+                    }
                 }
 
-                if (valor == null || valor.equals("NULL")) {
-                    valor = "";
-                }
-
-                plantillaHTML = plantillaHTML.replace(variable, valor);
+                plantillaHTMLFinal = plantillaHTMLFinal.replace(variable, valor);
             }
         }
 
-        return plantillaHTML;
+
+        for (VariablesDTO variable : variables) {
+            String variableName = "[" + variable.getVarNombre() + "]";
+            if (plantillaHTMLFinal.contains(variableName)) {
+                String defaultValue = variable.getVarValor() != null ? variable.getVarValor() : "Valor no encontrado";
+                plantillaHTMLFinal = plantillaHTMLFinal.replace(variableName, defaultValue);
+            }
+        }
+
+        return plantillaHTMLFinal;
     }
 
     private String buscarValorPorDefecto(String nombreVariable, List<VariablesDTO> variables) {
         for (VariablesDTO variable : variables) {
             if (variable.getVarNombre().equals(nombreVariable)) {
-                return variable.getVarValor() != null ? variable.getVarValor() : "";
+                return variable.getVarValor() != null ? variable.getVarValor() : "Valor no encontrado";
             }
         }
-        return "";
+        return "Valor no encontrado";
     }
-
 
 
     private boolean esVariableCondicional(String columnName, List<VariablesDTO> variables) {
