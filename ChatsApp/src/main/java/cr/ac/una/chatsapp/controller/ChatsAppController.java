@@ -172,21 +172,21 @@ public class ChatsAppController extends Controller implements Initializable {
                         mensajeLabel.setWrapText(true);
                         mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
 
-                        // Crear botón de eliminar
                         Button btnEliminar = new Button("Eliminar");
                         btnEliminar.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-                        btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje)); // Acción para eliminar el mensaje
-                        // Determinar si el mensaje fue enviado por el emisor actual
+                        btnEliminar.setOnAction(event -> onActionEliminarMensaje(mensaje));
+
                         Long emisorIdMensaje = mensaje.getEmisorId().getUsuId();
                         if (emisorIdMensaje != null && emisorIdMensaje.equals(idEmisor)) {
                             hbox.setAlignment(Pos.CENTER_RIGHT);
                             mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
+                            hbox.getChildren().addAll(mensajeLabel, btnEliminar);
                         } else {
                             hbox.setAlignment(Pos.CENTER_LEFT);
                             mensajeLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10px; -fx-background-radius: 10px;");
+                            hbox.getChildren().addAll(mensajeLabel, btnEliminar);
                         }
 
-                        hbox.getChildren().addAll(mensajeLabel, btnEliminar);
                         vboxChats.getChildren().add(hbox);
                     });
         } else {
@@ -195,6 +195,8 @@ public class ChatsAppController extends Controller implements Initializable {
             vboxChats.getChildren().add(noMessagesLabel);
         }
     }
+
+
 
     private void iniciarActualizacionPeriodica() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> actualizarMensajes()));
@@ -221,19 +223,15 @@ public class ChatsAppController extends Controller implements Initializable {
 
     @FXML
     void onActonBtnSend(ActionEvent event) {
-
-
         String textoMensaje = txtMensaje.getText();
 
         if (textoMensaje.isEmpty()) {
-            Mensaje mensaje = new Mensaje();
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "El campo de mensaje no puede estar vacío.");
+            new Mensaje().show(Alert.AlertType.WARNING, "Advertencia", "El campo de mensaje no puede estar vacío.");
             return;
         }
 
         if (tbvContactos.getSelectionModel().getSelectedItem() == null) {
-            Mensaje mensaje = new Mensaje();
-            mensaje.show(Alert.AlertType.WARNING, "Advertencia", "No se ha seleccionado ningún chat.");
+            new Mensaje().show(Alert.AlertType.WARNING, "Advertencia", "No se ha seleccionado ningún chat.");
             return;
         }
 
@@ -244,7 +242,6 @@ public class ChatsAppController extends Controller implements Initializable {
         }
 
         if (currentChat == null) {
-
             ChatsDTO nuevoChat = new ChatsDTO();
             UsuariosDTO emisor = new UsuariosDTO();
             UsuariosDTO receptor = new UsuariosDTO();
@@ -291,17 +288,21 @@ public class ChatsAppController extends Controller implements Initializable {
             mensajeLabel.setMaxWidth(hbox.getPrefWidth() * 0.75);
             mensajeLabel.setStyle("-fx-background-color: #2390b8; -fx-padding: 10px; -fx-background-radius: 10px;");
 
-            hbox.getChildren().add(mensajeLabel);
+            Button btnEliminar = new Button("Eliminar");
+            btnEliminar.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            btnEliminar.setOnAction(e -> onActionEliminarMensaje(mensajeDto));
+
+            hbox.getChildren().addAll(mensajeLabel, btnEliminar);
+
             vboxChats.getChildren().add(hbox);
 
             txtMensaje.clear();
         } else {
             System.out.println("Error enviando el mensaje: " + respuesta.getMensaje());
         }
-
-        actualizarMensajes();
-        iniciarActualizacionPeriodica();
     }
+
+
 
     @FXML
     void onActionBtnDeleteChat(ActionEvent event) {
