@@ -221,6 +221,8 @@ public class ChatsAppController extends Controller implements Initializable {
 
     @FXML
     void onActonBtnSend(ActionEvent event) {
+
+
         String textoMensaje = txtMensaje.getText();
 
         if (textoMensaje.isEmpty()) {
@@ -296,6 +298,9 @@ public class ChatsAppController extends Controller implements Initializable {
         } else {
             System.out.println("Error enviando el mensaje: " + respuesta.getMensaje());
         }
+
+        actualizarMensajes();
+        iniciarActualizacionPeriodica();
     }
 
     @FXML

@@ -229,7 +229,7 @@ public class CorreosService {
     public Respuesta enviarCorreoActivacion(UsuariosDTO usuario) {
     try {
         
-        Notificacion notificacion = em.find(Notificacion.class, 3L);
+        Notificacion notificacion = em.find(Notificacion.class, 2L);
         if (notificacion == null) {
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la notificación de activación.", "enviarCorreoActivacion NoResultException");
         }

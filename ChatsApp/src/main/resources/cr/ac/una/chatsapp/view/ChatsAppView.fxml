@@ -66,8 +66,8 @@
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="41.0" prefWidth="255.0" spacing="10.0">
                            <children>
-                              <MFXTextField fx:id="txtEstado" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="168.0" promptText="Estado" />
-                              <MFXButton fx:id="btnGuardarEstado" onAction="#onBtnGuardarEstado" prefHeight="25.0" prefWidth="57.0" />
+                              <MFXTextField fx:id="txtEstado" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="146.0" promptText="Estado" />
+                              <MFXButton fx:id="btnGuardarEstado" onAction="#onBtnGuardarEstado" prefHeight="25.0" prefWidth="74.0" text="cambiar" />
                            </children>
                         </HBox>
                      </children></VBox>
