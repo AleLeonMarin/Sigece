@@ -84,12 +84,11 @@ public class UsuariosService {
                 // Agregar roles
                 if (!usuariosDto.getRolesDto().isEmpty()) {
                     for (RolesDto rolDto : usuariosDto.getRolesDto()) {
-                        if (rolDto.getModificado()) {
                             Roles rol = em.find(Roles.class, rolDto.getId());
                             rol.getUsuarios().add(usuarios);
                             usuarios.getRoles().add(rol);
                             LOG.log(Level.INFO, "Rol agregado: {0}", rol.getId());
-                        }
+                        
                     }
                 }
 

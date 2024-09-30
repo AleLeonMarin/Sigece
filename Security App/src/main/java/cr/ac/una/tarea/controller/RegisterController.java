@@ -12,11 +12,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.imageio.ImageIO;
-
-import cr.ac.una.tarea.model.RolesDto;
-import cr.ac.una.tarea.model.SistemasDto;
 import cr.ac.una.tarea.model.UsuariosDto;
 import cr.ac.una.tarea.service.UsuariosService;
 import cr.ac.una.tarea.util.AppContext;

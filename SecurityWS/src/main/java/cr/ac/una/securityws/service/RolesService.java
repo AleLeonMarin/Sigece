@@ -6,8 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import cr.ac.una.securityws.model.Roles;
 import cr.ac.una.securityws.model.RolesDto;
-import cr.ac.una.securityws.model.Usuarios;
-import cr.ac.una.securityws.model.UsuariosDto;
 import cr.ac.una.securityws.util.CodigoRespuesta;
 import cr.ac.una.securityws.util.Respuesta;
 import jakarta.ejb.LocalBean;

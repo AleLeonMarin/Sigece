@@ -16,6 +16,7 @@ public class SistemasDto implements Serializable {
     public Long version;
     public Boolean modificado;
     public ObservableList<RolesDto> rolesDto;
+    public RolesDto rolSelected;
 
     public SistemasDto() {
         this.id = new SimpleStringProperty();
@@ -98,6 +99,14 @@ public class SistemasDto implements Serializable {
 
     public void setRolesDto(ObservableList<RolesDto> rolesDto) {
         this.rolesDto = FXCollections.observableArrayList(rolesDto);
+    }
+
+    public RolesDto getRolSelected() {
+        return rolSelected;
+    }
+
+    public void setRolSelected(RolesDto rolSelected) {
+        this.rolSelected = rolSelected;
     }
 
 }

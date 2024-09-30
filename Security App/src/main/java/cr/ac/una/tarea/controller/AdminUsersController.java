@@ -26,6 +26,7 @@ import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -41,6 +42,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -90,7 +92,7 @@ public class AdminUsersController extends Controller implements Initializable {
     private TableColumn<RolesDto, String> tbcRolNombre;
 
     @FXML
-    private TableColumn<SistemasDto, String> tbcSistemaNombre;
+    private TableColumn<RolesDto, String> tbcSistemaNombre;
 
     @FXML
     private TableView<RolesDto> tbvRoles;
@@ -143,15 +145,20 @@ public class AdminUsersController extends Controller implements Initializable {
     @FXML
     private MFXTextField txfUser;
 
+    @FXML
     TableColumn<SistemasDto, RolesDto> tbcRol;
 
     UsuariosDto usuariosDto;
 
     SistemasDto systems;
 
+    RolesDto rol;
+
     File file;
 
     List<Node> requeridos = new ArrayList<>();
+
+    ObservableList<SistemasDto> sistemasList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -161,6 +168,7 @@ public class AdminUsersController extends Controller implements Initializable {
 
         this.usuariosDto = new UsuariosDto();
         this.systems = new SistemasDto();
+        this.rol = new RolesDto();
         newUser(); // Resets to a new user
         indicateRequiredFields(); // Marks required fields
 
@@ -185,9 +193,9 @@ public class AdminUsersController extends Controller implements Initializable {
                 return new Image(bis);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Puedes cambiarlo a un logger para mejor manejo
+            e.printStackTrace();
         }
-        return null; // Si la imagen no es válida o los bytes están vacíos, retornamos null
+        return null;
     }
 
     private void bindUser(boolean newUser) {
@@ -238,7 +246,6 @@ public class AdminUsersController extends Controller implements Initializable {
 
             @Override
             public RolesDto fromString(String string) {
-                // Este método no se utiliza, pero es obligatorio implementarlo.
                 return null;
             }
         });
@@ -342,7 +349,11 @@ public class AdminUsersController extends Controller implements Initializable {
     public void chargeRoles() {
 
         tbvRoles.getItems().clear();
-        tbvRoles.setItems((ObservableList<RolesDto>) this.usuariosDto.getRolesDto());
+        tbvRoles.setItems(FXCollections.observableArrayList(this.usuariosDto.getRolesDto()));
+        List<SistemasDto> sistemas = (List<SistemasDto>) rol.getSistema();
+        if (sistemas != null && !sistemas.isEmpty()) {
+            tbcSistemaNombre.setCellValueFactory(cd -> cd.getValue().nombre);
+        }
         tbvRoles.refresh();
     }
 
@@ -355,7 +366,7 @@ public class AdminUsersController extends Controller implements Initializable {
                 unbindUser();
                 this.usuariosDto = (UsuariosDto) respuesta.getResultado("Usuario");
                 bindUser(false);
-                cmbLan.getSelectionModel().selectItem(this.usuariosDto.getIdioma()); // Cambiado a select()
+                cmbLan.getSelectionModel().selectItem(this.usuariosDto.getIdioma());
                 validarRequeridos();
                 chargeRoles();
             } else {
@@ -387,23 +398,54 @@ public class AdminUsersController extends Controller implements Initializable {
     }
 
     private void columnsTable() {
-
+        // Configuración de la columna para el ID
         TableColumn<SistemasDto, String> tbcIdRol = new TableColumn<>("ID");
         tbcIdRol.setCellValueFactory(cd -> cd.getValue().id);
         tbvUsers.getColumns().add(tbcIdRol);
 
+        // Configuración de la columna para el nombre
         TableColumn<SistemasDto, String> tbcRolNombre = new TableColumn<>("Nombre");
         tbcRolNombre.setCellValueFactory(cd -> cd.getValue().nombre);
         tbvUsers.getColumns().add(tbcRolNombre);
 
+        // Configuración de la columna para el rol
         tbcRol = new TableColumn<>("Rol");
         tbcRol.setCellValueFactory(cd -> {
-            RolesDto selectedRole = cmbRoles.getSelectionModel().getSelectedItem();
-            return new SimpleObjectProperty<>(selectedRole);
+            SistemasDto sistema = cd.getValue();
+            // Devuelve el rol del sistema actual
+            return new SimpleObjectProperty<>(sistema.getRolSelected());
+        });
+
+        tbcRol.setCellFactory(column -> new TableCell<SistemasDto, RolesDto>() {
+            @Override
+            protected void updateItem(RolesDto rol, boolean empty) {
+                super.updateItem(rol, empty);
+                if (empty || rol == null) {
+                    setText(null);
+                } else {
+                    // Muestra el nombre del rol
+                    setText(rol.getNombre());
+                }
+            }
         });
 
         tbvUsers.getColumns().add(tbcRol);
 
+        cmbRoles.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+
+                SistemasDto nuevoSistema = new SistemasDto();
+                nuevoSistema.setRolSelected(newValue);
+
+                if (!sistemasList.contains(nuevoSistema)) {
+                    sistemasList.add(nuevoSistema);
+                }
+                Platform.runLater(() -> {
+                    tbvUsers.setItems(sistemasList);
+                    tbvUsers.refresh();
+                });
+            }
+        });
     }
 
     @Override
@@ -436,7 +478,9 @@ public class AdminUsersController extends Controller implements Initializable {
                         "Debe seleccionar un usuario.");
                 tbpUsuarios.getSelectionModel().select(tptMantenimiento);
             } else {
-                columnsTable();
+                if (tbvUsers.getColumns().isEmpty()) {
+                    columnsTable();
+                }
                 newSystem();
             }
         }
@@ -515,6 +559,7 @@ public class AdminUsersController extends Controller implements Initializable {
                 for (SistemasDto sistema : tbvUsers.getItems()) {
                     RolesDto selectedRole = (RolesDto) tbcRol.getCellData(sistema); // Get the RolesDto from the cell
                     if (selectedRole != null) {
+                        selectedRole.setModificado(true);
                         rolesList.add(selectedRole);
                     }
                 }

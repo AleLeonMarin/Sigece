@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.management.relation.Role;
-
 public class UsuariosDto implements Serializable {
 
     private Long id;

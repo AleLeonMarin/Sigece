@@ -25,6 +25,8 @@ import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -430,14 +432,9 @@ public class AdminSystemController extends Controller implements Initializable {
                 this.systems = (SistemasDto) res.getResultado("Sistema");
                 bindSystems(false);
 
-                // Limpiar la tabla de roles
-                tbvRoles.getItems().clear();
-
-                // Cargar los roles del sistema actual
-                List<RolesDto> rolesDelSistema = systems.getRolesDto();
-                if (rolesDelSistema != null && !rolesDelSistema.isEmpty()) {
-                    tbvRoles.getItems().addAll(rolesDelSistema);
-                }
+                // Limpiar y cargar los roles del sistema actual
+                ObservableList<RolesDto> rolesDelSistema = FXCollections.observableArrayList(systems.getRolesDto());
+                tbvRoles.setItems(rolesDelSistema);
 
                 System.out.println("Roles del sistema: " + rolesDelSistema.toString());
             }
