@@ -64,7 +64,6 @@ public class Notificacion implements Serializable {
     private List<Variables> sisVariablesList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "corNotId")
-
     private List<Correos> sisCorreosList;
 
     public Notificacion() {
