@@ -88,7 +88,7 @@ public class NotificacionesController {
                     .build();
         }
     }
-    
+
     @GET
     @Path("/notificaciones")
     @Produces(MediaType.APPLICATION_JSON)

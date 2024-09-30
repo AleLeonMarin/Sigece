@@ -228,13 +228,13 @@ public class CorreosService {
     
     public Respuesta enviarCorreoActivacion(UsuariosDTO usuario) {
     try {
-        // Obtener la notificación de activación (ID = 3)
+        
         Notificacion notificacion = em.find(Notificacion.class, 3L);
         if (notificacion == null) {
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró la notificación de activación.", "enviarCorreoActivacion NoResultException");
         }
 
-        // Reemplazar la variable [Usuario] en el contenido HTML
+   
         String contenidoHtml = notificacion.getNotPlantilla()
                 .replace("[Usuario]", usuario.getUsuUsuario());
 
@@ -243,8 +243,8 @@ public class CorreosService {
         correoDto.setCorAsunto("Activación de cuenta SigeceUna");
         correoDto.setCorDestinatario(usuario.getUsuCorreo());
         correoDto.setCorResultado(contenidoHtml);
-        correoDto.setCorNotId(notificacion); // Asignamos la notificación al correo
-        correoDto.setCorEstado("E"); // Estado inicial pendiente
+        correoDto.setCorNotId(notificacion); 
+        correoDto.setCorEstado("E"); 
         correoDto.setCorFecha(new Date());
         correoDto.setCorVersion(Long.MIN_VALUE);
      
