@@ -282,7 +282,7 @@
 
 .jfx-tbvUser-btnDelete{
 
-    -fx-opacity: 0,8;
+    -fx-opacity: 0.8;
     -fx-background-repeat: no-repeat;
     -fx-background-size: contain;
     -fx-background-position: center;

@@ -27,6 +27,7 @@ public class UsuariosDto implements Serializable {
     public Long version;
     public Boolean modificado;
     public List<RolesDto> rolesDto;
+    public List<RolesDto> rolesDtoEliminados;
 
     public UsuariosDto() {
         this.id = new SimpleStringProperty("");
@@ -44,6 +45,7 @@ public class UsuariosDto implements Serializable {
         this.status = new SimpleStringProperty("");
         this.modificado = false;
         this.rolesDto = FXCollections.observableArrayList();
+        this.rolesDtoEliminados = FXCollections.observableArrayList();
     }
 
     public UsuariosDto(cr.ac.una.securityws.controller.UsuariosDto usuarios) {
@@ -70,6 +72,13 @@ public class UsuariosDto implements Serializable {
                 this.rolesDto.add(new RolesDto(rol));
             }
         }
+
+        if(!usuarios.getRolesEliminados().isEmpty()){
+            List<cr.ac.una.securityws.controller.RolesDto> roles = usuarios.getRolesEliminados();
+            for (cr.ac.una.securityws.controller.RolesDto rol : roles) {
+                this.rolesDtoEliminados.add(new RolesDto(rol));
+            }
+        }
     }
 
     public cr.ac.una.securityws.controller.UsuariosDto registers() {
@@ -94,6 +103,13 @@ public class UsuariosDto implements Serializable {
         if (this.getRolesDto() != null && !this.getRolesDto().isEmpty()) {
             for (RolesDto rol : this.getRolesDto()) {
                 usuarios.getRolesDto().add(rol.register()); // Agregar directamente a la lista
+            }
+        }
+
+        // Aquí se asignan los roles eliminados directamente a la lista de rolesDtoEliminados
+        if (this.rolesDtoEliminados != null && !this.rolesDtoEliminados.isEmpty()) {
+            for (RolesDto rol : this.rolesDtoEliminados) {
+                usuarios.getRolesEliminados().add(rol.register()); // Agregar directamente a la lista
             }
         }
 
@@ -170,6 +186,10 @@ public class UsuariosDto implements Serializable {
         return rolesDto;
     }
 
+    public List<RolesDto> getRolesDtoEliminados() {
+        return rolesDtoEliminados;
+    }
+
     // Setters
 
     public void setId(Long id) {
@@ -234,6 +254,10 @@ public class UsuariosDto implements Serializable {
 
     public void setRolesDto(List<RolesDto> rolesDto) {
         this.rolesDto = FXCollections.observableArrayList(rolesDto);
+    }
+
+    public void setRolesDtoEliminados(List<RolesDto> rolesDtoEliminados) {
+        this.rolesDtoEliminados = FXCollections.observableArrayList(rolesDtoEliminados);
     }
 
 }

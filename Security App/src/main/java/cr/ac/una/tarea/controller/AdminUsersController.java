@@ -27,6 +27,7 @@ import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -40,6 +41,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
@@ -165,6 +167,11 @@ public class AdminUsersController extends Controller implements Initializable {
         // Initialize TableView columns rols
         tbcIdRol.setCellValueFactory(cd -> cd.getValue().id);
         tbcRolNombre.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getNombre()));
+        TableColumn<RolesDto, Boolean> tbcEliminar = new TableColumn<>("Eliminar");
+        tbcEliminar.setCellValueFactory(
+                (TableColumn.CellDataFeatures<RolesDto, Boolean> p) -> new SimpleBooleanProperty(p.getValue() != null));
+        tbcEliminar.setCellFactory((TableColumn<RolesDto, Boolean> p) -> new ButtonCell());
+        tbvRoles.getColumns().add(tbcEliminar);
 
         this.usuariosDto = new UsuariosDto();
         this.systems = new SistemasDto();
@@ -621,8 +628,7 @@ public class AdminUsersController extends Controller implements Initializable {
                     BufferedImage bufferedImage = ImageIO.read(file);
                     Image image = SwingFXUtils.toFXImage(bufferedImage, null);
                     imgViewUser.setImage(image);
-                    // Actualiza la foto en el DTO si es necesario
-                    usuariosDto.setFoto(toByteArray(bufferedImage)); // Método de conversión a byte[]
+                    usuariosDto.setFoto(toByteArray(bufferedImage));
                 } catch (IOException e) {
                     e.printStackTrace();
                     new Mensaje().showModal(AlertType.ERROR, "Error", getStage(), "Error al cargar la imagen.");
@@ -637,6 +643,31 @@ public class AdminUsersController extends Controller implements Initializable {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "png", baos);
         return baos.toByteArray();
+    }
+
+    private class ButtonCell extends TableCell<RolesDto, Boolean> {
+
+        final Button cellButton = new Button();
+
+        ButtonCell() {
+            cellButton.setPrefWidth(500);
+            cellButton.getStyleClass().add("jfx-tbvUser-btnDelete");
+
+            cellButton.setOnAction((ActionEvent t) -> {
+                RolesDto rol = (RolesDto) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
+                usuariosDto.getRolesDtoEliminados().add(rol);
+                tbvRoles.getItems().remove(rol);
+                tbvRoles.refresh();
+            });
+        }
+
+        @Override
+        protected void updateItem(Boolean t, boolean empty) {
+            super.updateItem(t, empty);
+            if (!empty) {
+                setGraphic(cellButton);
+            }
+        }
     }
 
 }
