@@ -9,6 +9,7 @@ import cr.ac.una.securityws.model.RolesDto;
 import cr.ac.una.securityws.model.Usuarios;
 import cr.ac.una.securityws.model.UsuariosDto;
 import cr.ac.una.securityws.util.CodigoRespuesta;
+import cr.ac.una.securityws.util.Request;
 import cr.ac.una.securityws.util.Respuesta;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
@@ -28,7 +29,7 @@ public class UsuariosService {
 
     public Respuesta validateUser(String usuario, String clave) {
         try {
-            LOG.log(Level.INFO, "Ejecutando consulta con usuario: {0} y clave: {1}", new Object[]{usuario, clave});
+            LOG.log(Level.INFO, "Ejecutando consulta con usuario: {0} y clave: {1}", new Object[] { usuario, clave });
 
             Query query = em.createNamedQuery("Usuarios.findByUsuClave", Usuarios.class);
             query.setParameter("usuario", usuario);
@@ -102,6 +103,7 @@ public class UsuariosService {
             } else {
                 usuarios = new Usuarios(usuariosDto);
                 em.persist(usuarios);
+                //activateUser(usuariosDto);
             }
 
             // Aseguramos que los cambios se confirmen en la base de datos
@@ -226,6 +228,25 @@ public class UsuariosService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.",
                     "getUserByMail " + ex.getMessage());
         }
+    }
+
+    private void activateUser(UsuariosDto usuarios) {
+
+        try {
+
+            Request request = new Request("CorreosController/correos/enviarActivacion");
+            request.post(usuarios);
+
+            if (request.isError()) {
+                LOG.log(Level.SEVERE, "Error al activar el usuario: {0}", request.getError());
+            }
+
+            UsuariosDto usuario = (UsuariosDto) request.readEntity(UsuariosDto.class);
+            LOG.log(Level.INFO, "Usuario activado correctamente: {0}", usuario);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al activar el usuario.", ex);
+        }
+
     }
 
 }

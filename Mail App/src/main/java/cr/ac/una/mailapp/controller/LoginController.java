@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import cr.ac.una.mailapp.model.UsuariosDto;
 import cr.ac.una.mailapp.service.UsuariosService;
+import cr.ac.una.mailapp.util.AppContext;
 import cr.ac.una.mailapp.util.FlowController;
 import cr.ac.una.mailapp.util.Mensaje;
 import cr.ac.una.mailapp.util.Respuesta;
@@ -81,7 +82,12 @@ public class LoginController extends Controller implements Initializable {
                 if (respuesta.getEstado()) {
 
                     UsuariosDto usuario = (UsuariosDto) respuesta.getResultado("Usuario");
-                    if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Admin")) && usuario.getEstado().equals("A")) {
+                    if (usuario.getRolesDto().stream()
+                            .anyMatch(r -> r.getNombre().equals("Administrador de correos masivos"))
+                            || usuario.getRolesDto().stream()
+                                    .anyMatch(r -> r.getNombre().equals("Normal de Correos Masivos"))
+                                    && usuario.getEstado().equals("A")) {
+                        AppContext.getInstance().set("Usuario", usuario);
                         FlowController.getInstance().goMain("MailAppView");
                         getStage().close();
                     } else {

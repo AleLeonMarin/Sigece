@@ -4,6 +4,8 @@
  */
 package cr.ac.una.mailapp.controller;
 
+import cr.ac.una.mailapp.model.UsuariosDto;
+import cr.ac.una.mailapp.util.AppContext;
 import cr.ac.una.mailapp.util.FlowController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import java.net.URL;
@@ -27,7 +29,7 @@ public class MailAppController extends Controller implements Initializable {
      * Initializes the controller class.
      */
 
-      @FXML
+    @FXML
     private MFXButton btnAdminParameters;
 
     @FXML
@@ -56,11 +58,28 @@ public class MailAppController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
     }
 
     @Override
-    public void initialize(){
+    public void initialize() {
+
+        UsuariosDto usuario = (UsuariosDto) AppContext.getInstance().get("Usuario");
+        
+        if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Administrador de correos masivos"))) {
+            btnAdminParameters.setVisible(true);
+            btnAdminProcess.setVisible(true);
+            btnMassiveMails.setVisible(true);
+            btnMailBox.setVisible(true);
+            btnNewMail.setVisible(true);
+        } else if (usuario.getRolesDto().stream().anyMatch(r -> r.getNombre().equals("Normal de Correos Masivos"))) {
+            btnAdminParameters.setVisible(false);
+            btnAdminProcess.setVisible(false);
+            btnMassiveMails.setVisible(true);
+            btnMailBox.setVisible(false);
+            btnNewMail.setVisible(false);
+        }
+
     }
 
     @FXML
@@ -91,13 +110,10 @@ public class MailAppController extends Controller implements Initializable {
 
     }
 
-
     @FXML
     void onActionBtnNewMail(ActionEvent event) {
         FlowController.getInstance().goViewInWindowModal("EnvioCorreoView", this.getStage(), Boolean.FALSE);
 
     }
-
-
 
 }

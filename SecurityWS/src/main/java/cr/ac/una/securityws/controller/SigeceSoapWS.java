@@ -41,12 +41,10 @@ public class SigeceSoapWS {
         try {
             Respuesta res = usuariosService.validateUser(usuario, clave);
 
-            // Verifica si la validación fue exitosa
             if (!res.getEstado()) {
-                // Opcional: puedes lanzar una excepción o manejar el error de otra manera
                 Logger.getLogger(SigeceSoapWS.class.getName()).log(Level.WARNING, "Error de autenticación: {0}",
                         res.getMensajeInterno());
-                return null; // o podrías retornar un DTO que represente un error
+                return null;
             }
 
             UsuariosDto user = (UsuariosDto) res.getResultado("Usuario");
