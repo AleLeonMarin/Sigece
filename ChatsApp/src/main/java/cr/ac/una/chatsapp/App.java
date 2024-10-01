@@ -16,8 +16,5 @@ public class App extends Application {
         FlowController.getInstance().InitializeFlow(stage, null);
         FlowController.getInstance().goViewInWindow("LoginView");
     }
-    public static void main(String[] args) {
-        launch();
-    }
 
 }

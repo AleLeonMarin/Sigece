@@ -1,5 +1,6 @@
 package cr.ac.una.chatsapp.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,7 +35,19 @@ public class AppContext {
     private void cargarPropiedades() {
         try {
             FileInputStream configFile;
-            configFile = new FileInputStream("config/properties.ini");
+
+            File configFile1 = new File("classes/config/properties.ini");
+            if (configFile1.exists()) {
+                configFile = new FileInputStream(configFile1);
+            } else {
+                File configFile2 = new File("config/properties.ini");
+                if (configFile2.exists()) {
+                    configFile = new FileInputStream(configFile2);
+                } else {
+                    throw new IOException("Archivo de configuración no encontrado en ninguna ubicación.");
+                }
+            }
+
             Properties appProperties = new Properties();
             appProperties.load(configFile);
             configFile.close();
@@ -46,6 +59,7 @@ public class AppContext {
             System.out.println("Archivo de configuración no encontrado.");
         }
     }
+
 
     @Override
     public Object clone() throws CloneNotSupportedException {
