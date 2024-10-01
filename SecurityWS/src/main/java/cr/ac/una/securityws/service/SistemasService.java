@@ -17,6 +17,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import java.util.Objects;
 
 @Stateless
 @LocalBean

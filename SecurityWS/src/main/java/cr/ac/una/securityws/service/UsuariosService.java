@@ -29,28 +29,28 @@ public class UsuariosService {
     public Respuesta validateUser(String usuario, String clave) {
         try {
             LOG.log(Level.INFO, "Ejecutando consulta con usuario: {0} y clave: {1}", new Object[]{usuario, clave});
-            
+
             Query query = em.createNamedQuery("Usuarios.findByUsuClave", Usuarios.class);
             query.setParameter("usuario", usuario);
             query.setParameter("clave", clave);
-            
+
             List<Usuarios> usuariosList = query.getResultList();
-            
+
             // Check if no users were found
             if (usuariosList.isEmpty()) {
                 return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
                         "No existe un usuario con las credenciales ingresadas.", "validateUser Usuario no encontrado");
             }
-    
+
             // Only one user found
             Usuarios usuarios = usuariosList.get(0);
             UsuariosDto usuariosDto = new UsuariosDto(usuarios);
             for (Roles rol : usuarios.getRoles()) {
                 usuariosDto.getRolesDto().add(new RolesDto(rol));
             }
-    
+
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Usuario", usuariosDto);
-    
+
         } catch (NoResultException ex) {
             LOG.log(Level.INFO, "No se encontró ningún usuario con las credenciales proporcionadas.");
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,
@@ -77,18 +77,24 @@ public class UsuariosService {
 
                 // Eliminar roles
                 for (RolesDto rolDto : usuariosDto.getRolesEliminados()) {
-                    usuariosDto.getRolesDto().remove(new Roles(rolDto.getId()));
+                    Roles rol = em.find(Roles.class, rolDto.getId());
+                    if (rol != null) {
+                        rol.getUsuarios().remove(usuarios);
+                        usuarios.getRoles().remove(rol);
+                        em.merge(rol);
+                        em.merge(usuarios);
+                    }
                     LOG.log(Level.INFO, "Rol elimnado: {0}", rolDto.getId());
                 }
 
                 // Agregar roles
                 if (!usuariosDto.getRolesDto().isEmpty()) {
                     for (RolesDto rolDto : usuariosDto.getRolesDto()) {
-                            Roles rol = em.find(Roles.class, rolDto.getId());
-                            rol.getUsuarios().add(usuarios);
-                            usuarios.getRoles().add(rol);
-                            LOG.log(Level.INFO, "Rol agregado: {0}", rol.getId());
-                        
+                        Roles rol = em.find(Roles.class, rolDto.getId());
+                        rol.getUsuarios().add(usuarios);
+                        usuarios.getRoles().add(rol);
+                        LOG.log(Level.INFO, "Rol agregado: {0}", rol.getId());
+
                     }
                 }
 

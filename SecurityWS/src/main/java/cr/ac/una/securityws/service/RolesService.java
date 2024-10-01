@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import cr.ac.una.securityws.model.Roles;
 import cr.ac.una.securityws.model.RolesDto;
+import cr.ac.una.securityws.model.Sistemas;
 import cr.ac.una.securityws.util.CodigoRespuesta;
 import cr.ac.una.securityws.util.Respuesta;
 import jakarta.ejb.LocalBean;
@@ -38,6 +39,10 @@ public class RolesService {
             } else {
                 roles = new Roles(rolesDto);
                 em.persist(roles);
+                // Update the system's roles collection
+                Sistemas sistema = em.find(Sistemas.class, rolesDto.getSistema().getId());
+                sistema.getRoles().add(roles);
+                em.merge(sistema);
             }
             em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Rol", new RolesDto(roles));
@@ -76,6 +81,9 @@ public class RolesService {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontró el rol a eliminar.",
                             "deleteRol NoResultException");
                 }
+                Sistemas sistema = em.find(Sistemas.class, roles.getSistema().getId());
+                sistema.getRoles().remove(roles);
+                em.merge(sistema);
                 em.remove(roles);
             } else {
                 return new Respuesta(false, CodigoRespuesta.ERROR_CLIENTE, "Debe indicar el id del rol a eliminar.",
@@ -96,7 +104,7 @@ public class RolesService {
             query.setParameter("id", id);
             Roles roles = (Roles) query.getSingleResult();
             RolesDto rolesDto = new RolesDto(roles);
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Rol",rolesDto);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Rol", rolesDto);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrio un error al obtener el rol.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al obtener el rol.",
