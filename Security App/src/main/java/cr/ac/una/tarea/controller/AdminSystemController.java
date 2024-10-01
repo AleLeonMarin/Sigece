@@ -16,6 +16,7 @@ import cr.ac.una.tarea.model.RolesDto;
 import cr.ac.una.tarea.model.SistemasDto;
 import cr.ac.una.tarea.service.RolesService;
 import cr.ac.una.tarea.service.SistemasService;
+import cr.ac.una.tarea.util.Formato;
 import cr.ac.una.tarea.util.Mensaje;
 import cr.ac.una.tarea.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -446,6 +447,12 @@ public class AdminSystemController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        txfID.delegateSetTextFormatter(Formato.getInstance().integerFormat());
+        txfIdRol.delegateSetTextFormatter(Formato.getInstance().integerFormat());
+
+        txfName.delegateSetTextFormatter(Formato.getInstance().maxLengthFormat(50));
+        txfNombreRol.delegateSetTextFormatter(Formato.getInstance().maxLengthFormat(50));
         // Columns creation
         createColumnsSystems();
         createColumnsRoles();

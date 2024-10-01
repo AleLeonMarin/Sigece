@@ -144,7 +144,6 @@
                                              <columns>
                                                 <TableColumn fx:id="tbcIdRol" prefWidth="75.0" text="ID" />
                                                 <TableColumn fx:id="tbcRolNombre" prefWidth="75.0" text="ROL" />
-                                                <TableColumn fx:id="tbcSistemaNombre" prefWidth="75.0" text="SISTEMA" />
                                              </columns>
                                              <VBox.margin>
                                                 <Insets left="30.0" right="30.0" />

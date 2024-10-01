@@ -19,6 +19,7 @@ import cr.ac.una.tarea.service.SistemasService;
 import cr.ac.una.tarea.service.UsuariosService;
 import cr.ac.una.tarea.util.AppContext;
 import cr.ac.una.tarea.util.FlowController;
+import cr.ac.una.tarea.util.Formato;
 import cr.ac.una.tarea.util.Mensaje;
 import cr.ac.una.tarea.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -164,6 +165,18 @@ public class AdminUsersController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        txfID.delegateSetTextFormatter(Formato.getInstance().integerFormat());
+        txfCed.delegateSetTextFormatter(Formato.getInstance().cedulaFormat(15));
+        txfTel.delegateSetTextFormatter(Formato.getInstance().integerFormatWithMaxLength(30));
+        txfCel.delegateSetTextFormatter(Formato.getInstance().integerFormatWithMaxLength(30));
+        txfMail.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfNombre.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfLasts.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfUser.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfPassword.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfStatus.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+
         // Initialize TableView columns rols
         tbcIdRol.setCellValueFactory(cd -> cd.getValue().id);
         tbcRolNombre.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getNombre()));
@@ -418,9 +431,8 @@ public class AdminUsersController extends Controller implements Initializable {
         // Configuración de la columna para el rol
         tbcRol = new TableColumn<>("Rol");
         tbcRol.setCellValueFactory(cd -> {
-            SistemasDto sistema = cd.getValue();
-            // Devuelve el rol del sistema actual
-            return new SimpleObjectProperty<>(sistema.getRolSelected());
+            RolesDto selectedRole = cmbRoles.getSelectionModel().getSelectedItem();
+            return new SimpleObjectProperty<>(selectedRole);
         });
 
         tbcRol.setCellFactory(column -> new TableCell<SistemasDto, RolesDto>() {
@@ -437,22 +449,6 @@ public class AdminUsersController extends Controller implements Initializable {
         });
 
         tbvUsers.getColumns().add(tbcRol);
-
-        cmbRoles.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-
-                SistemasDto nuevoSistema = new SistemasDto();
-                nuevoSistema.setRolSelected(newValue);
-
-                if (!sistemasList.contains(nuevoSistema)) {
-                    sistemasList.add(nuevoSistema);
-                }
-                Platform.runLater(() -> {
-                    tbvUsers.setItems(sistemasList);
-                    tbvUsers.refresh();
-                });
-            }
-        });
     }
 
     @Override
@@ -485,13 +481,15 @@ public class AdminUsersController extends Controller implements Initializable {
                         "Debe seleccionar un usuario.");
                 tbpUsuarios.getSelectionModel().select(tptMantenimiento);
             } else {
+                new Mensaje().showModal(AlertType.INFORMATION, "Inclusion", getStage(), "Solo puede agregar un rol de un sistema a la vez.");
+                tbvUsers.getItems().clear();
+                tbvUsers.getColumns().clear();
                 if (tbvUsers.getColumns().isEmpty()) {
                     columnsTable();
                 }
                 newSystem();
             }
         }
-
     }
 
     @FXML
