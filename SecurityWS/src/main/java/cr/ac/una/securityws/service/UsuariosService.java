@@ -66,6 +66,7 @@ public class UsuariosService {
     public Respuesta saveUser(UsuariosDto usuariosDto) {
         try {
             Usuarios usuarios;
+            CorreosService correosService = new CorreosService();
 
             if (usuariosDto.getId() != null && usuariosDto.getId() > 0) {
                 usuarios = em.find(Usuarios.class, usuariosDto.getId());
@@ -103,7 +104,7 @@ public class UsuariosService {
             } else {
                 usuarios = new Usuarios(usuariosDto);
                 em.persist(usuarios);
-                //activateUser(usuariosDto);
+                Respuesta respuestaCorreo = correosService.enviarCorreoActivacion(usuariosDto);
             }
 
             // Aseguramos que los cambios se confirmen en la base de datos
