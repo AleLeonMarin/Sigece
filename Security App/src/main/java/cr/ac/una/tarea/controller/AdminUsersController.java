@@ -169,11 +169,11 @@ public class AdminUsersController extends Controller implements Initializable {
         txfCed.delegateSetTextFormatter(Formato.getInstance().cedulaFormat(15));
         txfTel.delegateSetTextFormatter(Formato.getInstance().integerFormatWithMaxLength(30));
         txfCel.delegateSetTextFormatter(Formato.getInstance().integerFormatWithMaxLength(30));
-        txfMail.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfMail.delegateSetTextFormatter(Formato.getInstance().maxLengthFormat(100));
         txfNombre.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
         txfLasts.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
         txfUser.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
-        txfPassword.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfPassword.delegateSetTextFormatter(Formato.getInstance().maxLengthFormat(50));
         txfStatus.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
 
         // Initialize TableView columns rols
@@ -653,6 +653,7 @@ public class AdminUsersController extends Controller implements Initializable {
             cellButton.setOnAction((ActionEvent t) -> {
                 RolesDto rol = (RolesDto) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
                 usuariosDto.getRolesDtoEliminados().add(rol);
+                usuariosDto.getRolesDto().remove(rol);
                 tbvRoles.getItems().remove(rol);
                 tbvRoles.refresh();
             });
