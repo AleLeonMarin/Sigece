@@ -132,7 +132,9 @@ public class AdminSystemController extends Controller implements Initializable {
                 if (!valid.isEmpty()) {
                     new Mensaje().showModal(AlertType.WARNING, "Guardar", getStage(), valid);
                 } else {
-                    rol.setSistema(systems);
+                    if (rol.getSistema() == null) {
+                        rol.setSistema(systems);
+                    }
                     RolesService service = new RolesService();
                     Respuesta res = service.saveRol(rol.register());
 
@@ -143,6 +145,7 @@ public class AdminSystemController extends Controller implements Initializable {
                         this.rol = (RolesDto) res.getResultado("Rol");
                         bindRoles(false);
                         chargeSistems();
+                        chargeSistem(Long.valueOf(txfID.getText()));
                         new Mensaje().showModal(AlertType.INFORMATION, "Guardar Rol", getStage(),
                                 "Rol guardados correctamente.");
                     }
@@ -202,6 +205,7 @@ public class AdminSystemController extends Controller implements Initializable {
                         new Mensaje().showModal(AlertType.INFORMATION, "Eliminar Rol", getStage(),
                                 "Rol eliminado correctamente.");
                         chargeSistems();
+                        chargeSistem(Long.valueOf(txfID.getText()));
                         newRol();
                     }
                 }

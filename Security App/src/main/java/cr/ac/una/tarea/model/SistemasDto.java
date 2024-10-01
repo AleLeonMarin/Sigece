@@ -15,7 +15,7 @@ public class SistemasDto implements Serializable {
     public SimpleStringProperty nombre;
     public Long version;
     public Boolean modificado;
-    public ObservableList<RolesDto> rolesDto;
+    public List<RolesDto> rolesDto;
     public RolesDto rolSelected;
 
     public SistemasDto() {
@@ -48,10 +48,10 @@ public class SistemasDto implements Serializable {
         sistema.setNombre(this.getNombre());
         sistema.setVersion(this.getVersion());
 
-        if (!this.rolesDto.isEmpty()) {
-            List<cr.ac.una.securityws.controller.RolesDto> roles = new ArrayList<>();
-            for (RolesDto rol : this.getRolesDto()) {
-                roles.add(rol.register());
+        if (this.getRolesDto() != null && !this.getRolesDto().isEmpty()) {
+            List<cr.ac.una.securityws.controller.RolesDto> roles = sistema.getRolesDto();
+            for (cr.ac.una.securityws.controller.RolesDto rol : roles) {
+                this.rolesDto.add(new RolesDto(rol));
             }
         }
         return sistema;
@@ -77,7 +77,7 @@ public class SistemasDto implements Serializable {
         return modificado;
     }
 
-    public ObservableList<RolesDto> getRolesDto() {
+    public List<RolesDto> getRolesDto() {
         return rolesDto;
     }
 
@@ -97,7 +97,7 @@ public class SistemasDto implements Serializable {
         this.modificado = modificado;
     }
 
-    public void setRolesDto(ObservableList<RolesDto> rolesDto) {
+    public void setRolesDto(List<RolesDto> rolesDto) {
         this.rolesDto = FXCollections.observableArrayList(rolesDto);
     }
 
