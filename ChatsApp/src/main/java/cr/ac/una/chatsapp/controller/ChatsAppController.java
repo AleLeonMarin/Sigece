@@ -370,6 +370,8 @@ public class ChatsAppController extends Controller implements Initializable {
                 mensajeAlerta.show(Alert.AlertType.ERROR, "Error", "Ocurrió un error al eliminar el mensaje: " + respuesta.getMensaje());
             }
         }
+        //quitar seleccion de la tbv
+        tbvContactos.getSelectionModel().clearSelection();
     }
 
     @FXML

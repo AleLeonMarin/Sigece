@@ -1,7 +1,7 @@
 package cr.ac.una.chatsapp.model;
 
 import javafx.beans.property.SimpleStringProperty;
-import javassist.Loader;
+
 
 import javax.print.DocFlavor;
 import java.io.Serializable;
