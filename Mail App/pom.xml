@@ -167,10 +167,22 @@
                 <includes>
                     <include>jax-ws-catalog.xml</include>
                     <include>wsdl/**</include>
+
                 </includes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>config</directory>
+                <targetPath>config</targetPath>
+                <includes>
+                    <include>properties.ini</include>
+                </includes>
             </resource>
         </resources>
 
@@ -250,6 +262,30 @@
                                 <option>${profiler.jvmargs.arg5}</option>
                             </options>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>cr.ac.una.mailapp.Main</mainClass> <!-- Cambia esto a tu clase principal -->
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal> <!-- Empaquetar en un solo jar -->
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

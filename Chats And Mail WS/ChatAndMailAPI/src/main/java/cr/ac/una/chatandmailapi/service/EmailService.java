@@ -70,7 +70,7 @@ public class EmailService {
         return em.find(Parametros.class, 1L); 
     }
     
-
+//No se utiliza
     public String enviarCorreoConEspera(String destinatario, String asunto, String mensajeTexto) {
         try {
        
