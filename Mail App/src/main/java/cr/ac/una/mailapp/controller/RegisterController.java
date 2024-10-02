@@ -90,6 +90,7 @@ public class RegisterController extends Controller implements Initializable {
 
     @Override
     public void initialize() {
+        cmbLan.getItems().clear();
 
     }
 
