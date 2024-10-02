@@ -18,7 +18,7 @@ public class CorreosService {
      private static final Logger LOG = Logger.getLogger(CorreosService.class.getName());
        public Respuesta enviarCorreoActivacion(UsuariosDto usuarioDto) {
         try {
-            Request request = new Request("http://localhost:8080/ChatAndMailAPI/ws/correos/enviarActivacion");
+            Request request = new Request("correos/enviarActivacion");
             request.post(usuarioDto);
 
             if (request.isError()) {

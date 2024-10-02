@@ -39,7 +39,7 @@ public class Request {
 
     public Request(String target, String parametros, Map<String, Object> valores) {
         this();
-        this.webTarget = client.target(AppContext.getInstance().get("resturl") + target).path(parametros).resolveTemplates(valores);
+        this.webTarget = client.target(/*AppContext.getInstance().get("resturl")*/"http://localhost:8080/ChatAndMailAPI/ws/" + target).path(parametros).resolveTemplates(valores);
         this.builder = webTarget.request(MediaType.APPLICATION_JSON);
         MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
         headers.add("Content-Type", "application/json; charset=UTF-8");
@@ -53,7 +53,7 @@ public class Request {
      * @param target Objetivo de la petición
      */
     public void setTarget(String target) {
-        this.webTarget = client.target(AppContext.getInstance().get("resturl") + target);
+        this.webTarget = client.target(/*AppContext.getInstance().get("resturl")*/"http://localhost:8080/ChatAndMailAPI/ws/" + target);
         this.builder = webTarget.request(MediaType.APPLICATION_JSON);
         MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
         headers.add("Content-Type", "application/json; charset=UTF-8");

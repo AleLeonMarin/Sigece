@@ -116,8 +116,8 @@ public class UsuariosService {
                     }
                 }
 
-                // Respuesta respuestaCorreo =
-                // correosService.enviarCorreoActivacion(usuariosDto);
+                Respuesta respuestaCorreo =
+                correosService.enviarCorreoActivacion(usuariosDto);
             }
 
             // Aseguramos que los cambios se confirmen en la base de datos
