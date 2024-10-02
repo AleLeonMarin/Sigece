@@ -104,7 +104,20 @@ public class UsuariosService {
             } else {
                 usuarios = new Usuarios(usuariosDto);
                 em.persist(usuarios);
-                //Respuesta respuestaCorreo = correosService.enviarCorreoActivacion(usuariosDto);
+                // Asignar rol de administrador al primer usuario registrado
+                if (em.createQuery("SELECT COUNT(u) FROM Usuarios u", Long.class).getSingleResult() == 1) {
+                    Roles administradorRole = em.find(Roles.class, 1L); // assume role ID 1 is administrator
+                    if (administradorRole != null) {
+                        administradorRole.getUsuarios().add(usuarios);
+                        usuarios.getRoles().add(administradorRole);
+                        em.merge(administradorRole);
+                        usuarios = em.merge(usuarios); // Actualiza la lista de roles del usuario
+                        LOG.log(Level.INFO, "Rol administrador asignado al primer usuario registrado.");
+                    }
+                }
+
+                // Respuesta respuestaCorreo =
+                // correosService.enviarCorreoActivacion(usuariosDto);
             }
 
             // Aseguramos que los cambios se confirmen en la base de datos
@@ -117,7 +130,9 @@ public class UsuariosService {
             return new Respuesta(true, CodigoRespuesta.CORRECTO,
                     "El usuario se guardó correctamente", "", "Usuario",
                     new UsuariosDto(usuarios));
-        } catch (NoResultException ex) {
+        } catch (
+
+        NoResultException ex) {
             // Manejo de excepción específica cuando no se encuentra el usuario
             LOG.log(Level.SEVERE, "Usuario no encontrado.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO,

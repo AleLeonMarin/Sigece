@@ -289,4 +289,30 @@ INSERT INTO sis_notificacion (not_id, not_nombre, not_plantilla, not_version)
 VALUES (1, 'Correos Comunes', 'Correos Comunes', 0);
 
 INSERT INTO sis_notificacion (not_id, not_nombre, not_plantilla, not_version)
-VALUES (2, 'Activacion de Cuenta', '<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Activacion de Cuenta</title> <style> body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; } .container { max-width: 650px; margin: 30px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); border: 1px solid #e0e0e0; } .header { background-color: #0D47A1; padding: 30px 20px; text-align: center; color: white; } .header img { width: 200px; height: auto; margin-bottom: 15px; } .header h2 { font-size: 26px; margin: 0; font-weight: normal; } .content { padding: 40px 30px; text-align: left; } .content h1 { font-size: 24px; color: #0D47A1; margin-bottom: 15px; } .content p { font-size: 16px; color: #5f6368; margin-bottom: 20px; line-height: 1.6; } .cta { text-align: center; } .cta a { display: inline-block; text-decoration: none; background-color: #0D47A1; color: white; padding: 12px 30px; font-size: 18px; border-radius: 6px; transition: background-color 0.3s ease; } .cta a:hover { background-color: #1565C0; } .footer { background-color: #f1f1f1; padding: 20px; text-align: center; font-size: 14px; color: #7a7a7a; } .footer p { margin: 0; } .footer a { color: #0D47A1; text-decoration: none; } .footer a:hover { text-decoration: underline; } .spacer { height: 40px; } </style> </head> <body> <div class="container"> <div class="header"> <img src="https://i.ibb.co/qdw7zmV/Logo-White.png" alt="Logo SigeceUna"> <h2>Bienvenido a SigeceUna</h2> </div> <div class="content"> <h1>¡Activa tu cuenta ahora!</h1> <p>Estimado/a [Usuario],</p> <p>Nos alegra que te hayas registrado en SigeceUna. Para activar tu cuenta y empezar a disfrutar de nuestros servicios, haz clic en el boton de abajo:</p> <div class="cta"> <a href="http://localhost:8080/ChatAndMailAPI/ws/UsuariosController/activarUsuario/[Usuario]" target="_blank">Activar Cuenta</a> </div> <p>Si no solicitaste esta activacion, puedes ignorar este correo. Tu cuenta estara segura.</p> </div> <div class="spacer"></div> <div class="footer"> <p>&copy; 2024 SigeceUna. Todos los derechos reservados.</p> <p><a href="#">Politica de Privacidad</a> | <a href="#">Terminos y Condiciones</a></p> </div> </div> </body> </html>', 0);
+VALUES (2, 'Activacion de Cuenta', '<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Activacion de Cuenta</title> <style> body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; } .container { max-width: 650px; margin: 30px auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); border: 1px solid #e0e0e0; } .header { background-color: #0D47A1; padding: 30px 20px; text-align: center; color: white; } .header img { width: 200px; height: auto; margin-bottom: 15px; } .header h2 { font-size: 26px; margin: 0; font-weight: normal; } .content { padding: 40px 30px; text-align: left; } .content h1 { font-size: 24px; color: #0D47A1; margin-bottom: 15px; } .content p { font-size: 16px; color: #5f6368; margin-bottom: 20px; line-height: 1.6; } .cta { text-align: center; } .cta a { display: inline-block; text-decoration: none; background-color: #0D47A1; color: white; padding: 12px 30px; font-size: 18px; border-radius: 6px; transition: background-color 0.3s ease; } .cta a:hover { background-color: #1565C0; } .footer { background-color: #f1f1f1; padding: 20px; text-align: center; font-size: 14px; color: #7a7a7a; } .footer p { margin: 0; } .footer a { color: #0D47A1; text-decoration: none; } .footer a:hover { text-decoration: underline; } .spacer { height: 40px; } </style> </head> <body> <div class="container"> <div class="header"> <img src="https://i.ibb.co/qdw7zmV/Logo-White.png" alt="Logo SigeceUna"> <h2>Bienvenido a SigeceUna</h2> </div> <div class="content"> <h1>ï¿½Activa tu cuenta ahora!</h1> <p>Estimado/a [Usuario],</p> <p>Nos alegra que te hayas registrado en SigeceUna. Para activar tu cuenta y empezar a disfrutar de nuestros servicios, haz clic en el boton de abajo:</p> <div class="cta"> <a href="http://localhost:8080/ChatAndMailAPI/ws/UsuariosController/activarUsuario/[Usuario]" target="_blank">Activar Cuenta</a> </div> <p>Si no solicitaste esta activacion, puedes ignorar este correo. Tu cuenta estara segura.</p> </div> <div class="spacer"></div> <div class="footer"> <p>&copy; 2024 SigeceUna. Todos los derechos reservados.</p> <p><a href="#">Politica de Privacidad</a> | <a href="#">Terminos y Condiciones</a></p> </div> </div> </body> </html>', 0);
+
+INSERT INTO sis_sistemas(sis_id, sis_nombre, sis_version)
+VALUES(1,'Seguridad', 1);
+
+INSERT INTO sis_sistemas(sis_id, sis_nombre, sis_version)
+VALUES(2,'Chats', 1);
+
+INSERT INTO sis_sistemas(sis_id, sis_nombre, sis_version)
+VALUES(3,'Correos Masivos', 1);
+
+INSERT INTO sis_roles(rol_id , rol_nombre, rol_sis_id, rol_version)
+VALUES (1, 'Admin', 1 , 1);
+
+
+INSERT INTO sis_roles(rol_id , rol_nombre, rol_sis_id, rol_version)
+VALUES (2, 'Normal', 2 , 1);
+
+
+INSERT INTO sis_roles(rol_id , rol_nombre, rol_sis_id, rol_version)
+VALUES (3, 'Administrador de correos masivos', 3 , 1);
+
+
+INSERT INTO sis_roles(rol_id , rol_nombre, rol_sis_id, rol_version)
+VALUES (4, 'Normal de correos masivos', 3, 1);
+
+

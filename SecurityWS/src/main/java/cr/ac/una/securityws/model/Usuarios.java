@@ -19,6 +19,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -135,6 +136,7 @@ public class Usuarios implements Serializable {
     private List<Roles> roles;
 
     public Usuarios() {
+        this.roles = new ArrayList<>();
     }
 
     public Usuarios(Long id) {
