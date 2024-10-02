@@ -110,7 +110,7 @@ public class UsuariosController {
             }
 
             // Cargar el archivo HTML desde el directorio de recursos
-            String htmlFilePath = "/path/to/your/project/src/main/webapp/activacion_exitosa.html"; // Cambia esto
+            String htmlFilePath = "plantilla/activacion_exitosa.html"; 
             String htmlContent = new String(Files.readAllBytes(Paths.get(htmlFilePath)));
 
             // Reemplazar el marcador con el nombre del usuario
@@ -119,7 +119,7 @@ public class UsuariosController {
             return Response.ok(htmlContent).build();
 
         } catch (Exception e) {
-            Logger.getLogger(UsuariosController.class.getName()).log(Level.SEVERE, "Error activando el usuario");
+            Logger.getLogger(UsuariosController.class.getName()).log(Level.SEVERE, "");
             String htmlError = "<html><body><h1>Error activando el usuario</h1><p>" + e.getMessage() + "</p></body></html>";
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(htmlError)
