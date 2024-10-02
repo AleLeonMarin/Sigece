@@ -4,6 +4,7 @@
  */
 package cr.ac.una.securityws.service;
 
+import cr.ac.una.securityws.model.UsuariosDTORest;
 import cr.ac.una.securityws.model.UsuariosDto;
 import cr.ac.una.securityws.util.Request;
 import cr.ac.una.securityws.util.Respuesta;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class CorreosService {
      private static final Logger LOG = Logger.getLogger(CorreosService.class.getName());
-       public Respuesta enviarCorreoActivacion(UsuariosDto usuarioDto) {
+       public Respuesta enviarCorreoActivacion(UsuariosDTORest usuarioDto) {
         try {
             Request request = new Request("correos/enviarActivacion");
             request.post(usuarioDto);

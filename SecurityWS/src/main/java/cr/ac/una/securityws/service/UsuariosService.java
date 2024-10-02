@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import cr.ac.una.securityws.model.Roles;
 import cr.ac.una.securityws.model.RolesDto;
 import cr.ac.una.securityws.model.Usuarios;
+import cr.ac.una.securityws.model.UsuariosDTORest;
 import cr.ac.una.securityws.model.UsuariosDto;
 import cr.ac.una.securityws.util.CodigoRespuesta;
 import cr.ac.una.securityws.util.Request;
@@ -116,8 +117,12 @@ public class UsuariosService {
                     }
                 }
 
+                UsuariosDTORest usuarioRest= new UsuariosDTORest();
+                
+                usuarioRest.setUsuUsuario(usuariosDto.getUsuario());
+                usuarioRest.setUsuCorreo(usuariosDto.getCorreo());
                 Respuesta respuestaCorreo =
-                correosService.enviarCorreoActivacion(usuariosDto);
+                correosService.enviarCorreoActivacion(usuarioRest);
             }
 
             // Aseguramos que los cambios se confirmen en la base de datos
