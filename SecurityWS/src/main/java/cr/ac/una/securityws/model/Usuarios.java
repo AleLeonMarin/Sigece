@@ -140,10 +140,12 @@ public class Usuarios implements Serializable {
     }
 
     public Usuarios(Long id) {
+        this();
         this.id = id;
     }
 
     public Usuarios(UsuariosDto usuariosDto) {
+        this();
         this.id = usuariosDto.getId();
         actualizar(usuariosDto);
     }

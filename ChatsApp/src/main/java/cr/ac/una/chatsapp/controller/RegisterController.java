@@ -17,6 +17,7 @@ import cr.ac.una.chatsapp.model.UsuariosDTO;
 import cr.ac.una.chatsapp.service.UsuariosService;
 import cr.ac.una.chatsapp.util.AppContext;
 import cr.ac.una.chatsapp.util.FlowController;
+import cr.ac.una.chatsapp.util.Formato;
 import cr.ac.una.chatsapp.util.Mensaje;
 import cr.ac.una.chatsapp.util.Respuesta;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -91,6 +92,16 @@ public class RegisterController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        txfCed.delegateSetTextFormatter(Formato.getInstance().cedulaFormat(15));
+        txfTel.delegateSetTextFormatter(Formato.getInstance().integerFormatWithMaxLength(30));
+        txfCel.delegateSetTextFormatter(Formato.getInstance().integerFormatWithMaxLength(30));
+        txfMail.delegateSetTextFormatter(Formato.getInstance().maxLengthFormat(100));
+        txfNombre.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfLasts.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfUser.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+        txfPassword.delegateSetTextFormatter(Formato.getInstance().maxLengthFormat(50));
+        txfStatus.delegateSetTextFormatter(Formato.getInstance().letrasFormat(100));
+
         this.usuariosDto = new UsuariosDTO();
         newUser();
         indicateRequiredFields();
