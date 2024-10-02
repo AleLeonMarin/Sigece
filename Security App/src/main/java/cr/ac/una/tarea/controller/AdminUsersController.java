@@ -654,6 +654,7 @@ public class AdminUsersController extends Controller implements Initializable {
                 RolesDto rol = (RolesDto) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
                 usuariosDto.getRolesDtoEliminados().add(rol);
                 usuariosDto.getRolesDto().remove(rol);
+                rol.getUsuariosDto().remove(usuariosDto);
                 tbvRoles.getItems().remove(rol);
                 tbvRoles.refresh();
             });
